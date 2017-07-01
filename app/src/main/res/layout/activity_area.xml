@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:clipToPadding="false"
+              android:clipChildren="false"
+              android:background="@drawable/ozone"
+              android:orientation="vertical"
+>
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/white">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+        <TextView
+                android:id="@+id/wall_display_name"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="0dp"
+                android:includeFontPadding="false"
+                android:layout_marginBottom="0dp"
+                android:singleLine="false"
+                android:textSize="36sp"
+
+                android:text=""/>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:paddingBottom="4dp"
+                    android:orientation="horizontal" >
+
+                <TextView
+                        style="@style/NavText"
+                        android:id="@+id/crag_name1"
+
+                />
+                <TextView
+                        style="@style/NavText"
+                        android:id="@+id/crag_name2"
+
+                />
+                <TextView
+                        style="@style/NavText"
+                        android:id="@+id/crag_name3"
+
+                />
+                <TextView
+                        style="@style/NavText"
+                        android:id="@+id/crag_name4"
+
+                />
+                <TextView
+                        style="@style/NavText"
+                        android:id="@+id/crag_name5"
+
+                />
+            </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+    <chat.crag.cragchat.android.SlidingTabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+    />
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"/>
+
+</LinearLayout>
+
+</LinearLayout>

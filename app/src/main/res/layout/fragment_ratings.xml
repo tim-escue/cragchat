@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:padding="8dp"
+              android:layout_height="match_parent">
+
+    <TextView android:layout_width="match_parent" android:layout_height="0dp"
+              android:gravity="center_horizontal"
+              android:paddingTop="80dp"
+              android:textSize="20sp"
+              android:layout_weight="1"
+
+              android:text="Be the first to rate this route!!!"
+              android:visibility="gone"
+              android:id="@+id/list_empty"/>
+
+    <ListView
+            android:id="@+id/list_ratings"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp">
+    </ListView>
+
+    <Button
+            android:id="@+id/button_add_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate this climb"
+                android:clickable="true"
+    android:onClick="rate"/>
+</LinearLayout>

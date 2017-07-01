@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/comment_section_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="8dp">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/string_submissions"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@string/string_sort_by" />
+
+        <Spinner
+            android:id="@+id/spinner_comment_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+    <TextView android:layout_width="match_parent" android:layout_height="0dp"
+              android:gravity="center_horizontal"
+              android:paddingTop="80dp"
+              android:textSize="20sp"
+              android:layout_weight="1"
+              android:text="Be the first to add a submission!!!"
+              android:visibility="gone"
+              android:id="@+id/list_empty"/>
+
+    <ListView
+        android:id="@+id/comment_section_list"
+        android:layout_weight="1"
+        android:paddingTop="4dp"
+        android:layout_width="fill_parent"
+        android:background="@color/transparent"
+        android:layout_height="0dp">
+    </ListView>
+
+    <Button
+        android:id="@+id/button_add_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="@string/string_add_comment"
+        android:onClick="onClick"
+        android:clickable="true"/>
+
+        </LinearLayout>
+
+</LinearLayout>

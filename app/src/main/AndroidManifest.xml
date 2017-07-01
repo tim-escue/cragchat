@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="chat.crag.cragchat" >
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        >
+
+
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
+
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyCdrtafxk2F8Np33kCgIET69Hs8Kvpy3Rk"/>
+
+
+        <activity
+            android:name="chat.crag.cragchat.MainActivity"
+            android:label="@string/app_name"
+
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+        </activity>
+
+        <activity android:name="chat.crag.cragchat.SearchActivity"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity
+            android:name=".RouteActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SearchActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+                android:name=".ProfileActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".SearchActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+            android:name=".AreaActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SearchActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+                android:name="chat.crag.cragchat.LoginActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+                android:name="chat.crag.cragchat.RegisterActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".LoginActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+                android:name="chat.crag.cragchat.EditImageActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".RouteActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+
+        <activity
+                android:name="chat.crag.cragchat.RateRouteActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+        <activity
+                android:name="chat.crag.cragchat.SubmitSendActivity"
+                android:screenOrientation="portrait">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity" />
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".SearchActivity" />
+        </activity>
+
+    </application>
+
+</manifest>

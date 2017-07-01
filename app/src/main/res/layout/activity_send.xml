@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_root"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:padding="10dp" >
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How many stars would you give this route?" />
+
+    <Spinner android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/spinner_rate_stars">
+    </Spinner>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How difficult was this route?" />
+
+    <Spinner android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/spinner_rate_yds">
+    </Spinner>
+
+
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Submit"
+            android:onClick="submitSend"/>
+
+    <requestFocus />
+
+
+</LinearLayout>

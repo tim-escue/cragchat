@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="4dp"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/string_submissions"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="@string/string_sort_by" />
+
+        <Spinner
+                android:id="@+id/spinner_comment_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView android:layout_width="match_parent" android:layout_height="0dp"
+              android:gravity="center_horizontal"
+              android:paddingTop="80dp"
+              android:textSize="20sp"
+              android:layout_weight="1"
+
+              android:text="No comments by user"
+              android:visibility="gone"
+              android:id="@+id/list_empty"/>
+
+    <ListView android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_weight="1"
+              android:id="@+id/list_profile_comments"
+    />
+
+</LinearLayout>

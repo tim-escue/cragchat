@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_height="match_parent"
+              >
+
+    <RelativeLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/progressBox"
+                    android:background="@color/lightgray">
+
+        <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:textSize="20sp"
+              android:layout_weight="1"
+              android:text="Internet connection required to load recent activity. Routes and areas that you have already viewed are still available and can be searched for above."
+              android:visibility="gone"
+              android:id="@+id/empty_text"/>
+
+    <ListView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="@null"
+              android:id="@+id/list_recent_activity"/>
+
+
+</LinearLayout>
