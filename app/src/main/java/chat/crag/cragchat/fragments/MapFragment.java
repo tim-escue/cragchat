@@ -73,13 +73,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
             lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setCostAllowed(false);
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                lm.requestLocationUpdates(lm.getBestProvider(criteria, true), 3000, 0, this);
-            }
+
+            startLocationUpdates();
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                     .findFragmentById(R.id.map);
@@ -106,7 +101,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         stopLocationUpdates();
     }
 
-    public void onR
+    @Override
+    public void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates()  {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setCostAllowed(false);
+            lm.requestLocationUpdates(lm.getBestProvider(criteria, true), 3000, 0, this);
+        }
+    }
 
     private void stopLocationUpdates() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

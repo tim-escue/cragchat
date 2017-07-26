@@ -2,6 +2,7 @@ package chat.crag.cragchat.sql;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import chat.crag.cragchat.CragChatActivity;
 import chat.crag.cragchat.R;
 import chat.crag.cragchat.adapters.RecentActivityAdapter;
+import chat.crag.cragchat.adapters.RecentActivityRecyclerAdapter;
 import chat.crag.cragchat.descriptor.Datable;
 import chat.crag.cragchat.remote.RemoteDatabase;
 import chat.crag.cragchat.remote.ResponseHandler;
@@ -25,11 +27,11 @@ public class UpdateRecentActivityTask extends AsyncTask<Void, Integer, List<Stri
 
     private long cur;
     private Activity con;
-    private ViewGroup bar;
-    private ListView view;
+    private View bar;
+    private RecyclerView view;
     private int displayId;
 
-    public UpdateRecentActivityTask(Activity con, int displayId, ListView view, ViewGroup bar) {
+    public UpdateRecentActivityTask(Activity con, int displayId, RecyclerView view, View bar) {
         cur = System.currentTimeMillis();
         this.bar = bar;
         this.con = con;
@@ -52,9 +54,10 @@ public class UpdateRecentActivityTask extends AsyncTask<Void, Integer, List<Stri
             }
             Collections.sort(haha, comparator);
             bar.setVisibility(View.GONE);
-            final RecentActivityAdapter adapter = new RecentActivityAdapter((CragChatActivity)con, haha);
-            view.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+           // final RecentActivityAdapter adapter = new RecentActivityAdapter((CragChatActivity)con, haha);
+            view.setAdapter(new RecentActivityRecyclerAdapter((CragChatActivity)con, haha));
+            view.setVisibility(View.VISIBLE);
+            view.getAdapter().notifyDataSetChanged();
         } else {
             bar.setVisibility(View.GONE);
             view.setVisibility(View.GONE);

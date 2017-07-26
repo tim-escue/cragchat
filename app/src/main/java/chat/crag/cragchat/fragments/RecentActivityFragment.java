@@ -2,6 +2,7 @@ package chat.crag.cragchat.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class RecentActivityFragment extends Fragment {
         RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.progressBox);
         layout.setVisibility(View.VISIBLE);
 
-        new UpdateRecentActivityTask(getActivity(), id, (ListView) view.findViewById(R.id.list_recent_activity), layout).execute();
+        new UpdateRecentActivityTask(getActivity(), id,(RecyclerView) view.findViewById(R.id.recycler_view), layout).execute();
 
 
 

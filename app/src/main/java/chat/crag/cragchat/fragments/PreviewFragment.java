@@ -1,7 +1,11 @@
 package chat.crag.cragchat.fragments;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
@@ -29,25 +33,47 @@ public class PreviewFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_preview, container, false);
-        id = Integer.parseInt(getArguments().getString("id"));
+//        id = Integer.parseInt(getArguments().getString("id"));
 
-        ListView lv = (ListView) view.findViewById(R.id.list_preview);
-        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.progressBox);
-        layout.setVisibility(View.VISIBLE);
-        ProgressBar bar = (ProgressBar)view.findViewById(R.id.progressBar1);
-        new UpdateRecentActivityTask(getActivity(), -1, lv, layout).execute();
+      //  ListView lv = (ListView) view.findViewById(R.id.list_preview);
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        recList.addItemDecoration(new RecyclerViewMargin(48));
 
-        TextView cragName = (TextView) view.findViewById(R.id.text_preview_cragname);
-        if (cragName != null) {
-            String udata =  cragName.getText().toString();
-            SpannableString content = new SpannableString(udata);
-            content.setSpan(new UnderlineSpan(), 0, udata.length(), 0);
-            cragName.setText(content);
-        }
+        ProgressBar layout = (ProgressBar) view.findViewById(R.id.progressBar1);
+        new UpdateRecentActivityTask(getActivity(), -1, recList, layout).execute();
 
 
         return view;
     }
+    public class RecyclerViewMargin extends RecyclerView.ItemDecoration {
+        private int margin;
 
+        /**
+         * constructor
+         * @param margin desirable margin size in px between the views in the recyclerView
+         */
+        public RecyclerViewMargin(@IntRange(from=0)int margin ) {
+            this.margin = margin;
+
+        }
+
+        /**
+         * Set different margins for the items inside the recyclerView: no top margin for the first row
+         * and no left margin for the first column.
+         */
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+
+            int position = parent.getChildLayoutPosition(view);
+            //set right margin to all
+            if (position > 0) {
+                outRect.top = margin;
+            }
+        }}
 
 }

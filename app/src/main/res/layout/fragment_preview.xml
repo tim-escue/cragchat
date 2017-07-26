@@ -1,58 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:background="@color/transparent_gray"
-              android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                android:padding="4dp">
-
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Ozone"
-                  android:textColor="@color/darkgreen"
-                  android:id="@+id/text_preview_cragname"
-                  android:gravity="center"
-                  android:textSize="36sp"
-                  android:includeFontPadding="false"
-                  android:onClick="onClick"/>
-
-    </LinearLayout>
-
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progressBox"
-                    android:background="@drawable/comment_body">
-
-        <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="visible"
-                android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"/>
 
     <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:background="@drawable/comment_body"
-              android:paddingTop="10dp"
-              android:textSize="20sp"
-              android:layout_weight="1"
-              android:text="Internet connection required to load recent activity"
-              android:visibility="gone"
-              android:id="@+id/empty_text"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textSize="20sp"
+        android:layout_weight="1"
+        android:text="Internet connection required to load recent activity"
+        android:visibility="gone"
+        android:id="@+id/empty_text"/>
 
-    <ListView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/list_preview"
-              android:divider="@null"
-              android:dividerHeight="8dp"
-              android:paddingBottom="2dp"/>
+    <!-- <ListView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_preview"
+                android:divider="@null"
+           android:visibility="gone"
+                android:dividerHeight="8dp"
+                android:paddingBottom="2dp"/> -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

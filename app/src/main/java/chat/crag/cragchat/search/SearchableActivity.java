@@ -20,16 +20,16 @@ public class SearchableActivity extends CragChatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+       /* getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        View customView = getLayoutInflater().inflate(R.layout.toolbar, null);
-        actionBar.setCustomView(customView);
-        Toolbar parent =(Toolbar) customView.getParent();
-        parent.setContentInsetsAbsolute(0,0);
+        actionBar.setDisplayShowTitleEnabled(false);*/
+       // View customView = getLayoutInflater().inflate(R.layout.toolbar, null);
+        //actionBar.setCustomView(customView);
+     //   Toolbar parent =(Toolbar) customView.getParent();
+      //  parent.setContentInsetsAbsolute(0,0);;
 
     }
 
@@ -42,7 +42,8 @@ public class SearchableActivity extends CragChatActivity {
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+
+        //searchView.setIconifiedByDefault(false);
         return true;
     }
 
@@ -52,7 +53,7 @@ public class SearchableActivity extends CragChatActivity {
     }
 
     public boolean startSearch(MenuItem menuItem) {
-        onSearchRequested();
+      //  onSearchRequested();
         return true;
     }
 

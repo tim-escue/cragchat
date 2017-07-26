@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -34,6 +35,12 @@ public class MainActivity extends SearchableActivity {
         display.getSize(size);
 
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Ozone");
+
+
         try {
 
             /*
@@ -64,15 +71,15 @@ public class MainActivity extends SearchableActivity {
             e.printStackTrace();
         }
 
-        LinearLayout fragContainer = (LinearLayout) findViewById(R.id.main_container);
+       // LinearLayout fragContainer = (LinearLayout) findViewById(R.id.main_container);
 
-        RelativeLayout ll = new RelativeLayout(this);
+      //  RelativeLayout ll = new RelativeLayout(this);
 
-        ll.setId(R.id.fragmentId);
+//        ll.setId(R.id.fragmentId);
 
-        getSupportFragmentManager().beginTransaction().add(ll.getId(), PreviewFragment.newInstance(-1), "someTag1").commit();
+  //      getSupportFragmentManager().beginTransaction().add(ll.getId(), PreviewFragment.newInstance(-1), "someTag1").commit();
 
-        fragContainer.addView(ll);
+    //    fragContainer.addView(ll);
 
     }
 
