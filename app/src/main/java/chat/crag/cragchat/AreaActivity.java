@@ -2,9 +2,11 @@ package chat.crag.cragchat;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.crag.cragchat.adapters.AreaActivityPagerAdapter;
 import chat.crag.cragchat.android.SlidingTabLayout;
@@ -18,37 +20,27 @@ public class AreaActivity extends SearchableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        setContentView(R.layout.activity_area);
 
         area = Displayable.decodeAreaString(getIntent().getStringExtra(CragChatActivity.DATA_STRING));
 
-        setContentView(R.layout.activity_area);
-
-        TextView textView = (TextView) findViewById(R.id.wall_display_name);
-        if (area.getName().length() >= 16) {
-            textView.setTextSize(28);
-        } else if (area.getName().length() >= 19) {
-            textView.setTextSize(10);
-        }
-        textView.setText(area.getName());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(area.getName());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Area[] hierarchy = LocalDatabase.getInstance(this).getHierarchy(area);
-        if (hierarchy.length != 0) {
-            textView = (TextView) findViewById(R.id.crag_name1);
-            SpannableString content = new SpannableString(hierarchy[0].getName());
-            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-            textView.setText(content);
-            textView.setVisibility(View.VISIBLE);
 
-            for (int i = 1 ; i < hierarchy.length; i++) {
-                textView = (TextView) findViewById(getResources().getIdentifier("crag_name" + (i+1), "id", getPackageName()));
-
-                content = new SpannableString("->"+hierarchy[i].getName());
-                content.setSpan(new UnderlineSpan(), 2, content.length(), 0);
-                textView.setText(content);
-
-                textView.setVisibility(View.VISIBLE);
-
+        LinearLayout navLayout = (LinearLayout) findViewById(R.id.nav_layout);
+        for (int i = 0 ; i < hierarchy.length; i++) {
+            LinearLayout button = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_nav_button, null);
+            if (i == 0) {
+                TextView arrow = (TextView) button.findViewById(R.id.text_arrow);
+                arrow.setVisibility(View.GONE);
             }
+            TextView location = (TextView) button.findViewById(R.id.text_location);
+            location.setText(hierarchy[i].getName());
+            navLayout.addView(button);
         }
 
 

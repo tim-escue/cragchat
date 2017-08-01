@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import chat.crag.cragchat.*;
 import chat.crag.cragchat.user.User;
@@ -44,7 +45,7 @@ public class SearchableActivity extends CragChatActivity {
                 searchManager.getSearchableInfo(getComponentName()));
 
         //searchView.setIconifiedByDefault(false);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

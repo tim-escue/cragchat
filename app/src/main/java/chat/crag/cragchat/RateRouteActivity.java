@@ -35,18 +35,6 @@ public class RateRouteActivity extends SearchableActivity {
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterSpinner);
 
-        spinner = (Spinner) findViewById(R.id.spinner_select_style);
-        adapterSpinner = ArrayAdapter.createFromResource(this,
-                R.array.spinner_options_climbstyle, android.R.layout.simple_spinner_item);
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterSpinner);
-
-        spinner = (Spinner) findViewById(R.id.spinner_select_send_typee);
-        adapterSpinner = ArrayAdapter.createFromResource(this,
-                R.array.spinner_select_send_type, android.R.layout.simple_spinner_item);
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterSpinner);
-
         InputFilter digitFilter = new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end,
@@ -73,20 +61,16 @@ public class RateRouteActivity extends SearchableActivity {
                 }
             }
         };
-        EditText edit = (EditText) findViewById(R.id.edittext_attempts);
-        edit.setFilters(new InputFilter[] {digitFilter});
-        edit = (EditText) findViewById(R.id.edittext_pitches);
-        edit.setFilters(new InputFilter[] {digitFilter});
 
     }
 
     public void rate(View v) {
         Spinner yds = ((Spinner) findViewById(R.id.spinner_rate_yds));
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
-        String climbStyle = ((Spinner) findViewById(R.id.spinner_select_style)).getSelectedItem().toString();
-        String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
-        int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
-        int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
+//        String climbStyle = ((Spinner) findViewById(R.id.spinner_select_style)).getSelectedItem().toString();
+  //      String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
+   //     int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
+    //    int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
 
         //String timeString = ((EditText)findViewById(R.id.edittext_time)).getText().toString();
        // String[] args = timeString.split(":");
@@ -103,9 +87,9 @@ public class RateRouteActivity extends SearchableActivity {
             new SendRatingTask(this, id, yds.getSelectedItemPosition(), stars, User.currentToken(this), true).execute();
         } else {
             Toast.makeText(this, "Unable to post rating - will try again later", Toast.LENGTH_LONG).show();
-            String store = "RATING###" + id + "###" + yds.getSelectedItemPosition() + "###" + stars + "###" + climbStyle + "###" + pitches + "###" + timeSeconds + "###" + User.currentToken(this)
+           /* String store = "RATING###" + id + "###" + yds.getSelectedItemPosition() + "###" + stars + "###" + climbStyle + "###" + pitches + "###" + timeSeconds + "###" + User.currentToken(this)
                     + "###" +sendStyle + "###" +attempts;
-            LocalDatabase.getInstance(this).store(this, store);
+            LocalDatabase.getInstance(this).store(this, store);*/
         }
 
     }

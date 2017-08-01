@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,21 +17,16 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:textSize="20sp"
-        android:layout_weight="1"
         android:text="Internet connection required to load recent activity"
         android:visibility="gone"
-        android:id="@+id/empty_text"/>
+        android:id="@+id/empty_text"
+        android:layout_centerInParent="true"/>
 
-    <!-- <ListView android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/list_preview"
-                android:divider="@null"
-           android:visibility="gone"
-                android:dividerHeight="8dp"
-                android:paddingBottom="2dp"/> -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:background="@color/gray"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</LinearLayout>
+</RelativeLayout>

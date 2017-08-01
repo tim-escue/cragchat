@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import chat.crag.cragchat.descriptor.Area;
@@ -52,17 +53,16 @@ public class CragChatActivity extends AppCompatActivity {
     }
 
     public void openDisplayable(View v) {
-        TextView view = (TextView) v;
-        String str = view.getText().toString();
-        if (str.startsWith("->")) {
-            str = str.substring(2);
+        if (v instanceof LinearLayout) {
+            LinearLayout layout = (LinearLayout) v;
+            TextView view = (TextView) layout.findViewById(R.id.text_location);
+            Displayable target = LocalDatabase.getInstance(this).findExact(view.getText().toString());
+            if (hasConnection()) {
+                //Log.d("RemoteDatabase", "Connected to internet - checking revision");
+                new CheckForRouteUpdateTask(target, this).execute();
+            }
+            launch(target);
         }
-        Displayable target = LocalDatabase.getInstance(this).findExact(str);
-        if (hasConnection()) {
-            //Log.d("RemoteDatabase", "Connected to internet - checking revision");
-            new CheckForRouteUpdateTask(target, this).execute();
-        }
-        launch(target);
     }
 
 

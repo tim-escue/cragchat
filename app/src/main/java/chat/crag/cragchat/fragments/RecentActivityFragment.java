@@ -1,7 +1,10 @@
 package chat.crag.cragchat.fragments;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +40,46 @@ public class RecentActivityFragment extends Fragment {
         RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.progressBox);
         layout.setVisibility(View.VISIBLE);
 
-        new UpdateRecentActivityTask(getActivity(), id,(RecyclerView) view.findViewById(R.id.recycler_view), layout).execute();
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        recList.addItemDecoration(new RecyclerViewMargin(48));
+
+        new UpdateRecentActivityTask(getActivity(), id,recList, layout).execute();
 
 
 
         return view;
     }
+
+    public class RecyclerViewMargin extends RecyclerView.ItemDecoration {
+        private int margin;
+
+        /**
+         * constructor
+         * @param margin desirable margin size in px between the views in the recyclerView
+         */
+        public RecyclerViewMargin(@IntRange(from=0)int margin ) {
+            this.margin = margin;
+
+        }
+
+        /**
+         * Set different margins for the items inside the recyclerView: no top margin for the first row
+         * and no left margin for the first column.
+         */
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+
+            int position = parent.getChildLayoutPosition(view);
+            //set right margin to all
+            if (position > 0) {
+                outRect.top = margin;
+            }
+        }}
 
 
 

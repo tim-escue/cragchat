@@ -6,7 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+
 import chat.crag.cragchat.R;
 import chat.crag.cragchat.adapters.RatingListAdapter;
 import chat.crag.cragchat.adapters.SendListAdapter;
@@ -48,6 +52,8 @@ public class SendsFragment extends Fragment {
 
         lv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+
 
         return view;
     }

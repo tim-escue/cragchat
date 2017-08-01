@@ -3,12 +3,16 @@ package chat.crag.cragchat;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import chat.crag.cragchat.adapters.RouteActivityPagerAdapter;
@@ -37,8 +41,7 @@ public class RouteActivity extends SearchableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(false);
+
 
         Intent intent = getIntent();
         route = null;
@@ -48,37 +51,31 @@ public class RouteActivity extends SearchableActivity {
             e.printStackTrace();
         }
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(route.getName());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      //  final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
+      //  getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+
+
         int tabInd = intent.getIntExtra("TAB", 0);
 
-
-        // Set text views
-        TextView textView = (TextView) findViewById(R.id.route_display_name);
-        if (route.getName().length() >= 16) {
-            textView.setTextSize(28);
-        } else if (route.getName().length() >= 19) {
-            textView.setTextSize(10);
-        }
-        textView.setText(route.getName());
-        //System.out.println(route.getName());
-
         Area[] hierarchy = LocalDatabase.getInstance(this).getHierarchy(route);
-        textView = (TextView) findViewById(R.id.crag_name1);
-        SpannableString content = new SpannableString(hierarchy[0].getName());
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        textView.setText(content);
-        textView.setVisibility(View.VISIBLE);
 
-        for (int i = 1 ; i < hierarchy.length; i++) {
-            textView = (TextView) findViewById(getResources().getIdentifier("crag_name" + (i+1), "id", getPackageName()));
-
-            content = new SpannableString("->"+hierarchy[i].getName());
-            content.setSpan(new UnderlineSpan(), 2, content.length(), 0);
-            textView.setText(content);
-
-            textView.setVisibility(View.VISIBLE);
-
+        LinearLayout navLayout = (LinearLayout) findViewById(R.id.nav_layout);
+        for (int i = 0 ; i < hierarchy.length; i++) {
+            LinearLayout button = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_nav_button, null);
+            if (i == 0) {
+                TextView arrow = (TextView) button.findViewById(R.id.text_arrow);
+                arrow.setVisibility(View.GONE);
+            }
+            TextView location = (TextView) button.findViewById(R.id.text_location);
+            location.setText(hierarchy[i].getName());
+            navLayout.addView(button);
         }
-        textView = (TextView) findViewById(R.id.type);
+        TextView textView = (TextView) findViewById(R.id.type);
         textView.setText(route.getType());
 
         textView = (TextView) findViewById(R.id.yds_scale);

@@ -6,10 +6,18 @@
         <item name="android:clickable">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="NavButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/blue_name</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="Thumb">
@@ -25,13 +33,21 @@
     </style>
 
 
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/darkgreen</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+    </style>
 
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
         <!-- Application theme. -->
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/darkgreen</item>
         <item name="colorPrimaryDark">@color/darkergreen</item>
+        <item name="android:textColorHint">@color/white</item>
     </style>
 
 

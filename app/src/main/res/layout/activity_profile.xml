@@ -8,6 +8,9 @@
               android:clipChildren="false"
               android:background="@drawable/ozone">
 
+    <include
+        layout="@layout/appbar"/>
+
     <TextView
             android:id="@+id/profile_username"
             android:layout_width="match_parent"
