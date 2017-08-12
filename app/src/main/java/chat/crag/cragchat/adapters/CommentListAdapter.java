@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import chat.crag.cragchat.CragChatActivity;
 import chat.crag.cragchat.ProfileActivity;
 import chat.crag.cragchat.R;
@@ -22,12 +26,15 @@ import chat.crag.cragchat.sql.SendCommentTask;
 import chat.crag.cragchat.sql.VoteTask;
 import chat.crag.cragchat.user.User;
 
+import static android.view.View.GONE;
+
 public class CommentListAdapter extends BaseAdapter {
 
     private Activity activity;
     private CommentManager manager;
     private static LayoutInflater inflater;
     private String table;
+    private ViewHolder lastOpened;
 
     public CommentListAdapter(Activity a, CommentManager manager, String table) {
         activity = a;
@@ -38,7 +45,7 @@ public class CommentListAdapter extends BaseAdapter {
 
     public void addComment(Comment m) {
         if (manager.getCommentList().size() == 0) {
-            activity.findViewById(R.id.list_empty).setVisibility(View.GONE);
+            activity.findViewById(R.id.list_empty).setVisibility(GONE);
         }
         manager.addComment(m);
     }
@@ -76,6 +83,7 @@ public class CommentListAdapter extends BaseAdapter {
         ImageView image1;
         ImageView image2;
         LinearLayout layout;
+        LinearLayout expandable;
     }
 
     @Override
@@ -100,13 +108,33 @@ public class CommentListAdapter extends BaseAdapter {
             holder.image2 = (ImageView) vi.findViewById(R.id.arrow_down);
             holder.text6 = (TextView) vi.findViewById(R.id.edit_comment);
             holder.layout = (LinearLayout) vi.findViewById(R.id.layout_comment);
+            holder.expandable = (LinearLayout) vi.findViewById(R.id.expanding_layout);
 
 
             /************  Set holder with LayoutInflater ************/
             vi.setTag(holder);
         } else
             holder = (ViewHolder) vi.getTag();
-        holder.layout.setBackgroundColor(position %2 == 0 ? Color.TRANSPARENT:Color.argb(220, 225, 225, 225));
+        int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
+        if (position % 2 != 0)  {
+            holder.layout.setBackgroundColor(color);
+            holder.expandable.setBackgroundColor(color);
+        }
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lastOpened != null && !lastOpened.equals(holder)) {
+                    lastOpened.expandable.setVisibility(GONE);
+                }
+                lastOpened = holder;
+                if (holder.expandable.getVisibility() == GONE) {
+                    holder.expandable.setVisibility(View.VISIBLE);
+                } else {
+                    holder.expandable.setVisibility(GONE);
+                }
+            }
+        });
 
 
         holder.image1.setOnClickListener(new View.OnClickListener() {
@@ -133,19 +161,26 @@ public class CommentListAdapter extends BaseAdapter {
         /*
             Give the comment an inset if it has a parent.
          */
-        int paddingPixel = 25;
+        int paddingPixel = 16;
         float density = activity.getResources().getDisplayMetrics().density;
         int paddingDp = (int)(paddingPixel * density);
         vi.setPadding(manager.getCommentList().get(position).getDepth() * paddingDp, vi.getPaddingTop(), vi.getPaddingRight(), vi.getPaddingBottom());
 
-        holder.text5.setText(String.valueOf(manager.getCommentList().get(position).getScore()));
+        int score= manager.getCommentList().get(position).getScore();
+        String points = "0 points";
+        if (score < 0) {
+            points = "-" + score + " points";
+        } else if (score > 0) {
+            points = "+" + score + " points";
+        }
+        holder.text5.setText(points);
 
         final Comment comment = manager.getCommentList().get(position);
         String uName = User.userName(activity);
         if (uName != null && uName.equals(comment.getAuthorName())) {
             holder.text6.setVisibility(View.VISIBLE);
         } else {
-            holder.text6.setVisibility(View.GONE);
+            holder.text6.setVisibility(GONE);
         }
         holder.text1.setText(String.valueOf(comment.getAuthorName()));
         holder.text1.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +195,16 @@ public class CommentListAdapter extends BaseAdapter {
                 }
             }
         });
-        holder.text2.setText(comment.getDate());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date= comment.getDate();
+        try {
+            Date dateObject = format.parse(comment.getDate());
+            SimpleDateFormat outDate = new SimpleDateFormat("MMMM d, yyyy");
+            date = outDate.format(dateObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        holder.text2.setText(date);
         holder.text3.setText(comment.getText());
         final CommentListAdapter adapter = this;
         holder.text4.setOnClickListener(new View.OnClickListener() {

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,8 +74,9 @@ public class ImageAdapter extends BaseAdapter {
                 File file = new File(album.getPath() + "/" + images[position].getName());
                 if (file.exists()) {
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-                    Uri data = Uri.parse("file://" + file.getAbsolutePath());
+                    Uri data = Uri.parse("file:/" + file.getAbsolutePath());
                     intent.setDataAndType(data, "image/*");
+                    Log.d("imagething", data.toString());
                     mContext.startActivity(intent);
                 } else {
                     int permissionWriteExternal = ContextCompat.checkSelfPermission(mContext,

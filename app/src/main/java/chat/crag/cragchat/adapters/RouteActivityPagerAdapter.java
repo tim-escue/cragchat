@@ -22,14 +22,12 @@ public class RouteActivityPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return CommentSectionFragment.newInstance(parentId, "BETA");
             case 1:
-                return CommentSectionFragment.newInstance(parentId, "DISCUSSION");
-            case 2:
                 return RatingFragment.newInstance(parentId);
-            case 3:
+            case 2:
                 return LocationFragment.newInstance(parentId);
-            case 4:
+            case 3:
                 return SendsFragment.newInstance(parentId);
-            case 5:
+            case 4:
                 return imageFragment;
             default:
                 return null;
@@ -38,7 +36,7 @@ public class RouteActivityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 6;
+        return 5;
     }
 
     @Override
@@ -47,14 +45,12 @@ public class RouteActivityPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Beta";
             case 1:
-                return "Discussion";
-            case 2:
                 return "Ratings";
-            case 3:
+            case 2:
                 return "Location";
-            case 4:
+            case 3:
                 return "Sends";
-            case 5:
+            case 4:
                 return "Images";
             default:
                 return "NULL";

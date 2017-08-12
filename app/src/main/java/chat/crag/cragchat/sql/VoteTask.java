@@ -40,7 +40,13 @@ public class VoteTask extends AsyncTask<Void, Integer, String[]> {
                     int score = Integer.parseInt(a.split(":")[1]);
                     LocalDatabase.getInstance(con).updateComment(score, comment.getId());
                     comment.setScore(score);
-                    view.setText(String.valueOf(score));
+                    String points = "0 points";
+                    if (score < 0) {
+                        points = "-" + score + " points";
+                    } else if (score > 0) {
+                        points = "+" + score + " points";
+                    }
+                    view.setText(points);
                     //System.out.println("Updated comment score");
                 }
             }

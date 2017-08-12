@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "chat.crag.cragchat"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 3
         versionName "1.0.3"
     }
@@ -18,7 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
 }
+
+
 
 repositories {
     jcenter() // jcenter() works as well because it pulls from Maven Central

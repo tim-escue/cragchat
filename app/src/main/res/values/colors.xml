@@ -26,6 +26,7 @@
     <item name="darktransparent" type="color">#DDCCCCCC</item>
     <item name="transparent" type="color">#00FF00FF</item>
     <item name="blue_name" type="color">#FF33A5FF</item>
+    <item name="recycler_background" type="color">#FFDDDDDD</item>
 
     <item name="white" type="color">#FFFFFFFF</item>
 
