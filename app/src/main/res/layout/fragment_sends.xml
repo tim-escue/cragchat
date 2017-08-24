@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:padding="8dp"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView android:layout_width="match_parent" android:layout_height="0dp"
               android:gravity="center_horizontal"
               android:paddingTop="80dp"
               android:textSize="20sp"
               android:layout_weight="1"
-
               android:text="Be the first to post a send"
               android:visibility="gone"
               android:id="@+id/list_empty"/>
 
-    <ListView
-            android:id="@+id/list_sends"
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp">
-    </ListView>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-            android:id="@+id/button_add_send"
+        <ListView
+            android:id="@+id/list_sends"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/button_add_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit send"
-            android:clickable="true"
-            android:onClick="submitSend"/>
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/darkgreen"
+            android:src="@drawable/ic_add_white_24dp"
+            android:onClick="submitSend"
+            app:layout_anchor="@id/list_sends"
+            app:layout_anchorGravity="bottom|right|end"
+            app:borderWidth="0dp"/>
+
+    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

@@ -8,7 +8,7 @@
     <include
         layout="@layout/appbar"/>
 
-    <fragment android:name="chat.crag.cragchat.fragments.PreviewFragment"
+    <fragment android:name="com.cragchat.mobile.fragments.PreviewFragment"
         android:id="@+id/fragment_recent_activity"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>

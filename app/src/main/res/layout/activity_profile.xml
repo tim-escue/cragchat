@@ -1,56 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:clipToPadding="false"
-              android:clipChildren="false"
-              android:background="@drawable/ozone">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/appbar"/>
+    <include layout="@layout/appbar" />
 
-    <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:singleLine="false"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/route_top"
-            android:text=""/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical" android:background="@drawable/border_green"
-                android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp">
-
-    <chat.crag.cragchat.android.SlidingTabLayout
+        <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
-            app:paddingStart="0dp"
+            android:layout_height="wrap_content"
             app:paddingEnd="0dp"
-            android:layout_height="wrap_content" />
+            app:paddingStart="0dp"
+            app:tabMode="scrollable" />
+
+    </android.support.v7.widget.CardView>
 
     <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:paddingBottom="6dp"
-    />
-
-        </LinearLayout>
-
-
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:paddingBottom="6dp" />
 
 </LinearLayout>

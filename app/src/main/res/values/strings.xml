@@ -12,7 +12,7 @@
     <string name="crag_wall_list_label"><u>Walls</u></string>
     <string name="crag_route_list_label"><u>Routes</u></string>
     <string name="crag_spinner_options">Display all:</string>
-    <string name="string_sort_by">Sort comments by:</string>
+    <string name="string_sort_by">Sort by:</string>
     <string name="string_add_comment">Add Comment</string>
     <string name="string_submissions">Submissions </string>
     <string name="pick_edit_option">Select type</string>
