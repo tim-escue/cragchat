@@ -1,6 +1,10 @@
 package com.cragchat.mobile.comments;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CommentManager {
 
@@ -9,7 +13,7 @@ public class CommentManager {
     private Comparator<Comment> currentComparator;
 
     public CommentManager() {
-       comments = new LinkedList<>();
+        comments = new LinkedList<>();
         parents = new ArrayList<>(20);
         currentComparator = scoreComparator;
     }
@@ -35,7 +39,7 @@ public class CommentManager {
                 if (i.getId() == id) {
                     return i;
                 }
-                Comment tryd = find (i.getChildren(), id);
+                Comment tryd = find(i.getChildren(), id);
                 if (tryd != null) {
                     return tryd;
                 }

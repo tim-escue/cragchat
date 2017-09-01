@@ -6,8 +6,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.cragchat.mobile.activity.CragChatActivity;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
@@ -18,8 +19,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class SearchResultListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener
-{
+public class SearchResultListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
     private Displayable[] results;
     private static LayoutInflater inflater;
@@ -70,10 +70,10 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
         boolean route = results[position] instanceof Route;
         if (convertView == null) {
             holder = new ViewHolder();
-                vi = inflater.inflate(R.layout.search_result_row_route, parent, false);
-                holder.text1 = (TextView) vi.findViewById(R.id.list_row_one);
-                holder.text2 = (TextView) vi.findViewById(R.id.list_row_two);
-                holder.text3 = (TextView) vi.findViewById(R.id.list_row_three);
+            vi = inflater.inflate(R.layout.search_result_row_route, parent, false);
+            holder.text1 = (TextView) vi.findViewById(R.id.list_row_one);
+            holder.text2 = (TextView) vi.findViewById(R.id.list_row_two);
+            holder.text3 = (TextView) vi.findViewById(R.id.list_row_three);
             holder.text4 = (TextView) vi.findViewById(R.id.list_row_four);
             vi.setTag(holder);
         } else {
@@ -88,7 +88,7 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
                 yds = "Not rated";
                 sters = "Not rated";
             } else {
-                yds =r.getYdsString(activity, r.getYds(activity));
+                yds = r.getYdsString(activity, r.getYds(activity));
                 sters = r.getStarsString(activity) + " stars";
             }
             holder.text2.setText(yds);
@@ -105,7 +105,7 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
             for (Route i : within) {
                 if (i.getYds(activity) != -1) {
                     average += i.getStars(activity);
-                     size++;
+                    size++;
                 }
             }
             String avString;

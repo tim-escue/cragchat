@@ -1,50 +1,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/layout_root"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:padding="10dp" >
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pitches?" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pitches?" />
 
-    <EditText android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="1"
-              android:id="@+id/edittext_pitches"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Attempts?" />
-    <EditText android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="1"
-              android:id="@+id/edittext_attempts"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/edittext_pitches" />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Style of send?" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attempts?" />
 
-    <Spinner android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:id="@+id/spinner_select_send_typee"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/edittext_attempts" />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Style of climb?" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Style of send?" />
 
-    <Spinner android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:id="@+id/spinner_select_style"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_select_send_typee" />
 
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Submit"
-            android:onClick="submit"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Style of climb?" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_select_style" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:onClick="submit" />
 
     <requestFocus />
 

@@ -2,6 +2,7 @@ package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
+
 import com.cragchat.mobile.activity.LoginActivity;
 import com.cragchat.mobile.fragments.NotificationDialog;
 import com.cragchat.mobile.remote.RemoteDatabase;

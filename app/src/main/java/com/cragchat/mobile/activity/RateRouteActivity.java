@@ -10,11 +10,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.SearchableActivity;
 import com.cragchat.mobile.sql.SendRatingTask;
 import com.cragchat.mobile.user.User;
 
-public class RateRouteActivity extends SearchableActivity {
+public class RateRouteActivity extends SearchActivity {
 
     private int id;
 
@@ -41,11 +40,11 @@ public class RateRouteActivity extends SearchableActivity {
                                        Spanned dest, int dstart, int dend) {
 
                 if (source instanceof SpannableStringBuilder) {
-                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder)source;
+                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
                     for (int i = end - 1; i >= start; i--) {
                         char currentChar = source.charAt(i);
                         if (!Character.isLetterOrDigit(currentChar) && !Character.isSpaceChar(currentChar)) {
-                            sourceAsSpannableBuilder.delete(i, i+1);
+                            sourceAsSpannableBuilder.delete(i, i + 1);
                         }
                     }
                     return source;
@@ -68,12 +67,12 @@ public class RateRouteActivity extends SearchableActivity {
         Spinner yds = ((Spinner) findViewById(R.id.spinner_rate_yds));
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
 //        String climbStyle = ((Spinner) findViewById(R.id.spinner_select_style)).getSelectedItem().toString();
-  //      String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
-   //     int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
-    //    int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
+        //      String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
+        //     int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
+        //    int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
 
         //String timeString = ((EditText)findViewById(R.id.edittext_time)).getText().toString();
-       // String[] args = timeString.split(":");
+        // String[] args = timeString.split(":");
         int timeSeconds = 0;
         /*if (args.length== 0 || args.length > 3) {
             Toast.makeText(this, "Time to climb is not formatted correctly", Toast.LENGTH_LONG).show();

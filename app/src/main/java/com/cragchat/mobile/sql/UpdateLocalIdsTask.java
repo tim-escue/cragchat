@@ -1,6 +1,7 @@
 package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
+
 import com.cragchat.mobile.remote.RemoteDatabase;
 
 public class UpdateLocalIdsTask extends AsyncTask<Void, Integer, String[]> {
@@ -10,7 +11,8 @@ public class UpdateLocalIdsTask extends AsyncTask<Void, Integer, String[]> {
 
     public UpdateLocalIdsTask(LocalDatabase db) {
         this.db = db;
-        cur = System.currentTimeMillis();;
+        cur = System.currentTimeMillis();
+        ;
     }
 
     protected String[] doInBackground(Void... urls) {

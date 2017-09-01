@@ -7,7 +7,6 @@ import com.cragchat.mobile.remote.RemoteDatabase;
 import java.util.List;
 
 
-
 public class TagLocationTask extends AsyncTask<String, Integer, List<String>> {
 
     private LocalDatabase db;
@@ -15,7 +14,8 @@ public class TagLocationTask extends AsyncTask<String, Integer, List<String>> {
 
     public TagLocationTask(LocalDatabase db) {
         this.db = db;
-        cur = System.currentTimeMillis();;
+        cur = System.currentTimeMillis();
+        ;
     }
 
     protected List<String> doInBackground(String... urls) {

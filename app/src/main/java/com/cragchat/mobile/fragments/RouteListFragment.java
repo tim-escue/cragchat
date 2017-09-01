@@ -7,9 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.cragchat.mobile.activity.CragChatActivity;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.adapters.RouteListAdapter;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
@@ -37,7 +42,7 @@ public class RouteListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
@@ -57,11 +62,11 @@ public class RouteListFragment extends Fragment {
         spinner.setOnItemSelectedListener(listener);
 
         ListView list = (ListView) view.findViewById(R.id.display_list);
-        RouteListAdapter adap = new RouteListAdapter((CragChatActivity)getActivity(), allRoutes);
+        RouteListAdapter adap = new RouteListAdapter((CragChatActivity) getActivity(), allRoutes);
         list.setAdapter(adap);
         list.setOnItemClickListener(adap);
 
-        Collections .sort(allRoutes);
+        Collections.sort(allRoutes);
         return view;
     }
 
@@ -76,7 +81,7 @@ public class RouteListFragment extends Fragment {
                 } else if (option.equals("YDS: High -> Low")) {
                     sorter.setHigh(true);
                     Collections.sort(allRoutes, sorter);
-                }else if (option.equals("YDS: Low -> High")) {
+                } else if (option.equals("YDS: Low -> High")) {
                     sorter.setHigh(false);
                     Collections.sort(allRoutes, sorter);
                 } else if (option.equals("Type")) {
@@ -107,17 +112,20 @@ public class RouteListFragment extends Fragment {
         public void setHigh(boolean high) {
             this.high = high;
         }
+
         @Override
         public int compare(Route one, Route two) {
             if (high) {
                 return two.getYds(con) - one.getYds(con);
             } else {
-                return  one.getYds(con) - two.getYds(con);
+                return one.getYds(con) - two.getYds(con);
             }
         }
 
 
-    };
+    }
+
+    ;
 
     private class TypeSorter implements Comparator<Route> {
 
@@ -126,7 +134,9 @@ public class RouteListFragment extends Fragment {
             return one.getType().compareTo(two.getType());
         }
 
-    };
+    }
+
+    ;
 
 
 }

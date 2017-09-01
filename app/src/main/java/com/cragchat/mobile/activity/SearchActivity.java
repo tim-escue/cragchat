@@ -4,12 +4,15 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.widget.ListView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.SearchableActivity;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.SearchQueryTask;
 
-public class SearchActivity extends SearchableActivity {
+public class SearchActivity extends NavigableActivity {
+
+    ListView resultsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -18,10 +21,12 @@ public class SearchActivity extends SearchableActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle("Search Results");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         handleIntent(getIntent());
+
+        this.resultsList = findViewById(R.id.listView);
     }
 
     @Override
@@ -32,7 +37,7 @@ public class SearchActivity extends SearchableActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            new SearchQueryTask(this).execute(query);
+            new SearchQueryTask(this, resultsList).execute(query);
         }
     }
 

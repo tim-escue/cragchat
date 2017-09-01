@@ -4,7 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,17 +20,27 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.remote.RemoteDatabase;
+import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.sql.SendImageTask;
 import com.cragchat.mobile.user.User;
+
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,17 +71,17 @@ public class EditImageActivity extends CragChatActivity {
 
         final ImageView view = (ImageView) findViewById(R.id.image_edit);
         Bitmap bitmap = null;
-        Route r = null;
+        Displayable r = null;
         this.uri = Uri.parse(getIntent().getStringExtra("image_uri"));
         try {
-            r = Route.decodeRoute(new JSONObject(getIntent().getStringExtra("route_json")));
+            r = LocalDatabase.getInstance(this).findExact(getIntent().getIntExtra("displayable_id", -1));
             bitmap = getCorrectlyOrientedImage(this, uri);
             image = bitmap;
             original = bitmap;
             view.setImageBitmap(image);
         } catch (Exception e) {
             e.printStackTrace();
-            int nh = (int) ( bitmap.getHeight() * (1024.0 / bitmap.getWidth()) );
+            int nh = (int) (bitmap.getHeight() * (1024.0 / bitmap.getWidth()));
             image = Bitmap.createScaledBitmap(bitmap, 1024, nh, true);
             view.setImageBitmap(image);
         }
@@ -86,15 +103,15 @@ public class EditImageActivity extends CragChatActivity {
                 view.setImageBitmap(image);
             }
         });
-        final Route rFinal = r;
+        final Displayable rFinal = r;
 
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 float[] coords = getPointerCoords(view, event);
-                Point newPoint = new Point((int)coords[0], (int)coords[1]);
+                Point newPoint = new Point((int) coords[0], (int) coords[1]);
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (addingBolts || addingAnchors) {
                         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), addingBolts ? R.drawable.bolt : R.drawable.anchor);
 
@@ -124,21 +141,11 @@ public class EditImageActivity extends CragChatActivity {
                     }
                     if (tracePoints.size() == 0) {
                         tracePoints.add(newPoint);
-                    } else if (dist(tracePoints.get(tracePoints.size()-1), newPoint) > 12) {
+                    } else if (dist(tracePoints.get(tracePoints.size() - 1), newPoint) > 12) {
                         Bitmap resultBitmap = Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
                         Canvas c = new Canvas(resultBitmap);
                         c.drawBitmap(image, 0, 0, null);
 
-                        /*Point old = tracePoints.get(tracePoints.size()-1);
-
-                        strokePaint.setStrokeWidth(outterStroke);
-                        strokePaint.setColor(Color.WHITE);
-                        c.drawLine((float)old.x, (float)old.y,(float) newPoint.x, (float)newPoint.y, strokePaint);
-
-                        strokePaint.setColor(Color.YELLOW);
-                        strokePaint.setStrokeWidth(innerStroke);
-                        c.drawLine((float)old.x, (float)old.y,(float) newPoint.x, (float)newPoint.y, strokePaint);
-                        */
                         strokePaint.setStrokeWidth(outterStroke);
                         strokePaint.setColor(Color.WHITE);
                         drawPath(c, tracePoints, strokePaint);
@@ -163,7 +170,7 @@ public class EditImageActivity extends CragChatActivity {
                 if (addingBolts && bolts.size() > 0) {
                     bolts.remove(bolts.size() - 1);
                 } else if (addingAnchors && anchors.size() > 0) {
-                    anchors.remove(anchors.size()- 1);
+                    anchors.remove(anchors.size() - 1);
                 } else if (tracing && tracePoints.size() > 0) {
                     tracePoints.remove(tracePoints.size() - 1);
                 }
@@ -178,18 +185,6 @@ public class EditImageActivity extends CragChatActivity {
                 c.drawBitmap(original, 0, 0, null);
 
                 if (tracePoints.size() > 1) {
-                    /*Point old = tracePoints.get(0);
-                    for (int i = 1; i < tracePoints.size(); i++) {
-                        Point newPoint = tracePoints.get(i);
-                        strokePaint.setColor(Color.WHITE);
-                        strokePaint.setStrokeWidth(outterStroke);
-                        c.drawLine((float) old.x, (float) old.y, (float) newPoint.x, (float) newPoint.y, strokePaint);
-
-                        strokePaint.setColor(Color.YELLOW);
-                        strokePaint.setStrokeWidth(innerStroke);
-                        c.drawLine((float) old.x, (float) old.y, (float) newPoint.x, (float) newPoint.y, strokePaint);
-                        old = newPoint;
-                    }*/
                     drawPath(c, tracePoints, strokePaint);
                 }
 
@@ -206,11 +201,10 @@ public class EditImageActivity extends CragChatActivity {
 
 
                 image = resultBitmap;
-                ((BitmapDrawable)view.getDrawable()).getBitmap().recycle();
+                ((BitmapDrawable) view.getDrawable()).getBitmap().recycle();
                 bitmap2.recycle();
                 view.setImageBitmap(image);
                 //resultBitmap.recycle();
-
 
 
             }
@@ -236,35 +230,35 @@ public class EditImageActivity extends CragChatActivity {
                         tracing = false;
                     }
                 });
-                    AlertDialog.Builder builder = new AlertDialog.Builder(act);
-                    builder.setTitle(R.string.pick_edit_option)
-                            .setItems(R.array.array_edit_options, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    TextView tv = (TextView) findViewById(R.id.text_edit_instructions);
-                                    String text = "";
-                                    switch (which) {
-                                        case 0:
-                                            addingBolts = true;
-                                            text = "Tap to add bolt / placement";
-                                            break;
-                                        case 1:
-                                            text = "Tap to add anchors";
-                                            addingAnchors = true;
-                                            break;
-                                        case 2:
-                                            text = "Outline route with your finger";
-                                            tracing = true;
-                                            break;
-                                    }
-                                    tv.setText(text);
-                                    LinearLayout lay = (LinearLayout) findViewById(R.id.layout_edit_options);
-                                    lay.setVisibility(View.GONE);
-                                    lay = (LinearLayout) findViewById(R.id.layout_edit_current);
-                                    lay.setVisibility(View.VISIBLE);
-                                    lay = (LinearLayout) findViewById(R.id.layout_image_submit);
-                                    lay.setVisibility(View.GONE);
+                AlertDialog.Builder builder = new AlertDialog.Builder(act);
+                builder.setTitle(R.string.pick_edit_option)
+                        .setItems(R.array.array_edit_options, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                TextView tv = (TextView) findViewById(R.id.text_edit_instructions);
+                                String text = "";
+                                switch (which) {
+                                    case 0:
+                                        addingBolts = true;
+                                        text = "Tap to add bolt / placement";
+                                        break;
+                                    case 1:
+                                        text = "Tap to add anchors";
+                                        addingAnchors = true;
+                                        break;
+                                    case 2:
+                                        text = "Outline route with your finger";
+                                        tracing = true;
+                                        break;
                                 }
-                            });
+                                tv.setText(text);
+                                LinearLayout lay = (LinearLayout) findViewById(R.id.layout_edit_options);
+                                lay.setVisibility(View.GONE);
+                                lay = (LinearLayout) findViewById(R.id.layout_edit_current);
+                                lay.setVisibility(View.VISIBLE);
+                                lay = (LinearLayout) findViewById(R.id.layout_image_submit);
+                                lay.setVisibility(View.GONE);
+                            }
+                        });
                 builder.create().show();
             }
         });
@@ -282,7 +276,7 @@ public class EditImageActivity extends CragChatActivity {
 
                     String name;
                     if (end != -1) {
-                        name = filePath.substring(cutOff != -1 ? cutOff + 1: 0, end);
+                        name = filePath.substring(cutOff != -1 ? cutOff + 1 : 0, end);
                     } else {
                         name = filePath.substring(cutOff != -1 ? cutOff + 1 : 0);
                     }
@@ -308,7 +302,7 @@ public class EditImageActivity extends CragChatActivity {
                         Log.e("COMPRESSING", "div: " + size);
                         percentage = (double) 100 / (div);
                     }
-                    System.out.println("percentage:"  + percentage);
+                    System.out.println("percentage:" + percentage);
                     try {
                         out = new FileOutputStream(f);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, (int) percentage, out); // bmp is your Bitmap instance
@@ -327,7 +321,7 @@ public class EditImageActivity extends CragChatActivity {
 
 
                     Toast.makeText(act, "Attempting to upload image.", Toast.LENGTH_SHORT).show();
-                    new SendImageTask((CragChatActivity)act, User.currentToken(act), Uri.fromFile(f), rFinal.getId(), "nocap", null).execute() ;
+                    new SendImageTask((CragChatActivity) act, User.currentToken(act), Uri.fromFile(f), rFinal.getId(), "nocap", null).execute();
                     launch(rFinal);
                     bitmap.recycle();
                     original.recycle();
@@ -343,12 +337,11 @@ public class EditImageActivity extends CragChatActivity {
     private void drawPath(Canvas canvas, List<Point> points, Paint paint) {
         Path path = new Path();
         boolean first = true;
-        for(Point point : tracePoints){
-            if(first){
+        for (Point point : tracePoints) {
+            if (first) {
                 first = false;
                 path.moveTo(point.x, point.y);
-            }
-            else{
+            } else {
                 path.lineTo(point.x, point.y);
             }
         }
@@ -358,13 +351,12 @@ public class EditImageActivity extends CragChatActivity {
     private int dist(Point one, Point two) {
         int x = Math.abs(two.x - one.x);
         int y = Math.abs(two.y - one.y);
-        return (int)Math.sqrt((x * x) + (y * y));
+        return (int) Math.sqrt((x * x) + (y * y));
     }
 
-    final float[] getPointerCoords(ImageView view, MotionEvent e)
-    {
+    final float[] getPointerCoords(ImageView view, MotionEvent e) {
         final int index = e.getActionIndex();
-        final float[] coords = new float[] { e.getX(index), e.getY(index) };
+        final float[] coords = new float[]{e.getX(index), e.getY(index)};
         Matrix matrix = new Matrix();
         view.getImageMatrix().invert(matrix);
         matrix.postTranslate(view.getScrollX(), view.getScrollY());
@@ -378,7 +370,6 @@ public class EditImageActivity extends CragChatActivity {
         dbo.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(is, null, dbo);
         is.close();
-
 
 
         int rotatedWidth, rotatedHeight;
@@ -426,7 +417,7 @@ public class EditImageActivity extends CragChatActivity {
     public static int getOrientation(Context context, Uri photoUri) {
     /* it's on the external media. */
         Cursor cursor = context.getContentResolver().query(photoUri,
-                new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
 
         if (cursor.getCount() != 1) {
             return -1;

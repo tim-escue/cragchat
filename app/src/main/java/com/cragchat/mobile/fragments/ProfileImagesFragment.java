@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.ImageAdapter;
 import com.cragchat.mobile.descriptor.Image;
@@ -30,12 +31,12 @@ public class ProfileImagesFragment extends Fragment {
     private List<Image> images;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_images, container, false);
 
-        load (view);
+        load(view);
 
         Button b = (Button) view.findViewById(R.id.button_add_image);
         b.setVisibility(View.GONE);

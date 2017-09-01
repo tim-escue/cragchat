@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.sql.UpdateRecentActivityTask;
 
@@ -20,7 +21,7 @@ public class RecentActivityFragment extends Fragment {
     public static RecentActivityFragment newInstance(int displayableId) {
         RecentActivityFragment f = new RecentActivityFragment();
         Bundle b = new Bundle();
-        b.putString("id", ""+displayableId);
+        b.putString("id", "" + displayableId);
         f.setArguments(b);
         return f;
     }
@@ -34,7 +35,7 @@ public class RecentActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recent_activity, container, false);
         id = Integer.parseInt(getArguments().getString("id"));
 
-        ProgressBar bar = (ProgressBar)view.findViewById(R.id.progressBar1);
+        ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar1);
         RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.progressBox);
         layout.setVisibility(View.VISIBLE);
 
@@ -45,8 +46,7 @@ public class RecentActivityFragment extends Fragment {
         recList.setLayoutManager(llm);
         recList.addItemDecoration(new RecyclerViewMargin(48));
 
-        new UpdateRecentActivityTask(getActivity(), id,recList, layout).execute();
-
+        new UpdateRecentActivityTask(getActivity(), id, recList, layout).execute();
 
 
         return view;
@@ -57,9 +57,10 @@ public class RecentActivityFragment extends Fragment {
 
         /**
          * constructor
+         *
          * @param margin desirable margin size in px between the views in the recyclerView
          */
-        public RecyclerViewMargin(@IntRange(from=0)int margin ) {
+        public RecyclerViewMargin(@IntRange(from = 0) int margin) {
             this.margin = margin;
 
         }
@@ -77,8 +78,8 @@ public class RecentActivityFragment extends Fragment {
             if (position > 0) {
                 outRect.top = margin;
             }
-        }}
-
+        }
+    }
 
 
 }

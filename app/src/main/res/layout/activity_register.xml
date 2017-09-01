@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/ozone"
-              >
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ozone">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/border_green">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/border_green">
 
-            <EditText
-                    android:id="@+id/register_username"
-                    android:hint="Username"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/register_username"
+            android:hint="Username"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-            <EditText
-                    android:id="@+id/register_email"
-                    android:hint="Email"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/register_email"
+            android:hint="Email"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-            <EditText
-                    android:id="@+id/register_email_confirm"
-                    android:hint="Register Email"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/register_email_confirm"
+            android:hint="Register Email"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
-            <EditText
-                    android:id="@+id/register_password"
-                    android:inputType="textPassword"
-                    android:layout_width="200dp"
-                    android:hint="Password"
-                    android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/register_password"
+            android:inputType="textPassword"
+            android:layout_width="200dp"
+            android:hint="Password"
+            android:layout_height="wrap_content" />
 
-            <EditText
-                    android:id="@+id/register_password_verify"
-                    android:inputType="textPassword"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Verify password"/>
+        <EditText
+            android:id="@+id/register_password_verify"
+            android:inputType="textPassword"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Verify password" />
 
         <Button
-                android:id="@+id/login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Register"
-                android:clickable="true"
-                android:onClick="register"/>
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:clickable="true"
+            android:onClick="register" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

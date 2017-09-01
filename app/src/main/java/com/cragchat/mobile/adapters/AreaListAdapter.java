@@ -6,8 +6,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.cragchat.mobile.activity.CragChatActivity;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.sql.LocalDatabase;
@@ -65,7 +66,7 @@ public class AreaListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         } else {
             holder = (ViewHolder) vi.getTag();
         }
-        if (routes.size() == 0 ) {
+        if (routes.size() == 0) {
             holder.text1.setText("No further areas");
         } else {
             Area r = routes.get(position);

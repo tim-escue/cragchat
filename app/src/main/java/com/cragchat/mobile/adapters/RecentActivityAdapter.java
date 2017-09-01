@@ -7,14 +7,24 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.cragchat.mobile.activity.CragChatActivity;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.*;
+import com.cragchat.mobile.descriptor.Area;
+import com.cragchat.mobile.descriptor.Displayable;
+import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.descriptor.Rating;
+import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.sql.GrabImageTask;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.List;
@@ -100,7 +110,7 @@ public class RecentActivityAdapter extends BaseAdapter {
 
                     }
                 });
-                content = "<font color='#33A5FF'>" +rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" +disp.getName()+"</font>" ;
+                content = "<font color='#33A5FF'>" + rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" + disp.getName() + "</font>";
                 holder.text1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -131,7 +141,7 @@ public class RecentActivityAdapter extends BaseAdapter {
 
                     }
                 });
-                content = "<font color='#33A5FF'>" +comment.getAuthorName() + "</font>" + " posted " + comment.getTable().toLowerCase() + " for " + "<font color='#77AA00'>" +disp.getName()+"</font>";
+                content = "<font color='#33A5FF'>" + comment.getAuthorName() + "</font>" + " posted " + comment.getTable().toLowerCase() + " for " + "<font color='#77AA00'>" + disp.getName() + "</font>";
                 holder.text1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -169,20 +179,20 @@ public class RecentActivityAdapter extends BaseAdapter {
                     Glide.with(activity).load(save).into(holder.imageView);
                 } else {
                     holder.imageView.setVisibility(View.VISIBLE);
-                   Glide.with(activity).load(R.drawable.tap_to_load).into(holder.imageView);
+                    Glide.with(activity).load(R.drawable.tap_to_load).into(holder.imageView);
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                int permissionWriteExternal = ContextCompat.checkSelfPermission(activity,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                                if (permissionWriteExternal == PackageManager.PERMISSION_GRANTED) {
-                                    holder.imageView.setVisibility(View.GONE);
-                                    holder.progress.setVisibility(View.VISIBLE);
-                                    new GrabImageTask(activity, LocalDatabase.getInstance(activity), img, holder.imageView, false).execute();
-                                } else {
-                                    Toast.makeText(activity, "App needs permission to Write To External Storage to load images.", Toast.LENGTH_SHORT).show();
-                                }
-                                //System.out.println("loading image");
+                            int permissionWriteExternal = ContextCompat.checkSelfPermission(activity,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            if (permissionWriteExternal == PackageManager.PERMISSION_GRANTED) {
+                                holder.imageView.setVisibility(View.GONE);
+                                holder.progress.setVisibility(View.VISIBLE);
+                                new GrabImageTask(activity, LocalDatabase.getInstance(activity), img, holder.imageView, false).execute();
+                            } else {
+                                Toast.makeText(activity, "App needs permission to Write To External Storage to load images.", Toast.LENGTH_SHORT).show();
+                            }
+                            //System.out.println("loading image");
                             holder.imageView.setOnClickListener(null);
 
                         }

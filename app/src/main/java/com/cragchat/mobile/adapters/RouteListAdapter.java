@@ -7,8 +7,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.cragchat.mobile.activity.CragChatActivity;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
@@ -25,7 +26,7 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
     public RouteListAdapter(CragChatActivity a, List<Route> routes) {
         this.routes = routes;
         inflater = a.getLayoutInflater();
-        this.activity  = a;
+        this.activity = a;
         stripe = true;
     }
 
@@ -90,7 +91,7 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
             yds = "Not rated";
             sters = "Not rated";
         } else {
-            yds =r.getYdsString(activity, r.getYds(activity));
+            yds = r.getYdsString(activity, r.getYds(activity));
             sters = r.getStarsString(activity) + " stars";
         }
         holder.text2.setText(yds);

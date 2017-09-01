@@ -15,12 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-
-import java.io.File;
-import java.util.List;
-
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
@@ -30,6 +26,9 @@ import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.sql.GrabImageTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * Created by tim on 7/25/17.
  */
@@ -37,12 +36,10 @@ import com.cragchat.mobile.sql.LocalDatabase;
 public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentActivityRecyclerAdapter.DisplayableHolder> {
 
     private CragChatActivity activity;
-    private static LayoutInflater inflater;
     private List<Object> activities;
 
     public RecentActivityRecyclerAdapter(CragChatActivity a, List<Object> activities) {
         activity = a;
-        inflater = activity.getLayoutInflater();
         this.activities = activities;
     }
 
@@ -74,7 +71,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
 
                     }
                 });
-                content = "<font color='#33A5FF'>" +rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" +disp.getName()+"</font>" ;
+                content = "<font color='#33A5FF'>" + rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" + disp.getName() + "</font>";
                 holder.text1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -105,7 +102,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
 
                     }
                 });
-                content = "<font color='#33A5FF'>" +comment.getAuthorName() + "</font>" + " posted " + comment.getTable().toLowerCase() + " for " + "<font color='#77AA00'>" +disp.getName()+"</font>";
+                content = "<font color='#33A5FF'>" + comment.getAuthorName() + "</font>" + " posted " + comment.getTable().toLowerCase() + " for " + "<font color='#77AA00'>" + disp.getName() + "</font>";
                 holder.text1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -194,7 +191,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
         LinearLayout content;
         ImageView imageView;
         ProgressBar progress;
-        
+
         public DisplayableHolder(View itemView) {
             super(itemView);
             text1 = (TextView) itemView.findViewById(R.id.text_recent_activity);

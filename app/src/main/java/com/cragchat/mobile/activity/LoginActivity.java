@@ -12,11 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.SearchableActivity;
 import com.cragchat.mobile.sql.LoginTask;
 import com.cragchat.mobile.sql.SendResetTask;
 
-public class LoginActivity extends SearchableActivity {
+public class LoginActivity extends SearchActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -37,7 +36,7 @@ public class LoginActivity extends SearchableActivity {
     public void register(View v) {
         if (hasConnection()) {
             Intent reg = new Intent(this, RegisterActivity.class);
-        startActivity(reg);
+            startActivity(reg);
         } else {
             Toast.makeText(this, "Must have data connection to register", Toast.LENGTH_LONG).show();
         }

@@ -21,7 +21,7 @@ public class Image implements Datable {
     private String name;
     private String date;
 
-    public Image (int displayId, String caption,String author, String name, String date) {
+    public Image(int displayId, String caption, String author, String name, String date) {
         this.displayId = displayId;
         this.author = author;
         this.caption = caption;
@@ -64,7 +64,7 @@ public class Image implements Datable {
             storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
             try {
                 if (storageDir.exists() && !storageDir.isDirectory()) {
-                   storageDir.delete();
+                    storageDir.delete();
                 }
                 if (!storageDir.exists()) {
                     storageDir.mkdirs();

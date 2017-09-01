@@ -10,9 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
-    <TextView android:layout_width="match_parent"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="10dp"
@@ -20,13 +21,12 @@
         android:text="Internet connection required to load recent activity"
         android:visibility="gone"
         android:id="@+id/empty_text"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:background="@color/recycler_background"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

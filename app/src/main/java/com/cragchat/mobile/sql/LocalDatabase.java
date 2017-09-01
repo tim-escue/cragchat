@@ -7,9 +7,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.*;
+import com.cragchat.mobile.descriptor.Area;
+import com.cragchat.mobile.descriptor.Displayable;
+import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.descriptor.Rating;
+import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.descriptor.Send;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -19,6 +25,8 @@ public class LocalDatabase {
 
     private static SQLiteDatabase db;
     private static LocalDatabase ref;
+    public static final String BETA = "BETA";
+    public static final String DISCUSSION = "DISCUSSION";
 
     /*
         Singleton Model - never needs to be more than one db object.
@@ -158,19 +166,19 @@ public class LocalDatabase {
 
     public List<Image> getImagesForProfile(Activity act, String username) {
         List<Image> images = new LinkedList<>();
-        Cursor c = query("SELECT * FROM IMAGES WHERE AUTHOR='"+username+"'");
+        Cursor c = query("SELECT * FROM IMAGES WHERE AUTHOR='" + username + "'");
         while (c.moveToNext()) {
             Image image = new Image(c.getInt(Image.COLUMN_DISPLAY_ID), c.getString(Image.COLUMN_CAPTION), c.getString(Image.COLUMN_AUTHOR), c.getString(Image.COLUMN_NAME), c.getString(Image.COLUMN_DATE));
             images.add(image);
         }
-        Log.d("IMAGESDATAASE", images.size()+"");
+        Log.d("IMAGESDATAASE", images.size() + "");
         c.close();
         return images;
     }
 
     public List<Image> getImagesFor(int id) {
         List<Image> images = new LinkedList<>();
-        Cursor c = query("SELECT * FROM IMAGES WHERE PARENT_ID='"+id+"'");
+        Cursor c = query("SELECT * FROM IMAGES WHERE PARENT_ID='" + id + "'");
         while (c.moveToNext()) {
             Image image = new Image(c.getInt(Image.COLUMN_DISPLAY_ID), c.getString(Image.COLUMN_CAPTION), c.getString(Image.COLUMN_AUTHOR),
                     c.getString(Image.COLUMN_NAME), c.getString(Image.COLUMN_DATE));
@@ -183,7 +191,7 @@ public class LocalDatabase {
 
     public List<Rating> getRatingsFor(int id) {
         List<Rating> ratings = new LinkedList<>();
-        Cursor c = query("SELECT * FROM RATINGS WHERE ROUTE_ID='"+id+"'");
+        Cursor c = query("SELECT * FROM RATINGS WHERE ROUTE_ID='" + id + "'");
         while (c.moveToNext()) {
             Rating r = new Rating(c.getInt(Rating.COLUMN_ROUTE_ID), c.getInt(Rating.COLUMN_YDS), c.getInt(Rating.COLUMN_STARS),
                     c.getString(Rating.COLUMN_USERNAME), c.getString(Rating.COLUMN_DATE));
@@ -196,7 +204,7 @@ public class LocalDatabase {
 
     public List<Send> getSendsFor(int id) {
         List<Send> sends = new LinkedList<>();
-        Cursor c = query("SELECT * FROM SEND WHERE ROUTE_ID='"+id+"'");
+        Cursor c = query("SELECT * FROM SEND WHERE ROUTE_ID='" + id + "'");
         while (c.moveToNext()) {
             Send r = new Send(c.getInt(Send.COLUMN_ROUTE_ID), c.getInt(Send.COLUMN_PITCHES), c.getString(Send.COLUMN_DATE), c.getString(Send.COLUMN_SEND_TYPE),
                     c.getInt(Send.COLUMN_ATTEMPTS), c.getString(Send.COLUMN_STYLE), c.getString(Send.COLUMN_USERNAME));
@@ -209,7 +217,7 @@ public class LocalDatabase {
 
     public List<Rating> getProfileRatings(Activity act, String username) {
         List<Rating> ratings = new LinkedList<>();
-        Cursor c = query("SELECT * FROM RATINGS WHERE USERNAME='"+username +"'");
+        Cursor c = query("SELECT * FROM RATINGS WHERE USERNAME='" + username + "'");
         while (c.moveToNext()) {
             Rating r = new Rating(c.getInt(Rating.COLUMN_ROUTE_ID), c.getInt(Rating.COLUMN_YDS), c.getInt(Rating.COLUMN_STARS),
                     c.getString(Rating.COLUMN_USERNAME), c.getString(Rating.COLUMN_DATE));
@@ -243,7 +251,7 @@ public class LocalDatabase {
     }
 
     public void updateRouteRating(int id, double stars, String yds, int num) {
-        String sql = "UPDATE ROUTES SET YDS='" + yds + "', STARS='" + stars + "', NUM_RATINGS='"+num+"' WHERE ID='" + id + "'";
+        String sql = "UPDATE ROUTES SET YDS='" + yds + "', STARS='" + stars + "', NUM_RATINGS='" + num + "' WHERE ID='" + id + "'";
         //System.out.println("UPDATingSQL:" + sql);
         db.execSQL(sql);
     }
@@ -284,7 +292,7 @@ public class LocalDatabase {
         vals.put("TABLE_NAME", c.getTable());
         Cursor cursor = query("SELECT * FROM BETA WHERE ID='" + c.getId() + "'");
         if (cursor.getCount() > 0) {
-            db.update("BETA", vals, "ID='"+c.getId()+"'", null);
+            db.update("BETA", vals, "ID='" + c.getId() + "'", null);
         } else {
             vals.put("ID", c.getId());
             db.insert("BETA", null, vals);
@@ -306,7 +314,7 @@ public class LocalDatabase {
 
         Cursor cursor = query("SELECT * FROM RATINGS WHERE ROUTE_ID='" + r.getRouteId() + "' AND USERNAME='" + r.getUserName() + "'");
         if (cursor.getCount() > 0) {
-            db.update("RATINGS", vals, "ROUTE_ID='"+r.getRouteId()+"' AND USERNAME='" + r.getUserName() + "'", null);
+            db.update("RATINGS", vals, "ROUTE_ID='" + r.getRouteId() + "' AND USERNAME='" + r.getUserName() + "'", null);
         } else {
             db.insert("RATINGS", null, vals);
         }
@@ -328,9 +336,9 @@ public class LocalDatabase {
         vals.put("SEND_TYPE", r.getSendType());
 
         Log.d("TRYING INSERT", r.getDate());
-        Cursor cursor = query("SELECT * FROM SEND WHERE ROUTE_ID='" + r.getRouteId() + "' AND USERNAME='" + r.getUserName() + "' AND DATE='"+ r.getDate() + "'");
+        Cursor cursor = query("SELECT * FROM SEND WHERE ROUTE_ID='" + r.getRouteId() + "' AND USERNAME='" + r.getUserName() + "' AND DATE='" + r.getDate() + "'");
         if (cursor.getCount() > 0) {
-            db.update("SEND", vals, "ROUTE_ID='"+r.getRouteId()+"' AND USERNAME='" + r.getUserName() + "' AND DATE='"+ r.getDate() + "'", null);
+            db.update("SEND", vals, "ROUTE_ID='" + r.getRouteId() + "' AND USERNAME='" + r.getUserName() + "' AND DATE='" + r.getDate() + "'", null);
         } else {
             db.insert("SEND", null, vals);
         }
@@ -347,7 +355,7 @@ public class LocalDatabase {
         vals.put("REVISION", r.getRevision());
         Cursor cursor = query("SELECT * FROM AREAS WHERE ID='" + r.getId() + "'");
         if (cursor.getCount() > 0) {
-            db.update("AREAS", vals, "ID='"+r.getId()+"'", null);
+            db.update("AREAS", vals, "ID='" + r.getId() + "'", null);
         } else {
             vals.put("ID", r.getId());
             db.insert("AREAS", null, vals);
@@ -365,7 +373,7 @@ public class LocalDatabase {
         vals.put("REVISION", r.getRevision());
         Cursor cursor = query("SELECT * FROM ROUTES WHERE ID='" + r.getId() + "'");
         if (cursor.getCount() > 0) {
-            db.update("ROUTES", vals, "ID='"+r.getId()+"'", null);
+            db.update("ROUTES", vals, "ID='" + r.getId() + "'", null);
         } else {
             vals.put("ID", r.getId());
             db.insert("ROUTES", null, vals);
@@ -380,7 +388,7 @@ public class LocalDatabase {
         vals.put("REVISION", idRow[Id.COLUMN_REVISION]);
         Cursor cursor = query("SELECT * FROM IDS_DISPLAYABLE WHERE ID='" + idRow[Id.COLUMN_ID] + "'");
         if (cursor.getCount() > 0) {
-            db.update("IDS_DISPLAYABLE", vals, "ID='"+idRow[Id.COLUMN_ID]+"'", null);
+            db.update("IDS_DISPLAYABLE", vals, "ID='" + idRow[Id.COLUMN_ID] + "'", null);
         } else {
             vals.put("ID", idRow[Id.COLUMN_ID]);
             db.insert("IDS_DISPLAYABLE", null, vals);
@@ -408,7 +416,7 @@ public class LocalDatabase {
     public void update(Displayable d, CragChatActivity act) {
         if (d instanceof Route) {
             Route r = (Route) d;
-            String sql = "UPDATE ROUTES SET LATITUDE = '"+r.getLatitude()+"', LONGITUDE = '"+r.getLongitude()+"', REVISION = '" + r.getRevision() + "' WHERE ID='" + r.getId() + "'";
+            String sql = "UPDATE ROUTES SET LATITUDE = '" + r.getLatitude() + "', LONGITUDE = '" + r.getLongitude() + "', REVISION = '" + r.getRevision() + "' WHERE ID='" + r.getId() + "'";
             db.execSQL(sql);
             new UpdateRouteCommentsImagesTask(this, act, r).execute();
         } else {
@@ -465,7 +473,7 @@ public class LocalDatabase {
     /*
         Query on local database where $item is the text to search for in names of all Displayables.
      */
-    public Displayable[] findAllWithName(String item) {
+    public List<Displayable> findAllWithName(String item) {
         List<Displayable> list = new LinkedList<>();
 
         item = item.replace("'", "''");
@@ -487,7 +495,7 @@ public class LocalDatabase {
         }
         c.close();
 
-        return list.toArray(new Displayable[list.size()]);
+        return list;
     }
 
     /*
@@ -526,7 +534,6 @@ public class LocalDatabase {
         cTop.close();
         return list;
     }
-
 
 
     /*

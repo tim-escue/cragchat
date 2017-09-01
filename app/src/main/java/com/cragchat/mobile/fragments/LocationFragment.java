@@ -8,8 +8,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.LocationPagerAdapter;
+import com.cragchat.mobile.adapters.pager.LocationPagerAdapter;
 
 public class LocationFragment extends Fragment {
 
@@ -32,7 +33,7 @@ public class LocationFragment extends Fragment {
         pager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN && v instanceof ViewGroup) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && v instanceof ViewGroup) {
                     ((ViewGroup) v).requestDisallowInterceptTouchEvent(true);
                 }
                 return false;

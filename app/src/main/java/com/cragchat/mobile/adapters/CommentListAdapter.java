@@ -8,22 +8,27 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Date;
-
+import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.SearchActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
-import com.cragchat.mobile.search.SearchableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.sql.SendCommentEditTask;
 import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.sql.VoteTask;
 import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.util.FormatUtil;
+
+import java.util.Date;
 
 import static android.view.View.GONE;
 
@@ -64,7 +69,7 @@ public class CommentListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void  edit(Comment m) {
+    public void edit(Comment m) {
         for (Comment i : manager.getCommentList()) {
             if (i.getId() == m.getId()) {
                 i.setText(m.getText());
@@ -153,7 +158,8 @@ public class CommentListAdapter extends BaseAdapter {
                     new VoteTask(activity, manager.getCommentList().get(position), false, holder.text5).execute();
                 } else {
                     Toast.makeText(activity, "Must be logged in to vote on comments", Toast.LENGTH_SHORT).show();
-                }            }
+                }
+            }
         });
 
         /*
@@ -161,10 +167,10 @@ public class CommentListAdapter extends BaseAdapter {
          */
         int paddingPixel = 16;
         float density = activity.getResources().getDisplayMetrics().density;
-        int paddingDp = (int)(paddingPixel * density);
+        int paddingDp = (int) (paddingPixel * density);
         vi.setPadding(manager.getCommentList().get(position).getDepth() * paddingDp, vi.getPaddingTop(), vi.getPaddingRight(), vi.getPaddingBottom());
 
-        int score= manager.getCommentList().get(position).getScore();
+        int score = manager.getCommentList().get(position).getScore();
         String points = "0 points";
         if (score < 0) {
             points = score + " points";
@@ -184,7 +190,7 @@ public class CommentListAdapter extends BaseAdapter {
         holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((SearchableActivity)activity).hasConnection()) {
+                if (((SearchActivity) activity).hasConnection()) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", comment.getAuthorName());
                     activity.startActivity(intent);
@@ -193,7 +199,7 @@ public class CommentListAdapter extends BaseAdapter {
                 }
             }
         });
-        String date= comment.getDate();
+        String date = comment.getDate();
         try {
             Date dateObject = FormatUtil.RAW_FORMAT.parse(comment.getDate());
             date = FormatUtil.MONTH_DAY_YEAR.format(dateObject);
@@ -255,7 +261,7 @@ public class CommentListAdapter extends BaseAdapter {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        AlertDialog dialog1 =  new AlertDialog.Builder(view.getContext())
+                        AlertDialog dialog1 = new AlertDialog.Builder(view.getContext())
                                 .setMessage("Are you sure you want to cancel this edit?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -304,7 +310,7 @@ public class CommentListAdapter extends BaseAdapter {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        AlertDialog dialog1 =  new AlertDialog.Builder(view.getContext())
+                        AlertDialog dialog1 = new AlertDialog.Builder(view.getContext())
                                 .setMessage("Are you sure you want to cancel this comment?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {

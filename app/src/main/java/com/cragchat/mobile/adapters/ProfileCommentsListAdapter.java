@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.ProfileCommentManager;
 import com.cragchat.mobile.descriptor.Area;
@@ -23,7 +23,7 @@ public class ProfileCommentsListAdapter extends BaseAdapter {
     private static LayoutInflater inflater;
 
     public ProfileCommentsListAdapter(Activity a, ProfileCommentManager manager) {
-        activity = (CragChatActivity)a;
+        activity = (CragChatActivity) a;
         this.manager = manager;
         inflater = activity.getLayoutInflater();
     }
@@ -77,7 +77,6 @@ public class ProfileCommentsListAdapter extends BaseAdapter {
             holder = (ViewHolder) vi.getTag();
 
 
-
         final Comment comment = manager.getCommentList().get(position);
 
         vi.setOnClickListener(new View.OnClickListener() {
@@ -85,23 +84,23 @@ public class ProfileCommentsListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 final Displayable disp = LocalDatabase.getInstance(activity).findExact(comment.getDisplayId());
 
-                        if (disp instanceof Route) {
-                            int i = 0;
-                            if (comment.getTable().equals("DISCUSSION")) {
-                                i = 1;
-                            } else if (comment.getTable().equals("LOCATION")) {
-                                i = 3;
-                            }
-                            activity.launch(disp, i);
-                        } else if (disp instanceof Area) {
-                            int i = 0;
-                            if (comment.getTable().equals("DISCUSSION")) {
-                                i = 1;
-                            } else if (comment.getTable().equals("LOCATION")) {
-                                i = 3;
-                            }
-                            activity.launch(disp, 1);
-                        }
+                if (disp instanceof Route) {
+                    int i = 0;
+                    if (comment.getTable().equals("DISCUSSION")) {
+                        i = 1;
+                    } else if (comment.getTable().equals("LOCATION")) {
+                        i = 3;
+                    }
+                    activity.launch(disp, i);
+                } else if (disp instanceof Area) {
+                    int i = 0;
+                    if (comment.getTable().equals("DISCUSSION")) {
+                        i = 1;
+                    } else if (comment.getTable().equals("LOCATION")) {
+                        i = 3;
+                    }
+                    activity.launch(disp, 1);
+                }
 
             }
         });

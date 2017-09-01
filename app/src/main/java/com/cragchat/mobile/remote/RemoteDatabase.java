@@ -23,15 +23,33 @@ import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.sql.SendImageTask;
 import com.cragchat.mobile.sql.SendRatingTask;
 import com.cragchat.mobile.user.User;
+
 import org.json.JSONObject;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class RemoteDatabase {
 
-    private static final String URL_ROOT="ec2-52-34-138-217.us-west-2.compute.amazonaws.com";
+    private static final String URL_ROOT = "ec2-52-34-138-217.us-west-2.compute.amazonaws.com";
 
     public static void main(String[] args) {
         try {
@@ -105,7 +123,7 @@ public class RemoteDatabase {
                 new SendImageTask((CragChatActivity) activity, args[2], Uri.fromFile(new File(args[1])), Integer.parseInt(args[3]), args[4], null).execute();
             }
             if (i.startsWith("RATING")) {
-                new SendRatingTask((CragChatActivity)activity, Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), args[7], false).execute();
+                new SendRatingTask((CragChatActivity) activity, Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), args[7], false).execute();
             }
         }
     }
@@ -200,6 +218,7 @@ public class RemoteDatabase {
     public static List<String> fetchSends() {
         return fetchSends(-1);
     }
+
     public static List<String> fetchSends(int id) {
         //Log.d("RemoteServer", "Fetching ratings" + id);
         String build = null;
@@ -534,7 +553,7 @@ public class RemoteDatabase {
         return null;
     }
 
-        public static List<String> tagLocation(String displayId, String lat, String lon) {
+    public static List<String> tagLocation(String displayId, String lat, String lon) {
         try {
             // open a connection to the site
             URL url = new URL("http://" + URL_ROOT + "/routedb/tagLocation.php");
@@ -669,14 +688,14 @@ public class RemoteDatabase {
 
             String name;
             if (end != -1) {
-                name = filePath.substring(cutOff != -1 ? cutOff + 1: 0, end);
+                name = filePath.substring(cutOff != -1 ? cutOff + 1 : 0, end);
             } else {
                 name = filePath.substring(cutOff != -1 ? cutOff + 1 : 0);
             }
             name = name.trim() + ".jpg";
             //System.out.println("UPLOADING#" + name + "#");
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(con.getContentResolver(), uri);
-            File file  = File.createTempFile(name, null, con.getCacheDir());
+            File file = File.createTempFile(name, null, con.getCacheDir());
             FileOutputStream out = null;
             int size = bitmap.getByteCount();
             double percentage = 100;
@@ -687,7 +706,7 @@ public class RemoteDatabase {
                 //System.out.println("DIV:" + div);
                 percentage = (double) 100 / (div);
             }
-            System.out.println("percentage:"  + percentage);
+            System.out.println("percentage:" + percentage);
             try {
                 out = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, (int) percentage, out); // bmp is your Bitmap instance
@@ -706,13 +725,13 @@ public class RemoteDatabase {
             bitmap.recycle();
             utility.addFormField("name", name);
             utility.addFormField("author", userToken);
-            utility.addFormField("displayId", displayId+"");
+            utility.addFormField("displayId", displayId + "");
             utility.addFormField("caption", caption);
             utility.addFilePart("file", file);
             List<String> list = new LinkedList<>();
             list.addAll(utility.finish());
             return list;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -724,7 +743,7 @@ public class RemoteDatabase {
      * other file-based ContentProviders.
      *
      * @param context The context.
-     * @param uri The Uri to query.
+     * @param uri     The Uri to query.
      * @author paulburke
      */
     public static String getPath(final Context context, final Uri uri) {
@@ -770,7 +789,7 @@ public class RemoteDatabase {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -793,9 +812,9 @@ public class RemoteDatabase {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */

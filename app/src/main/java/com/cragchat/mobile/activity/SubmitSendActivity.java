@@ -5,14 +5,15 @@ import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.SearchableActivity;
 import com.cragchat.mobile.sql.SendSendTask;
 import com.cragchat.mobile.user.User;
 
-public class SubmitSendActivity extends SearchableActivity {
+public class SubmitSendActivity extends SearchActivity {
 
     private int id;
 
@@ -38,11 +39,11 @@ public class SubmitSendActivity extends SearchableActivity {
             public CharSequence filter(CharSequence source, int start, int end,
                                        Spanned dest, int dstart, int dend) {
                 if (source instanceof SpannableStringBuilder) {
-                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder)source;
+                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
                     for (int i = end - 1; i >= start; i--) {
                         char currentChar = source.charAt(i);
                         if (!Character.isLetterOrDigit(currentChar) && !Character.isSpaceChar(currentChar)) {
-                            sourceAsSpannableBuilder.delete(i, i+1);
+                            sourceAsSpannableBuilder.delete(i, i + 1);
                         }
                     }
                     return source;
@@ -59,17 +60,17 @@ public class SubmitSendActivity extends SearchableActivity {
             }
         };
         EditText edit = (EditText) findViewById(R.id.edittext_attempts);
-        edit.setFilters(new InputFilter[] {digitFilter});
+        edit.setFilters(new InputFilter[]{digitFilter});
         edit = (EditText) findViewById(R.id.edittext_pitches);
-        edit.setFilters(new InputFilter[] {digitFilter});
+        edit.setFilters(new InputFilter[]{digitFilter});
 
     }
 
     public void submit(View v) {
         String climbStyle = ((Spinner) findViewById(R.id.spinner_select_style)).getSelectedItem().toString();
         String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
-        int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
-        int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
+        int pitches = Integer.parseInt(((EditText) findViewById(R.id.edittext_pitches)).getText().toString());
+        int attempts = Integer.parseInt(((EditText) findViewById(R.id.edittext_attempts)).getText().toString());
 
         if (hasConnection()) {
             new SendSendTask(this, id, attempts, pitches, climbStyle, sendStyle, User.currentToken(this), true).execute();

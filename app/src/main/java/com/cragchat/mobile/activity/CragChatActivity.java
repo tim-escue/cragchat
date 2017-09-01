@@ -14,6 +14,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
@@ -26,8 +27,6 @@ public class CragChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lastConnection = 0;
-       // registerReceiver(new Receiver(this),
-       //         new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     public void launch(Displayable r) {
@@ -35,16 +34,17 @@ public class CragChatActivity extends AppCompatActivity {
     }
 
     public void launch(Displayable r, int tab) {
-        Class c;
+        Intent intent;
         String encoded;
+
         if (r instanceof Route) {
-            c = RouteActivity.class;
+            intent = new Intent(this, RouteActivity.class);
             encoded = r.toString();
         } else {
-            c = AreaActivity.class;
-            encoded = Displayable.encodeAsString((Area)r);
+            intent = new Intent(this, AreaActivity.class);
+            encoded = Displayable.encodeAsString((Area) r);
         }
-        Intent intent = new Intent(this, c);
+        intent.putExtra(NavigableActivity.USE_HOME_ICON, false);
         intent.putExtra("TAB", tab);
         intent.putExtra(DATA_STRING, encoded);
         startActivity(intent);
@@ -66,7 +66,7 @@ public class CragChatActivity extends AppCompatActivity {
 
     public boolean hasConnection() {
         ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&

@@ -15,7 +15,8 @@ public class UpdateAllCommentsImagesTask extends AsyncTask<Void, Integer, List<S
 
     public UpdateAllCommentsImagesTask(LocalDatabase db) {
         this.db = db;
-        cur = System.currentTimeMillis();;
+        cur = System.currentTimeMillis();
+        ;
     }
 
     protected List<String> doInBackground(Void... urls) {

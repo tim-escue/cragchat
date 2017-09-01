@@ -5,8 +5,9 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import com.cragchat.mobile.activity.CragChatActivity;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.adapters.RecentActivityRecyclerAdapter;
 import com.cragchat.mobile.descriptor.Datable;
 import com.cragchat.mobile.remote.RemoteDatabase;
@@ -48,8 +49,8 @@ public class UpdateRecentActivityTask extends AsyncTask<Void, Integer, List<Stri
             }
             Collections.sort(haha, comparator);
             bar.setVisibility(View.GONE);
-           // final RecentActivityAdapter adapter = new RecentActivityAdapter((CragChatActivity)con, haha);
-            view.setAdapter(new RecentActivityRecyclerAdapter((CragChatActivity)con, haha));
+            // final RecentActivityAdapter adapter = new RecentActivityAdapter((CragChatActivity)con, haha);
+            view.setAdapter(new RecentActivityRecyclerAdapter((CragChatActivity) con, haha));
             view.setVisibility(View.VISIBLE);
             view.getAdapter().notifyDataSetChanged();
         } else {
@@ -69,7 +70,7 @@ public class UpdateRecentActivityTask extends AsyncTask<Void, Integer, List<Stri
     public Comparator<Object> comparator = new Comparator<Object>() {
         @Override
         public int compare(Object lhs, Object rhs) {
-            return ((Datable)rhs).getDate().compareTo(((Datable)lhs).getDate());
+            return ((Datable) rhs).getDate().compareTo(((Datable) lhs).getDate());
         }
     };
 }

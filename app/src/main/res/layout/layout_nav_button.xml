@@ -10,13 +10,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text=" > "/>
+        android:text=" > " />
 
     <TextView
         android:id="@+id/text_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue_name"
+        android:textColor="@color/accent"
         android:textSize="16sp" />
 
 </LinearLayout>

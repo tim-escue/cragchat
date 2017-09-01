@@ -25,7 +25,7 @@ public class Route extends Displayable {
     private double longitude;
 
     public Route(int id, String name, String type,
-                    double latitude, double longitude, int revision) {
+                 double latitude, double longitude, int revision) {
         super(id, revision);
         this.name = name;
         this.type = type;
@@ -41,6 +41,7 @@ public class Route extends Displayable {
             this.yds = yds;
             this.stars = stars;
         }
+
         public int yds;
         public double stars;
     }

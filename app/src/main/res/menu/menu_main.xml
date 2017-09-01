@@ -1,21 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".activity.MainActivity">
-   <!-- <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
-        -->
-    <item android:id="@+id/search"
-        android:title="@string/find_crag"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        android:onClick="startSearch"
-        android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
 
-        />
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:onClick="launchProfile"
+        android:title="More Options"
+        app:showAsAction="always" />
 
-    <item android:id="@+id/user_menu"
-          android:icon="@drawable/ic_menu_white_24dp"
-          app:showAsAction="always"
-          android:title="Profile"
-        android:onClick="launchProfile"/>
 </menu>

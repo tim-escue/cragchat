@@ -26,7 +26,7 @@ public class UpdateRatingsTask extends AsyncTask<Void, Integer, List<String>> {
     protected void onPostExecute(List<String> feed) {
         if (feed != null) {
             for (String a : feed) {
-                Rating resp = (Rating)ResponseHandler.parseResponse(con, a);
+                Rating resp = (Rating) ResponseHandler.parseResponse(con, a);
                 //Log.d("UPDATING RATING", a);
                 if (resp != null) {
                     LocalDatabase.getInstance(con).insert(resp);

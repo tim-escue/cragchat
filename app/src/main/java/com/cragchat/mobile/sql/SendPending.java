@@ -3,6 +3,7 @@ package com.cragchat.mobile.sql;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
 import com.cragchat.mobile.remote.RemoteDatabase;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class SendPending extends AsyncTask<Void, Integer, Void> {
     }
 
     protected Void doInBackground(Void... urls) {
-        RemoteDatabase.sendPending(act,pending);
+        RemoteDatabase.sendPending(act, pending);
 
         return null;
     }

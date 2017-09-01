@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/lightgray"/>
-    <stroke android:color="@color/darkgreen" android:width="2dp"/>
+    <solid android:color="@color/cardview_light_background" />
+    <stroke
+        android:color="@color/primary_dark"
+        android:width="2dp" />
 </shape>

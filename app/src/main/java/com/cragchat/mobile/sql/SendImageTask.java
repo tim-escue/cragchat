@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.Toast;
+
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.fragments.ImageFragment;
@@ -106,7 +107,7 @@ public class SendImageTask extends AsyncTask<String, Integer, List<String>> {
                     Toast.makeText(activity, "Image upload success!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(activity, "Image failed to upload - will try again later", Toast.LENGTH_LONG).show();
-                    LocalDatabase.getInstance(activity).store(activity, "IMAGE###" + RemoteDatabase.getPath(activity, uri) + "###" + token + "###" + parentId + "###" + caption );
+                    LocalDatabase.getInstance(activity).store(activity, "IMAGE###" + RemoteDatabase.getPath(activity, uri) + "###" + token + "###" + parentId + "###" + caption);
                 }
             }
         }

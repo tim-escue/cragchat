@@ -26,7 +26,7 @@ public class UpdateSendsTask extends AsyncTask<Void, Integer, List<String>> {
     protected void onPostExecute(List<String> feed) {
         if (feed != null) {
             for (String a : feed) {
-                Send resp = (Send)ResponseHandler.parseResponse(con, a);
+                Send resp = (Send) ResponseHandler.parseResponse(con, a);
                 if (resp != null) {
                     LocalDatabase.getInstance(con).insert(resp);
                 }

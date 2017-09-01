@@ -5,7 +5,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.ProfileCommentsListAdapter;
@@ -26,9 +30,9 @@ public class ProfileCommentsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_profile_comments,  container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_comments, container, false);
 
         manager = new ProfileCommentManager();
 

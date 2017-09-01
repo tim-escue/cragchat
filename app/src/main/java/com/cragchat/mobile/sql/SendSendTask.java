@@ -1,6 +1,7 @@
 package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
+
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.descriptor.Send;
@@ -45,7 +46,7 @@ public class SendSendTask extends AsyncTask<Void, Integer, List<String>> {
                 }
             }
             if (openAfter) {
-                Route r = (Route)LocalDatabase.getInstance(con).findExact(id);
+                Route r = (Route) LocalDatabase.getInstance(con).findExact(id);
                 con.launch(r, 4);
             }
         }

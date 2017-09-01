@@ -1,6 +1,7 @@
 package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
+
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Rating;
 import com.cragchat.mobile.descriptor.Route;
@@ -38,7 +39,7 @@ public class SendRatingTask extends AsyncTask<Void, Integer, List<String>> {
     }
 
     protected List<String> doInBackground(Void... voids) {
-        return RemoteDatabase.rate(id, yds, stars,token);
+        return RemoteDatabase.rate(id, yds, stars, token);
     }
 
     protected void onPostExecute(List<String> feed) {
@@ -50,7 +51,7 @@ public class SendRatingTask extends AsyncTask<Void, Integer, List<String>> {
                 }
             }
             if (openAfter) {
-                Route r = (Route)LocalDatabase.getInstance(con).findExact(id);
+                Route r = (Route) LocalDatabase.getInstance(con).findExact(id);
                 con.launch(r, 2);
             }
         }

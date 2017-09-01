@@ -1,53 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_margin="20dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Ozone"
-              android:gravity="center"
-              android:textSize="24sp"
-              android:onClick="onClick"
-              android:background="@drawable/shape_preview"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:background="@color/green"
-              android:gravity="center"
-              android:textSize="16sp"
-              android:text="Recent activity"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_preview"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Ozone"
+        android:textSize="24sp" />
 
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progressBox"
-                    android:background="@color/lightgray">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:text="Recent activity"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/progressBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:paddingTop="10dp"
-              android:background="@color/lightgray"
-              android:textSize="20sp"
-              android:layout_weight="1"
+    <TextView
+        android:id="@+id/empty_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
 
-              android:text="Internet connection required to load recent activity"
-              android:visibility="gone"
-              android:id="@+id/empty_text"/>
+        android:text="Internet connection required to load recent activity"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
-    <ListView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/list_preview"
-              android:background="@color/lightgray"
-    />
+    <ListView
+        android:id="@+id/list_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

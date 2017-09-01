@@ -34,7 +34,7 @@ public class Send implements Datable {
 
     public static Send decode(JSONObject json) {
         try {
-            return new Send(json.getInt("routeId"), json.getInt("pitches"), json.getString("date"),json.getString("sendType"),
+            return new Send(json.getInt("routeId"), json.getInt("pitches"), json.getString("date"), json.getString("sendType"),
                     json.getInt("attempts"), json.getString("style"), json.getString("username"));
         } catch (Exception e) {
             e.printStackTrace();

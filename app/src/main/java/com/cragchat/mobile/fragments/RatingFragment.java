@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.RatingListAdapter;
 import com.cragchat.mobile.descriptor.Rating;
@@ -21,7 +22,7 @@ public class RatingFragment extends Fragment {
     public static RatingFragment newInstance(int displayableId) {
         RatingFragment f = new RatingFragment();
         Bundle b = new Bundle();
-        b.putString("id", ""+displayableId);
+        b.putString("id", "" + displayableId);
         f.setArguments(b);
         return f;
     }
@@ -29,7 +30,7 @@ public class RatingFragment extends Fragment {
     private int id;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);

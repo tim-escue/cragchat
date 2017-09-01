@@ -8,9 +8,16 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.cragchat.mobile.activity.CragChatActivity;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.adapters.CommentListAdapter;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
@@ -32,19 +39,18 @@ public class CommentSectionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View view = inflater.inflate(R.layout.fragment_comment_section,  container, false);
+        final View view = inflater.inflate(R.layout.fragment_comment_section, container, false);
 
         manager = new CommentManager();
 
         //Log.d("ROUTE_COMMENTS", "Attempting to load comments for " + getArguments().getString("display_id"));
-        for (Comment i : LocalDatabase.getInstance(getContext()).getCommentsFor(Integer.parseInt(getArguments().getString("display_id")),getArguments().getString("table"))) {
+        for (Comment i : LocalDatabase.getInstance(getContext()).getCommentsFor(Integer.parseInt(getArguments().getString("display_id")), getArguments().getString("table"))) {
             manager.addComment(i);
             //Log.d("ROUTE_COMMENTS", "\tComment:" + i.getText());
         }
         manager.sortByScore();
-
 
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner_comment_sort);
@@ -72,7 +78,7 @@ public class CommentSectionFragment extends Fragment {
 
                     final EditText txtUrl = new EditText(getActivity());
 
-                txtUrl.setHint("Type your comment here.");
+                    txtUrl.setHint("Type your comment here.");
                     AlertDialog dialog = getCommentDialog(txtUrl, view, adapter);
                     dialog.show();
                 } else {

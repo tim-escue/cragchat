@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.descriptor.Image;
-import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,7 +58,7 @@ public class GrabImageTask extends AsyncTask<Void, Integer, String> {
             File save = new File(dir + "/" + image.getName());
             save.createNewFile();
             FileOutputStream out = new FileOutputStream(save);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.close();
             //System.out.print("Saved main img:" + save.getPath());
 
@@ -75,10 +76,8 @@ public class GrabImageTask extends AsyncTask<Void, Integer, String> {
             res = "failed for " + image.getName();
             e.printStackTrace();
         }
-        return  res;
+        return res;
     }
-
-
 
 
     protected void onPostExecute(String feed) {
@@ -88,7 +87,7 @@ public class GrabImageTask extends AsyncTask<Void, Integer, String> {
         if (view != null) {
             Log.d("imgview", "loading " + image.getName());
             Glide.with(context).load(new File(dir + (thumb ? "/thumb_" + image.getName() : image.getName()))).into(view);
-            View progress = ((ViewGroup)view.getParent()).findViewById(R.id.progress_image_load);
+            View progress = ((ViewGroup) view.getParent()).findViewById(R.id.progress_image_load);
             if (progress != null) {
                 progress.setVisibility(View.GONE);
                 view.setVisibility(View.VISIBLE);

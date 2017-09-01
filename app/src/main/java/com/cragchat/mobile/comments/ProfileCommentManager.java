@@ -1,6 +1,9 @@
 package com.cragchat.mobile.comments;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ProfileCommentManager {
 
@@ -14,7 +17,7 @@ public class ProfileCommentManager {
 
     public void addComment(Comment comment) {
         //Log.d("COMMENT MANAGER", "Comment added:" + comment.getScore() + " date:" + comment.getDate());
-            comments.add(comment);
+        comments.add(comment);
         sort(currentComparator);
     }
 

@@ -14,7 +14,8 @@ public class UpdateLocalDisplayablesTask extends AsyncTask<Void, Integer, Displa
 
     public UpdateLocalDisplayablesTask(LocalDatabase db) {
         this.db = db;
-        cur = System.currentTimeMillis();;
+        cur = System.currentTimeMillis();
+        ;
     }
 
     protected Displayable[] doInBackground(Void... urls) {
@@ -25,9 +26,9 @@ public class UpdateLocalDisplayablesTask extends AsyncTask<Void, Integer, Displa
         if (feed != null) {
             for (Displayable a : feed) {
                 if (a instanceof Route) {
-                    db.insert((Route)a);
+                    db.insert((Route) a);
                 } else if (a instanceof Area) {
-                    db.insert((Area)a);
+                    db.insert((Area) a);
                 }
             }
             //Log.d("Task", "Updated displayables with " + feed.length + " insertions made in "  + (System.currentTimeMillis() - cur) + " millis.");

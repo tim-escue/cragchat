@@ -1,13 +1,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/darkgreen" />
+            <solid android:color="@color/primary_dark" />
         </shape>
     </item>
-    <item android:left="2dp" android:right="2dp" >
+    <item
+        android:left="2dp"
+        android:right="2dp">
         <shape>
 
-            <solid android:color="@color/lightgray" />
+            <solid android:color="@color/cardview_light_background" />
         </shape>
     </item>
 </layer-list>

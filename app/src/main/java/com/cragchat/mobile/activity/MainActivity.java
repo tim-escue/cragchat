@@ -3,42 +3,38 @@ package com.cragchat.mobile.activity;
 import android.Manifest;
 import android.app.DialogFragment;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.fragments.NotificationDialog;
-import com.cragchat.mobile.search.SearchableActivity;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends SearchableActivity {
+public class MainActivity extends NavigableActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
+        addContent(R.layout.activity_main);
 
-        setContentView(R.layout.activity_main);
+        handlePermission();
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Ozone");
+    public void onClick(View v) {
+        openDisplayable(v);
+    }
 
-
+    private void handlePermission() {
         try {
 
             /*
@@ -65,31 +61,16 @@ public class MainActivity extends SearchableActivity {
             }
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-       // LinearLayout fragContainer = (LinearLayout) findViewById(R.id.main_container);
-
-      //  RelativeLayout ll = new RelativeLayout(this);
-
-//        ll.setId(R.id.fragmentId);
-
-  //      getSupportFragmentManager().beginTransaction().add(ll.getId(), PreviewFragment.newInstance(-1), "someTag1").commit();
-
-    //    fragContainer.addView(ll);
-
-    }
-
-    public void onClick(View v) {
-        openDisplayable(v);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
         //System.out.println("PERMISSIONS REQ");
-        for (int i = 0 ; i < grantResults.length; i++) {
+        for (int i = 0; i < grantResults.length; i++) {
             if (permissions[i].equals("android.permission.WRITE_EXTERNAL_STORAGE")) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     //Log.d("Permission", "Granted permission for permission[" + i + "] " + permissions[i]);

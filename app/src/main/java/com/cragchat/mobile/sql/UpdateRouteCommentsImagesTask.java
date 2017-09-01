@@ -1,6 +1,7 @@
 package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
+
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.descriptor.Displayable;
@@ -43,8 +44,8 @@ public class UpdateRouteCommentsImagesTask extends AsyncTask<Void, Integer, List
                     } else {
                         db.updateComment(com.getScore(), com.getId());
                     }
-                } else if (i.startsWith("IMAGE")){
-                        db.insert(new Image(Integer.parseInt(args[1]), args[2], args[3], args[4],args[5]));
+                } else if (i.startsWith("IMAGE")) {
+                    db.insert(new Image(Integer.parseInt(args[1]), args[2], args[3], args[4], args[5]));
 
                 }
             }

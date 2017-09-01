@@ -1,4 +1,5 @@
 <resources>
+
     <style name="NavText">
         <item name="android:visibility">gone</item>
         <item name="android:text">""</item>
@@ -16,7 +17,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:background">@color/white</item>
-        <item name="android:textColor">@color/blue_name</item>
+        <item name="android:textColor">@color/accent</item>
         <item name="android:visibility">gone</item>
     </style>
 
@@ -34,7 +35,7 @@
 
 
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/darkgreen</item>
+        <item name="background">@color/primary_dark</item>
         <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
     </style>
 
@@ -42,13 +43,25 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-        <!-- Application theme. -->
+    <!-- Application theme.
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/darkgreen</item>
-        <item name="colorPrimaryDark">@color/darkergreen</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="android:textColorHint">@color/white</item>
+    </style> -->
+
+    <!-- inherit from the material theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
     </style>
+
 
 
 </resources>

@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
-import com.cragchat.mobile.activity.ProfileActivity;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.ProfileActivity;
 import com.cragchat.mobile.fragments.NotificationDialog;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.user.User;

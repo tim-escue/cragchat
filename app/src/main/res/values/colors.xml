@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="black" type="color">#FF000000</item>
+    <!-- App brand colors -->
+    <color name="primary">#689F38</color>
+    <color name="primary_dark">#558B2F</color>
+    <color name="primary_light">#9CCC65</color>
+    <color name="accent">#8BC34A</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+
+    <!-- Generic colors -->
+    <color name="dark_grey">#FF797979</color>
+    <color name="black">#FF000000</color>
+    <color name="red">#FFFF4444</color>>
+
+
+    <!-- <item name="black" type="color">#FF000000</item>
     <item name="blue" type="color">#FF006600</item>
     <item name="purple" type="color">#FFAA66CC</item>
     <item name="green" type="color">#FF99CC00</item>
@@ -9,7 +25,6 @@
     <item name="toolbar" type="color">#FF66CC00</item>
     <item name="toolbardark" type="color">#FF77DD00</item>
     <item name="orange" type="color">#FFFFBB33</item>
-    <item name="red" type="color">#FFFF4444</item>
     <item name="darkblue" type="color">#FF0099CC</item>
     <item name="darkpurple" type="color">#FF9933CC</item>
     <item name="darkgreen" type="color">#FF558800</item>
@@ -26,11 +41,11 @@
     <item name="darktransparent" type="color">#DDCCCCCC</item>
     <item name="transparent" type="color">#00FF00FF</item>
     <item name="blue_name" type="color">#FF33A5FF</item>
-    <item name="recycler_background" type="color">#FFDDDDDD</item>
+    <item name="recycler_background" type="color">#FFDDDDDD</item> -->
 
     <item name="white" type="color">#FFFFFFFF</item>
 
-    <integer-array name="androidcolors">
+    <!-- <integer-array name="androidcolors">
         <item>@color/black</item>
         <item>@color/blue</item>
         <item>@color/purple</item>
@@ -44,6 +59,6 @@
         <item>@color/darkergreen</item>
         <item>@color/darkorange</item>
         <item>@color/darkred</item>
-    </integer-array>
+    </integer-array> -->
 
 </resources> 

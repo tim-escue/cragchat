@@ -3,6 +3,7 @@ package com.cragchat.mobile.sql;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.TextView;
+
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.remote.RemoteDatabase;
 

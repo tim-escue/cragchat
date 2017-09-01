@@ -1,14 +1,17 @@
 package com.cragchat.mobile.descriptor;
 
 import android.app.Activity;
+import android.content.Context;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.sql.LocalDatabase;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Displayable implements Comparable<Displayable> {
-
 
 
     public abstract String getName();
@@ -29,7 +32,6 @@ public abstract class Displayable implements Comparable<Displayable> {
         this.revision = revision;
     }
 
-
     @Override
     public int compareTo(Displayable b) {
         return getName().compareTo(b.getName());
@@ -38,15 +40,15 @@ public abstract class Displayable implements Comparable<Displayable> {
     @Override
     public String toString() {
         if (this instanceof Route) {
-            return encodeRoute((Route)this).toString();
+            return encodeRoute((Route) this).toString();
         } else if (this instanceof Area) {
-            return encodeAsString((Area)this);
+            return encodeAsString((Area) this);
         }
         return "NULL_STRING(toString()displayable)";
     }
 
     public static String encodeAsString(Area a) {
-        return "AREA#" + a.getId() + "#" + a.getName() + "#" + a.getLatitude() + "#" + a.getLongitude()+ "#" + a.getRevision();
+        return "AREA#" + a.getId() + "#" + a.getName() + "#" + a.getLatitude() + "#" + a.getLongitude() + "#" + a.getRevision();
     }
 
     public static Area decodeAreaString(String s) {
@@ -83,12 +85,24 @@ public abstract class Displayable implements Comparable<Displayable> {
         return new JSONObject(map);
     }
 
+    public String getSubTitle(Context context) {
+        Area[] hierarchy = LocalDatabase.getInstance(context).getHierarchy(this);
+        StringBuilder subtitle = new StringBuilder();
+        for (int i = 0; i < hierarchy.length; i++) {
+            Area area = hierarchy[i];
+            if (i != 0) {
+                subtitle.append(" -> ");
+            }
+            subtitle.append(area.getName());
+        }
+        return subtitle.toString();
+    }
 
     public static Rating decodeRating(JSONObject obj) {
         try {
             return new Rating(obj.getInt("routeId"), obj.getInt("yds"), obj.getInt("stars"),
                     obj.getString("username"), obj.getString("date"));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -97,7 +111,7 @@ public abstract class Displayable implements Comparable<Displayable> {
     public static Route decodeRoute(JSONObject obj) {
         try {
             return new Route(obj.getInt("id"), obj.getString("name"), obj.getString("type"), obj.getDouble("latitude"), obj.getDouble("longitude"), obj.getInt("revision"));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

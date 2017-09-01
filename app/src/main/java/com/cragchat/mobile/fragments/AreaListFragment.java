@@ -7,9 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.cragchat.mobile.activity.CragChatActivity;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.adapters.AreaListAdapter;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
@@ -36,7 +41,7 @@ public class AreaListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sorter = new NumRoutesSorter(getContext());
         nameSorter = new NameSorter();
         Area thisArea = Displayable.decodeAreaString(getArguments().getString("AREA"));
@@ -56,11 +61,11 @@ public class AreaListFragment extends Fragment {
 
 
         ListView list = (ListView) view.findViewById(R.id.display_list);
-        AreaListAdapter adap = new AreaListAdapter((CragChatActivity)getActivity(), allAreas);
+        AreaListAdapter adap = new AreaListAdapter((CragChatActivity) getActivity(), allAreas);
         list.setAdapter(adap);
         list.setOnItemClickListener(adap);
 
-        Collections .sort(allAreas);
+        Collections.sort(allAreas);
         return view;
     }
 
@@ -70,7 +75,7 @@ public class AreaListFragment extends Fragment {
             if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("Name")) {
-                    Collections.sort(allAreas,nameSorter);
+                    Collections.sort(allAreas, nameSorter);
                 } else if (option.equals("Num Routes")) {
                     Collections.sort(allAreas, sorter);
                 }
@@ -101,7 +106,9 @@ public class AreaListFragment extends Fragment {
         }
 
 
-    };
+    }
+
+    ;
 
     private class NameSorter implements Comparator<Area> {
 
@@ -110,6 +117,8 @@ public class AreaListFragment extends Fragment {
             return one.getName().compareTo(two.getName());
         }
 
-    };
+    }
+
+    ;
 
 }

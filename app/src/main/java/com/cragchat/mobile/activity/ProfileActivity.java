@@ -7,10 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.ProfilePagerAdapter;
-import com.cragchat.mobile.search.SearchableActivity;
+import com.cragchat.mobile.adapters.pager.ProfilePagerAdapter;
 
-public class ProfileActivity extends SearchableActivity {
+public class ProfileActivity extends SearchActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -29,7 +28,6 @@ public class ProfileActivity extends SearchableActivity {
         TabLayout slab = (TabLayout) findViewById(R.id.sliding_tabs);
         slab.setupWithViewPager(pager);
     }
-
 
 
 }

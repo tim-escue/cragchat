@@ -17,9 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.R;
-
+import com.cragchat.mobile.activity.CragChatActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -62,7 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             /* map is already there, just return view as it is */
         }
 
-        if (((CragChatActivity)getActivity()).hasConnection()) {
+        if (((CragChatActivity) getActivity()).hasConnection()) {
             apiClient = new GoogleApiClient.Builder(getContext())
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
@@ -105,7 +104,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         startLocationUpdates();
     }
 
-    private void startLocationUpdates()  {
+    private void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             Criteria criteria = new Criteria();
@@ -192,9 +191,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-    /** Determines whether one Location reading is better than the current Location fix
-     * @param location  The new Location that you want to evaluate
-     * @param currentBestLocation  The current Location fix, to which you want to compare the new one
+    /**
+     * Determines whether one Location reading is better than the current Location fix
+     *
+     * @param location            The new Location that you want to evaluate
+     * @param currentBestLocation The current Location fix, to which you want to compare the new one
      */
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
@@ -238,7 +239,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         return false;
     }
 
-    /** Checks whether two providers are the same */
+    /**
+     * Checks whether two providers are the same
+     */
     private boolean isSameProvider(String provider1, String provider2) {
         if (provider1 == null) {
             return provider2 == null;

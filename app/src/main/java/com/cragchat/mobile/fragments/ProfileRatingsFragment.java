@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.RatingListAdapter;
 import com.cragchat.mobile.descriptor.Rating;
@@ -27,7 +28,7 @@ public class ProfileRatingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_profile_ratings, container, false);

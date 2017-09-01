@@ -14,11 +14,12 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.sql.GrabImageTask;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.bumptech.glide.Glide;
 
 import java.io.File;
 
@@ -65,7 +66,7 @@ public class ImageAdapter extends BaseAdapter {
             Glide.with(mContext).load(R.drawable.tap_to_load).into(imageView);
         }
 
-      //  imageView.setImageBitmap(bitmaps[position]);
+        //  imageView.setImageBitmap(bitmaps[position]);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

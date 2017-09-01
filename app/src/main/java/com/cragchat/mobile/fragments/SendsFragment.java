@@ -22,7 +22,7 @@ public class SendsFragment extends Fragment {
     public static SendsFragment newInstance(int displayableId) {
         SendsFragment f = new SendsFragment();
         Bundle b = new Bundle();
-        b.putString("id", ""+displayableId);
+        b.putString("id", "" + displayableId);
         f.setArguments(b);
         return f;
     }
@@ -30,7 +30,7 @@ public class SendsFragment extends Fragment {
     private int id;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_sends, container, false);
@@ -47,7 +47,6 @@ public class SendsFragment extends Fragment {
 
         lv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
 
 
         return view;

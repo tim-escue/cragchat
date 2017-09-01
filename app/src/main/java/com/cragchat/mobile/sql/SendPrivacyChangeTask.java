@@ -30,11 +30,11 @@ public class SendPrivacyChangeTask extends AsyncTask<Void, Integer, List<String>
     protected void onPostExecute(List<String> feed) {
         for (String i : feed) {
             //Log.d("PRIVACY", "<------->"+i+"<------->");
-           if (i.contains("privacy changed")) {
-               String[] vals = i.split(" ");
-               Toast.makeText(act, "Privacy setting has been changed to " + vals[vals.length-1], Toast.LENGTH_SHORT).show();
-               User.setPrivacy(act, vals[vals.length-1]);
-           }
+            if (i.contains("privacy changed")) {
+                String[] vals = i.split(" ");
+                Toast.makeText(act, "Privacy setting has been changed to " + vals[vals.length - 1], Toast.LENGTH_SHORT).show();
+                User.setPrivacy(act, vals[vals.length - 1]);
+            }
         }
     }
 }
