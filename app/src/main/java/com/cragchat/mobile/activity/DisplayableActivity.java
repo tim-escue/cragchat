@@ -23,14 +23,13 @@ import com.cragchat.mobile.user.User;
  * Created by timde on 8/31/2017.
  */
 
-public abstract class DisplayableActivity extends NavigableActivity {
+public abstract class DisplayableActivity extends CragChatActivity {
 
     public static final int PICK_IMAGE = 873;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -38,14 +37,6 @@ public abstract class DisplayableActivity extends NavigableActivity {
         getMenuInflater().inflate(R.menu.menu_route_activity, menu);
         return true;
         //return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = getDrawerLayout().isDrawerOpen(Gravity.START);
-        menu.findItem(R.id.search).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -58,11 +49,11 @@ public abstract class DisplayableActivity extends NavigableActivity {
                 startActivity(new Intent(this, MainActivity.class));
             }
         } else if (item.getItemId() == R.id.search) {
-            if (getDrawerLayout().isDrawerOpen(Gravity.START)) {
+            /*if (getDrawerLayout().isDrawerOpen(Gravity.START)) {
                 getDrawerLayout().closeDrawer(Gravity.START);
             } else {
                 getDrawerLayout().openDrawer(Gravity.START);
-            }
+            }*/
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/display_list_fragment"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="match_parent">
 
-    <!-- Route sort options -->
+    <!-- Route sort options
     <LinearLayout
         android:id="@+id/route_sort_options"
         android:layout_width="fill_parent"
@@ -23,11 +21,33 @@
             android:id="@+id/route_sort_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </LinearLayout> -->
+
+    <ImageView
+        android:id="@+id/sort_icon"
+        android:layout_margin="@dimen/eight_dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/filter_icon"
+        android:src="@drawable/ic_sort_black_24dp"
+        android:contentDescription="@string/sort"/>
+
+    <ImageView
+        android:id="@+id/filter_icon"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_filter_list_black_24dp"
+        android:contentDescription="@string/filter"/>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/filter_icon"
         android:background="@color/divider" />
     <!-- List display area -->
     <ListView
@@ -35,5 +55,6 @@
         android:id="@+id/display_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@id/divider"
         android:divider="@null"/>
-</LinearLayout>
+</RelativeLayout>

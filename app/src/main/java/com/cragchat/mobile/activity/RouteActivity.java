@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -28,7 +29,7 @@ public class RouteActivity extends DisplayableActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addContent(R.layout.activity_route);
+        //addContent(R.layout.activity_route);
 
         Intent intent = getIntent();
         route = null;
@@ -53,10 +54,12 @@ public class RouteActivity extends DisplayableActivity {
         textView.setText(sters);
 
         int tabInd = intent.getIntExtra("TAB", 0);
-        RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this, getSupportFragmentManager(), route.getId());
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this, getSupportFragmentManager(), appBarLayout, route.getId());
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pageAdapter);
         pager.setCurrentItem(tabInd);
+        pager.addOnPageChangeListener(pageAdapter);
 
         TabLayout slab = (TabLayout) findViewById(R.id.sliding_tabs);
         slab.setupWithViewPager(pager);

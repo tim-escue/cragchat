@@ -1,6 +1,7 @@
 package com.cragchat.mobile.adapters.pager;
 
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,19 +22,19 @@ import java.util.Map;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
-    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, int routeId) {
-        super(context, fragmentManager);
+    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, int routeId) {
+        super(context, fragmentManager, appBarLayout);
 
         addFragment(context.getString(R.string.title_beta),
-                CommentSectionFragment.newInstance(routeId, LocalDatabase.BETA));
+                CommentSectionFragment.newInstance(routeId, LocalDatabase.BETA), false);
         addFragment(context.getString(R.string.title_ratings),
-                RatingFragment.newInstance(routeId));
+                RatingFragment.newInstance(routeId), false);
         addFragment(context.getString(R.string.title_sends),
-                SendsFragment.newInstance(routeId));
+                SendsFragment.newInstance(routeId), true);
         addFragment(context.getString(R.string.title_location),
-                LocationFragment.newInstance(routeId));
+                LocationFragment.newInstance(routeId), true);
         addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(routeId));
+                ImageFragment.newInstance(routeId), true);
     }
     
 }

@@ -18,7 +18,8 @@
     <!-- Menu Items -->
     <string name="more_options">More options</string>
     <string name="search">Search</string>
-
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

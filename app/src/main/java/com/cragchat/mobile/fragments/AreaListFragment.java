@@ -51,13 +51,13 @@ public class AreaListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
+      /*  Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
                 R.array.area_sort_array, android.R.layout.simple_spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterSpinner);
 
-        spinner.setOnItemSelectedListener(listener);
+        spinner.setOnItemSelectedListener(listener);*/
 
 
         ListView list = (ListView) view.findViewById(R.id.display_list);
@@ -72,7 +72,7 @@ public class AreaListFragment extends Fragment {
     private AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (parent.getId() == R.id.route_sort_spinner) {
+         /*   if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("Name")) {
                     Collections.sort(allAreas, nameSorter);
@@ -82,7 +82,7 @@ public class AreaListFragment extends Fragment {
                 ListView lv = (ListView) getView().findViewById(R.id.display_list);
                 BaseAdapter adap = (BaseAdapter) lv.getAdapter();
                 adap.notifyDataSetChanged();
-            }
+            }*/
 
         }
 
