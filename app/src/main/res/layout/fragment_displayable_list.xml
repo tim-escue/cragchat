@@ -4,25 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Route sort options
-    <LinearLayout
-        android:id="@+id/route_sort_options"
-        android:layout_width="fill_parent"
+    <Spinner
+        android:id="@+id/route_sort_spinner"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/sixteen_dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/string_sort_by" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_toEndOf="@id/route_sort_spinner"
+        android:layout_marginTop="10dp"
+        android:text="@string/filter"/>
 
-        <Spinner
-            android:id="@+id/route_sort_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout> -->
 
+    <!--
     <ImageView
         android:id="@+id/sort_icon"
         android:layout_margin="@dimen/eight_dp"
@@ -33,28 +31,22 @@
         android:src="@drawable/ic_sort_black_24dp"
         android:contentDescription="@string/sort"/>
 
+
     <ImageView
         android:id="@+id/filter_icon"
-        android:layout_width="wrap_content"
-        android:layout_margin="@dimen/eight_dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_toEndOf="@id/route_sort_spinner"
+        android:layout_alignTop="@id/route_sort_spinner"
         android:src="@drawable/ic_filter_list_black_24dp"
-        android:contentDescription="@string/filter"/>
+        android:contentDescription="@string/filter"/> -->
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/filter_icon"
-        android:background="@color/divider" />
     <!-- List display area -->
     <ListView
-        android:cacheColorHint="#00000000"
         android:id="@+id/display_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/divider"
-        android:divider="@null"/>
+        android:layout_below="@id/route_sort_spinner"
+        android:cacheColorHint="#00000000"
+        android:divider="@null" />
 </RelativeLayout>

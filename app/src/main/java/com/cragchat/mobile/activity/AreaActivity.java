@@ -20,7 +20,7 @@ public class AreaActivity extends DisplayableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        setContentView(R.layout.collapsing_tab_toolbar);
+        addContent(R.layout.collapsing_tab_toolbar);
 
         int tabInd = getIntent().getIntExtra("TAB", 0);
         area = Displayable.decodeAreaString(getIntent().getStringExtra(CragChatActivity.DATA_STRING));
@@ -28,8 +28,8 @@ public class AreaActivity extends DisplayableActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       // getSupportActionBar().setTitle(area.getName());
-       // getSupportActionBar().setSubtitle(area.getSubTitle(this));
+        getSupportActionBar().setTitle(area.getName());
+        getSupportActionBar().setSubtitle(area.getSubTitle(this));
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this, getSupportFragmentManager(), appBarLayout, area);
@@ -41,9 +41,9 @@ public class AreaActivity extends DisplayableActivity {
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
 
-        //TextView numRoutesView = (TextView) findViewById(R.id.num_routes);
-       // int numRouutes = LocalDatabase.getInstance(this).findRoutesWithin(area).size();
-       // numRoutesView.setText(numRouutes + " routes");
+        TextView numRoutesView = (TextView) findViewById(R.id.num_route_value);
+        int numRouutes = LocalDatabase.getInstance(this).findRoutesWithin(area).size();
+        numRoutesView.setText(String.valueOf(numRouutes));
     }
 
     @Override

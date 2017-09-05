@@ -34,7 +34,7 @@ public class PreviewFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-        recList.addItemDecoration(new RecyclerViewMargin(48));
+        recList.addItemDecoration(new RecyclerViewMargin(16));
 
         ProgressBar layout = (ProgressBar) view.findViewById(R.id.progressBar1);
         new UpdateRecentActivityTask(getActivity(), -1, recList, layout).execute();

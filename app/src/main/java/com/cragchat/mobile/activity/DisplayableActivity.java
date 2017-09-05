@@ -23,7 +23,7 @@ import com.cragchat.mobile.user.User;
  * Created by timde on 8/31/2017.
  */
 
-public abstract class DisplayableActivity extends CragChatActivity {
+public abstract class DisplayableActivity extends NavigableActivity {
 
     public static final int PICK_IMAGE = 873;
 
@@ -48,12 +48,6 @@ public abstract class DisplayableActivity extends CragChatActivity {
             } else {
                 startActivity(new Intent(this, MainActivity.class));
             }
-        } else if (item.getItemId() == R.id.search) {
-            /*if (getDrawerLayout().isDrawerOpen(Gravity.START)) {
-                getDrawerLayout().closeDrawer(Gravity.START);
-            } else {
-                getDrawerLayout().openDrawer(Gravity.START);
-            }*/
         }
         return super.onOptionsItemSelected(item);
     }

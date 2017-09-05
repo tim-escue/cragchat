@@ -53,13 +53,13 @@ public class RouteListFragment extends Fragment {
         allRoutes = LocalDatabase.getInstance(getActivity()).findRoutesWithin(thisArea);
 
 
-       /* Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
+        Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
                 R.array.route_sort_array, R.layout.spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterSpinner);
 
-        spinner.setOnItemSelectedListener(listener);*/
+        spinner.setOnItemSelectedListener(listener);
 
         ListView list = (ListView) view.findViewById(R.id.display_list);
         RouteListAdapter adap = new RouteListAdapter((CragChatActivity) getActivity(), allRoutes);
@@ -74,14 +74,14 @@ public class RouteListFragment extends Fragment {
     private AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            /*if (parent.getId() == R.id.route_sort_spinner) {
+            if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("Name")) {
                     Collections.sort(allRoutes);
-                } else if (option.equals("YDS: High -> Low")) {
+                } /*else if (option.equals("YDS: High -> Low")) {
                     sorter.setHigh(true);
                     Collections.sort(allRoutes, sorter);
-                } else if (option.equals("YDS: Low -> High")) {
+                }*/ else if (option.equals("YDS")) { //Used to be YDS: Low -> High
                     sorter.setHigh(false);
                     Collections.sort(allRoutes, sorter);
                 } else if (option.equals("Type")) {
@@ -91,7 +91,6 @@ public class RouteListFragment extends Fragment {
                 BaseAdapter adap = (BaseAdapter) lv.getAdapter();
                 adap.notifyDataSetChanged();
             }
-*/
         }
 
         @Override
@@ -115,7 +114,7 @@ public class RouteListFragment extends Fragment {
 
         @Override
         public int compare(Route one, Route two) {
-            if (high) {
+            if (!high) {
                 return two.getYds(con) - one.getYds(con);
             } else {
                 return one.getYds(con) - two.getYds(con);

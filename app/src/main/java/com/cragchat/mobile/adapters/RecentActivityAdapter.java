@@ -60,9 +60,9 @@ public class RecentActivityAdapter extends BaseAdapter {
         LinearLayout layout;
         TextView text1;
         TextView text2;
-        LinearLayout content;
         ImageView imageView;
         ProgressBar progress;
+        View divider;
     }
 
     @Override
@@ -81,9 +81,9 @@ public class RecentActivityAdapter extends BaseAdapter {
             holder.text1 = (TextView) vi.findViewById(R.id.text_recent_activity);
             holder.text2 = (TextView) vi.findViewById(R.id.text_recent_activity_text);
             holder.layout = (LinearLayout) vi.findViewById(R.id.layout_recent_activity);
-            holder.content = (LinearLayout) vi.findViewById(R.id.item_recent_contentbox);
             holder.imageView = (ImageView) vi.findViewById(R.id.image_recent_activity);
             holder.progress = (ProgressBar) vi.findViewById(R.id.progress_image_load);
+            holder.divider = vi.findViewById(R.id.divider);
 
             /************  Set holder with LayoutInflater ************/
             vi.setTag(holder);
@@ -91,7 +91,8 @@ public class RecentActivityAdapter extends BaseAdapter {
             holder = (ViewHolder) vi.getTag();
         }
 
-        holder.content.setVisibility(View.VISIBLE);
+        holder.divider.setVisibility(View.VISIBLE);
+        holder.text2.setVisibility(View.VISIBLE);
         final Object obj = activities.get(position);
         String content = "null";
         if (obj instanceof Rating) {
@@ -164,7 +165,8 @@ public class RecentActivityAdapter extends BaseAdapter {
             }
 
         } else if (obj instanceof Image) {
-            holder.content.setVisibility(View.GONE);
+            holder.text2.setVisibility(View.GONE);
+            holder.divider.setVisibility(View.GONE);
             final Image img = (Image) obj;
             final Displayable disp = LocalDatabase.getInstance(activity).findExact(img.getDisplayId());
             if (disp == null) {

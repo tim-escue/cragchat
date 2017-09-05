@@ -125,7 +125,8 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
             }
 
         } else if (obj instanceof Image) {
-            holder.content.setVisibility(View.GONE);
+            holder.text2.setVisibility(View.GONE);
+            holder.divider.setVisibility(View.GONE);
             final Image img = (Image) obj;
             final Displayable disp = LocalDatabase.getInstance(activity).findExact(img.getDisplayId());
             if (disp == null) {
@@ -188,18 +189,18 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
         LinearLayout layout;
         TextView text1;
         TextView text2;
-        LinearLayout content;
         ImageView imageView;
         ProgressBar progress;
+        View divider;
 
         public DisplayableHolder(View itemView) {
             super(itemView);
             text1 = (TextView) itemView.findViewById(R.id.text_recent_activity);
             text2 = (TextView) itemView.findViewById(R.id.text_recent_activity_text);
             layout = (LinearLayout) itemView.findViewById(R.id.layout_recent_activity);
-            content = (LinearLayout) itemView.findViewById(R.id.item_recent_contentbox);
             imageView = (ImageView) itemView.findViewById(R.id.image_recent_activity);
             progress = (ProgressBar) itemView.findViewById(R.id.progress_image_load);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

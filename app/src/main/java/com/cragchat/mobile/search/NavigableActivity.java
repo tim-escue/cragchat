@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,8 +51,6 @@ public class NavigableActivity extends CragChatActivity {
         mRootView = findViewById(R.id.layout_root);
         useHomeButton = getIntent().getBooleanExtra(USE_HOME_ICON, true);
 
-        setupActionBar();
-
         setupNavigationDrawer();
     }
 
@@ -64,6 +61,8 @@ public class NavigableActivity extends CragChatActivity {
     protected void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     protected void setupNavigationDrawer() {
@@ -104,13 +103,13 @@ public class NavigableActivity extends CragChatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        setupActionBar();
         if (useHomeButton) {
             mDrawerToggle.syncState();
         }
@@ -140,12 +139,14 @@ public class NavigableActivity extends CragChatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (useHomeButton && mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
+        } else if (item.getItemId() == R.id.search) {
+            if (getDrawerLayout().isDrawerOpen(Gravity.START)) {
+                getDrawerLayout().closeDrawer(Gravity.START);
+            } else {
+                getDrawerLayout().openDrawer(Gravity.START);
+            }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean startSearch(MenuItem menuItem) {
-        return true;
     }
 
     public boolean launchProfile(MenuItem menuItem) {

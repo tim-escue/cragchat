@@ -4,7 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
@@ -63,6 +65,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             holder.text3.setText(sters);
             holder.text4.setVisibility(View.VISIBLE);
             holder.text4.setText(r.getType());
+            holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
         } else {
             Area a = (Area) obj;
             holder.text1.setText(a.getName());
@@ -114,6 +117,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
         TextView text2;
         TextView text3;
         TextView text4;
+        ImageView icon;
 
         public DisplayableHolder(View itemView) {
             super(itemView);
@@ -122,6 +126,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             text2 = (TextView) itemView.findViewById(R.id.list_row_two);
             text3 = (TextView) itemView.findViewById(R.id.list_row_three);
             text4 = (TextView) itemView.findViewById(R.id.list_row_four);
+            icon = itemView.findViewById(R.id.icon);
         }
     }
 }

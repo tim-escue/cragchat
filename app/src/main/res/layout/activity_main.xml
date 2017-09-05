@@ -1,5 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <include layout="@layout/simple_toolbar" />
+
     <fragment
         android:id="@+id/fragment_recent_activity"
         android:name="com.cragchat.mobile.fragments.PreviewFragment"

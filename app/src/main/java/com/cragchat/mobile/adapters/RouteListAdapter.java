@@ -1,10 +1,12 @@
 package com.cragchat.mobile.adapters;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +53,7 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
         TextView text3;
         TextView text4;
         LinearLayout rect;
+        ImageView icon;
     }
 
     @Override
@@ -77,6 +80,8 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
             holder.text3 = (TextView) vi.findViewById(R.id.list_row_three);
             holder.text4 = (TextView) vi.findViewById(R.id.list_row_four);
             holder.rect = (LinearLayout) vi.findViewById(R.id.rectangle);
+            holder.icon = (ImageView) vi.findViewById(R.id.icon);
+
             vi.setTag(holder);
         } else {
             holder = (ViewHolder) vi.getTag();
@@ -98,6 +103,8 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
         holder.text3.setText(sters);
         holder.text4.setVisibility(View.VISIBLE);
         holder.text4.setText(r.getType());
+        holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
+
 
         return vi;
     }

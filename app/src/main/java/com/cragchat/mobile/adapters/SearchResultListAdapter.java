@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
@@ -51,6 +52,7 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
         TextView text2;
         TextView text3;
         TextView text4;
+        ImageView icon;
     }
 
     @Override
@@ -75,6 +77,7 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
             holder.text2 = (TextView) vi.findViewById(R.id.list_row_two);
             holder.text3 = (TextView) vi.findViewById(R.id.list_row_three);
             holder.text4 = (TextView) vi.findViewById(R.id.list_row_four);
+            holder.icon = vi.findViewById(R.id.icon);
             vi.setTag(holder);
         } else {
             holder = (ViewHolder) vi.getTag();
@@ -95,6 +98,7 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
             holder.text3.setText(sters);
             holder.text4.setVisibility(View.VISIBLE);
             holder.text4.setText(r.getType());
+            holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
         } else {
             Area a = (Area) results[position];
             holder.text1.setText(a.getName());

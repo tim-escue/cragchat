@@ -10,8 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/simple_toolbar" />
-
     </LinearLayout>
     <!-- The navigation drawer -->
     <LinearLayout
@@ -45,7 +43,7 @@
                         android:maxLines="1"
                         android:hint="Search route/wall/crag"
                         android:background="@null"
-
+                        android:imeOptions="actionDone"
                         />
 
                 </android.support.design.widget.TextInputLayout>

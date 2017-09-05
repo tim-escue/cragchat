@@ -21,6 +21,9 @@
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
 
+    <!-- Generic climbing -->
+    <string name="routes">Routes</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="find_crag">Search</string>
@@ -30,12 +33,12 @@
     <string name="yds_label">YDS </string>
 
     <string name="crag_wall_list_label"><u>Walls</u></string>
-    <string name="crag_route_list_label"><u>Routes</u></string>
     <string name="crag_spinner_options">Display all:</string>
     <string name="string_sort_by">Sort by:</string>
     <string name="string_add_comment">Add Comment</string>
     <string name="string_submissions">Submissions </string>
     <string name="pick_edit_option">Select type</string>
+
 
     <string-array name="array_edit_options">
         <item>Protection</item>
@@ -70,8 +73,7 @@
     </string-array>
 
     <string-array name="route_sort_array">
-        <item>YDS: High -> Low</item>
-        <item>YDS: Low -> High</item>
+        <item>YDS</item>
         <item>Type</item>
         <item>Name</item>
     </string-array>
