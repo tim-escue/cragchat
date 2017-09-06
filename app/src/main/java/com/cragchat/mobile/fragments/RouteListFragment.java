@@ -4,13 +4,17 @@ package com.cragchat.mobile.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
@@ -31,7 +35,9 @@ public class RouteListFragment extends Fragment {
     private List<Route> allRoutes;
     private YdsSorter sorter;
     private TypeSorter typeSorter;
-
+    private View filterView;
+    private RouteListAdapter adap;
+    private PopupWindow popupWindow;
 
     public static RouteListFragment newInstance(Area a) {
         RouteListFragment f = new RouteListFragment();
@@ -62,14 +68,58 @@ public class RouteListFragment extends Fragment {
         spinner.setOnItemSelectedListener(listener);
 
         ListView list = (ListView) view.findViewById(R.id.display_list);
-        RouteListAdapter adap = new RouteListAdapter((CragChatActivity) getActivity(), allRoutes);
+        adap = new RouteListAdapter((CragChatActivity) getActivity(), allRoutes);
         list.setAdapter(adap);
         list.setOnItemClickListener(adap);
+
+        Button filterButton = view.findViewById(R.id.filter_button);
+        filterView = getLayoutInflater().inflate(R.layout.fragment_filter, null);
+
+        SwitchCompat switchButton = filterView.findViewById(R.id.sport);
+        switchButton.setOnCheckedChangeListener(filterListener);
+        switchButton = filterView.findViewById(R.id.trad);
+        switchButton.setOnCheckedChangeListener(filterListener);
+        switchButton = filterView.findViewById(R.id.toprope);
+        switchButton.setOnCheckedChangeListener(filterListener);
+
+        Button doneButton = filterView.findViewById(R.id.done_button);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (popupWindow == null || !popupWindow.isShowing()) {
+                    popupWindow = new PopupWindow(
+                            filterView,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.showAsDropDown(view);
+                }
+            }
+        });
 
         Collections.sort(allRoutes);
         return view;
     }
 
+    private CompoundButton.OnCheckedChangeListener filterListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            String filter = compoundButton.getText().toString();
+            if (b) {
+                adap.removeFilter(filter);
+            } else {
+                adap.addFilter(filter);
+            }
+        }
+    };
 
     private AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -78,10 +128,7 @@ public class RouteListFragment extends Fragment {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("Name")) {
                     Collections.sort(allRoutes);
-                } /*else if (option.equals("YDS: High -> Low")) {
-                    sorter.setHigh(true);
-                    Collections.sort(allRoutes, sorter);
-                }*/ else if (option.equals("YDS")) { //Used to be YDS: Low -> High
+                } else if (option.equals("YDS")) { //Used to be YDS: Low -> High
                     sorter.setHigh(false);
                     Collections.sort(allRoutes, sorter);
                 } else if (option.equals("Type")) {

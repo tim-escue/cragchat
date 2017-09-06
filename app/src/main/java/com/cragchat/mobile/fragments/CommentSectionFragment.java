@@ -55,7 +55,7 @@ public class CommentSectionFragment extends Fragment {
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner_comment_sort);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
-                R.array.spinner_comment_sort_options, android.R.layout.simple_spinner_item);
+                R.array.spinner_comment_sort_options, R.layout.spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterSpinner);
 

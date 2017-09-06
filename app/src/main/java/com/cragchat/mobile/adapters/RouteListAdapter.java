@@ -1,6 +1,7 @@
 package com.cragchat.mobile.adapters;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
@@ -24,12 +27,35 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
     private List<Route> routes;
     private static LayoutInflater inflater;
     private CragChatActivity activity;
+    private List<Route> filtered;
 
     public RouteListAdapter(CragChatActivity a, List<Route> routes) {
         this.routes = routes;
         inflater = a.getLayoutInflater();
         this.activity = a;
         stripe = true;
+        filtered = new ArrayList<>();
+    }
+
+    public void addFilter(String string) {
+        for (Iterator<Route> routeIterator = routes.iterator(); routeIterator.hasNext();) {
+            Route r = routeIterator.next();
+            if (r.getType().equalsIgnoreCase(string)) {
+                filtered.add(r);
+                routeIterator.remove();
+            }
+        }
+        notifyDataSetChanged();
+    }
+    public void removeFilter(String string) {
+        for (Iterator<Route> routeIterator = filtered.iterator(); routeIterator.hasNext();) {
+            Route r = routeIterator.next();
+            if (r.getType().toLowerCase().contains(string.toLowerCase())) {
+                routes.add(r);
+                routeIterator.remove();
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -60,7 +86,6 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Displayable a = LocalDatabase.getInstance(activity).findExact(routes.get(position).getId());
         if (activity.hasConnection()) {
-            //Log.d("RemoteDatabase", "Connected to internet - checking revision");
             new CheckForRouteUpdateTask(a, activity).execute();
         }
         activity.launch(a);
@@ -95,16 +120,17 @@ public class RouteListAdapter extends BaseAdapter implements AdapterView.OnItemC
         if (r.getYds(activity) == -1) {
             yds = "Not rated";
             sters = "Not rated";
+            holder.text3.setVisibility(View.GONE);
         } else {
             yds = r.getYdsString(activity, r.getYds(activity));
             sters = r.getStarsString(activity) + " stars";
+            holder.text3.setVisibility(View.VISIBLE);
         }
         holder.text2.setText(yds);
         holder.text3.setText(sters);
         holder.text4.setVisibility(View.VISIBLE);
         holder.text4.setText(r.getType());
         holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
-
 
         return vi;
     }
