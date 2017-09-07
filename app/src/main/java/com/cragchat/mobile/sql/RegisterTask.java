@@ -1,6 +1,7 @@
 package com.cragchat.mobile.sql;
 
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.cragchat.mobile.activity.LoginActivity;
@@ -34,12 +35,12 @@ public class RegisterTask extends AsyncTask<Void, Integer, List<String>> {
         if (feed != null && feed.size() > 0) {
             String result = feed.get(0);
             if (result.contains("already in use")) {
-                android.app.DialogFragment df = NotificationDialog.newInstance("Username has already been taken.\nPlease" +
+                DialogFragment df = NotificationDialog.newInstance("Username has already been taken.\nPlease" +
                         "try again with new username.");
-                df.show(con.getFragmentManager(), "dialog");
+                df.show(con.getSupportFragmentManager(), "dialog");
             } else if (result.contains("Registration successful")) {
-                android.app.DialogFragment df = NotificationDialog.newInstance("Registration successsful!\n Please login.", LoginActivity.class);
-                df.show(con.getFragmentManager(), "dialog");
+                DialogFragment df = NotificationDialog.newInstance("Registration successsful!\n Please login.", LoginActivity.class);
+                df.show(con.getSupportFragmentManager(), "dialog");
             }
         }
     }

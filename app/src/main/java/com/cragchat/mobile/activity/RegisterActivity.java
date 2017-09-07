@@ -1,8 +1,8 @@
 package com.cragchat.mobile.activity;
 
 
-import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
@@ -33,13 +33,13 @@ public class RegisterActivity extends SearchActivity {
         } else {
             if (!password.equals(edit_verify.getText().toString())) {
                 DialogFragment fragment = NotificationDialog.newInstance("Passwords did not match. Please try again.");
-                fragment.show(getFragmentManager(), "dialog");
+                fragment.show(getSupportFragmentManager(), "dialog");
                 edit_pw.setText("");
                 edit_verify.setText("");
             }
             if (!email.equals(emailCheck)) {
                 DialogFragment fragment = NotificationDialog.newInstance("Email did not match. Please try again.");
-                fragment.show(getFragmentManager(), "dialog");
+                fragment.show(getSupportFragmentManager(), "dialog");
                 edit_emai.setText("");
                 edit_email_verifyy.setText("");
             }

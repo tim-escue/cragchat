@@ -5,7 +5,10 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:padding="@dimen/eight_dp">
+    android:paddingTop="@dimen/eight_dp"
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingEnd="@dimen/sixteen_dp"
+    android:paddingBottom="@dimen/eight_dp">
 
     <ImageView
         android:id="@+id/icon"

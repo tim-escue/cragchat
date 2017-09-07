@@ -2,6 +2,7 @@ package com.cragchat.mobile.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,7 @@ public class AreaActivity extends DisplayableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        addContent(R.layout.collapsing_tab_toolbar);
+        addContent(R.layout.activity_area);
 
         int tabInd = getIntent().getIntExtra("TAB", 0);
         area = Displayable.decodeAreaString(getIntent().getStringExtra(CragChatActivity.DATA_STRING));
@@ -31,8 +32,12 @@ public class AreaActivity extends DisplayableActivity {
         getSupportActionBar().setTitle(area.getName());
         getSupportActionBar().setSubtitle(area.getSubTitle(this));
 
+        FloatingActionButton floatingActionButton = findViewById(R.id.add_button);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this, getSupportFragmentManager(), appBarLayout, area);
+
+        AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this,
+                getSupportFragmentManager(), appBarLayout, area, floatingActionButton);
+
         ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
         pager.addOnPageChangeListener(pageAdapter);

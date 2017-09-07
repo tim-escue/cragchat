@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
@@ -25,9 +29,10 @@ import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.user.User;
 
-public class CommentSectionFragment extends Fragment {
+public class CommentSectionFragment extends Fragment implements View.OnClickListener {
 
     private CommentManager manager;
+    private CommentListAdapter adapter;
 
     public static CommentSectionFragment newInstance(int displayId, String table) {
         CommentSectionFragment f = new CommentSectionFragment();
@@ -48,7 +53,6 @@ public class CommentSectionFragment extends Fragment {
         //Log.d("ROUTE_COMMENTS", "Attempting to load comments for " + getArguments().getString("display_id"));
         for (Comment i : LocalDatabase.getInstance(getContext()).getCommentsFor(Integer.parseInt(getArguments().getString("display_id")), getArguments().getString("table"))) {
             manager.addComment(i);
-            //Log.d("ROUTE_COMMENTS", "\tComment:" + i.getText());
         }
         manager.sortByScore();
 
@@ -61,31 +65,19 @@ public class CommentSectionFragment extends Fragment {
 
         spinner.setOnItemSelectedListener(listener);
 
-        final CommentListAdapter adapter = new CommentListAdapter(getActivity(), manager, getArguments().getString("table"));
-        ListView lv = (ListView) view.findViewById(R.id.comment_section_list);
-        if (manager.getCommentList().size() == 0) {
-            lv.setEmptyView(view.findViewById(R.id.list_empty));
-        }
-        lv.setAdapter(adapter);
+        adapter = new CommentListAdapter(getActivity(), manager, getArguments().getString("table"));
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        recList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.button_add_comment);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (User.currentToken(getActivity()) != null) {
-
-                    final EditText txtUrl = new EditText(getActivity());
-
-                    txtUrl.setHint("Type your comment here.");
-                    AlertDialog dialog = getCommentDialog(txtUrl, view, adapter);
-                    dialog.show();
-                } else {
-                    Toast.makeText(getContext(), "Must be logged in to addto a comment", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+       if (manager.getCommentList().size() == 0) {
+           TextView empty = (TextView) view.findViewById(R.id.list_empty);
+           empty.setVisibility(View.VISIBLE);
+       }
 
         return view;
     }
@@ -152,9 +144,8 @@ public class CommentSectionFragment extends Fragment {
                 } else if (option.equals("Date")) {
                     manager.sortByDate();
                 }
-                ListView lv = (ListView) getView().findViewById(R.id.comment_section_list);
-                BaseAdapter adap = (BaseAdapter) lv.getAdapter();
-                adap.notifyDataSetChanged();
+                RecyclerView lv = (RecyclerView) getView().findViewById(R.id.comment_section_list);
+                lv.getAdapter().notifyDataSetChanged();
             }
         }
 
@@ -163,4 +154,20 @@ public class CommentSectionFragment extends Fragment {
 
         }
     };
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.add_button) {
+            if (User.currentToken(getActivity()) != null) {
+
+                final EditText txtUrl = new EditText(getActivity());
+
+                txtUrl.setHint("Type your comment here.");
+                AlertDialog dialog = getCommentDialog(txtUrl, view, adapter);
+                dialog.show();
+            } else {
+                Toast.makeText(getContext(), "Must be logged in to addto a comment", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }

@@ -1,9 +1,8 @@
 package com.cragchat.mobile.sql;
 
-
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
@@ -46,7 +45,7 @@ public class LoginTask extends AsyncTask<Void, Integer, String> {
             //Log.d("LoginTask", "Username and password combination failed");
             DialogFragment df = NotificationDialog.newInstance("Login failed for username/password combination.");
             User.setUser(con, null, null, false);
-            df.show(con.getFragmentManager(), "dialog");
+            df.show(con.getSupportFragmentManager(), "dialog");
             ((EditText) con.findViewById(R.id.login_password)).setText("");
         }
     }

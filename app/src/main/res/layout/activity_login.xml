@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/ozone">
 
+    <include layout="@layout/simple_toolbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

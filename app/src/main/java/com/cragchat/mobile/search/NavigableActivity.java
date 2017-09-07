@@ -145,45 +145,41 @@ public class NavigableActivity extends CragChatActivity {
             } else {
                 getDrawerLayout().openDrawer(Gravity.START);
             }
+        } else if (item.getItemId() == R.id.more) {
+            launchProfile(item);
         }
         return super.onOptionsItemSelected(item);
     }
 
     public boolean launchProfile(MenuItem menuItem) {
-        final Activity act = this;
-        if (User.currentToken(this) != null) {
-            PopupMenu popup = new PopupMenu(this, findViewById(R.id.more));
-            popup.getMenuInflater().inflate(R.menu.menu_profile, popup.getMenu());
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    Intent intent = null;
-                    String selection = item.getTitle().toString();
-                    switch (selection) {
-                        case "My Profile":
-                            intent = new Intent(act, ProfileActivity.class);
-                            intent.putExtra("username", User.userName(act));
-                            break;
-                        case "Log out":
-                            User.logout(act);
-                            intent = new Intent(act, MainActivity.class);
-                            break;
-                    }
-                    startActivity(intent);
-                    return true;
-                }
-            });
-
-            popup.show();
-
-        } else {
-            if (!(this instanceof LoginActivity)) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
-        }
-
+        int layout = User.currentToken(this) != null ? R.menu.menu_profile : R.menu.menu_not_logged_in;
+        PopupMenu popup = new PopupMenu(this, findViewById(R.id.more));
+        popup.getMenuInflater().inflate(layout, popup.getMenu());
+        popup.setOnMenuItemClickListener(menuListener);
+        popup.show();
         return true;
     }
+
+    PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
+        public boolean onMenuItemClick(MenuItem item) {
+            Intent intent = null;
+            String selection = item.getTitle().toString();
+            switch (selection) {
+                case "My Profile":
+                    intent = new Intent(NavigableActivity.this, ProfileActivity.class);
+                    intent.putExtra("username", User.userName(NavigableActivity.this));
+                    break;
+                case "Log out":
+                    User.logout(NavigableActivity.this);
+                    intent = new Intent(NavigableActivity.this, MainActivity.class);
+                    break;
+                case "Login":
+                    intent = new Intent(NavigableActivity.this, LoginActivity.class);
+            }
+            startActivity(intent);
+            return true;
+        }
+    };
 
     @Override
     public void onBackPressed() {

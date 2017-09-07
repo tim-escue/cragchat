@@ -54,43 +54,5 @@ public abstract class DisplayableActivity extends NavigableActivity {
 
     public abstract Displayable getDisplayable();
 
-    public void addImage(View v) {
-        if (User.currentToken(this) != null) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-        } else {
-            //Log.d("RouteActivity", "Must be logged in to add an image");
-            DialogFragment df = NotificationDialog.newInstance("Must be logged in to add an image");
-            df.show(getFragmentManager(), "dialog");
-        }
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Log.d("RouteActivity", "No data");
-                return;
-            }
-            try {
-                //System.out.println("INTENT RECEIVED");
-                if (hasConnection()) {
-                    Intent editImage = new Intent(this, EditImageActivity.class);
-                    editImage.putExtra("image_uri", data.getData().toString());
-                    editImage.putExtra("displayable_id", getDisplayable().getId());
-                    startActivity(editImage);
-                    // new SendImageTask(this, User.currentToken(this), data.getData(), route.getId(), "nocap", imageFragment).execute();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No data connection - storing comment to post it later.", Toast.LENGTH_LONG).show();
-                    LocalDatabase.getInstance(this).store(this, "IMAGE###" + RemoteDatabase.getPath(this, data.getData()) + "###" + User.currentToken(this) + "###" + getDisplayable().getId() + "###" + "nocap");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
-        }
-    }
 }

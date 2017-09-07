@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +35,7 @@ import java.util.Date;
 
 import static android.view.View.GONE;
 
-public class CommentListAdapter extends BaseAdapter {
+public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.ViewHolder> {
 
     private Activity activity;
     private CommentManager manager;
@@ -55,18 +58,8 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return manager.getCommentList().size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return manager.getCommentList().get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     public void edit(Comment m) {
@@ -76,8 +69,8 @@ public class CommentListAdapter extends BaseAdapter {
             }
         }
     }
-
-    public static class ViewHolder {
+    
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text1;
         TextView text2;
         TextView text3;
@@ -88,37 +81,32 @@ public class CommentListAdapter extends BaseAdapter {
         ImageView image2;
         LinearLayout layout;
         LinearLayout expandable;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            text1 = (TextView) itemView.findViewById(R.id.comment_author);
+            text2 = (TextView) itemView.findViewById(R.id.comment_date);
+            text3 = (TextView) itemView.findViewById(R.id.comment_body);
+            text4 = (TextView) itemView.findViewById(R.id.reply);
+            text5 = (TextView) itemView.findViewById(R.id.text_score);
+            image1 = (ImageView) itemView.findViewById(R.id.arrow_up);
+            image2 = (ImageView) itemView.findViewById(R.id.arrow_down);
+            text6 = (TextView) itemView.findViewById(R.id.edit_comment);
+            layout = (LinearLayout) itemView.findViewById(R.id.layout_comment);
+            expandable = (LinearLayout) itemView.findViewById(R.id.expanding_layout);
+        }
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        final ViewHolder holder;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.
+                from(parent.getContext()).
+                inflate(R.layout.comment_list_item, parent, false);
+        return new ViewHolder(itemView);
+    }
 
-        if (convertView == null) {
-
-            /****** Inflate tabitem.xml file for each row ( Defined below ) *******/
-            vi = inflater.inflate(R.layout.comment_list_item, null);
-
-            /****** View Holder Object to contain tabitem.xml file elements ******/
-
-            holder = new ViewHolder();
-            holder.text1 = (TextView) vi.findViewById(R.id.comment_author);
-            holder.text2 = (TextView) vi.findViewById(R.id.comment_date);
-            holder.text3 = (TextView) vi.findViewById(R.id.comment_body);
-            holder.text4 = (TextView) vi.findViewById(R.id.reply);
-            holder.text5 = (TextView) vi.findViewById(R.id.text_score);
-            holder.image1 = (ImageView) vi.findViewById(R.id.arrow_up);
-            holder.image2 = (ImageView) vi.findViewById(R.id.arrow_down);
-            holder.text6 = (TextView) vi.findViewById(R.id.edit_comment);
-            holder.layout = (LinearLayout) vi.findViewById(R.id.layout_comment);
-            holder.expandable = (LinearLayout) vi.findViewById(R.id.expanding_layout);
-
-
-            /************  Set holder with LayoutInflater ************/
-            vi.setTag(holder);
-        } else
-            holder = (ViewHolder) vi.getTag();
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
         holder.layout.setBackgroundColor(color);
         holder.expandable.setBackgroundColor(color);
@@ -144,7 +132,7 @@ public class CommentListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (User.currentToken(activity) != null) {
-                    new VoteTask(activity, manager.getCommentList().get(position), true, holder.text5).execute();
+                    new VoteTask(activity, manager.getCommentList().get(holder.getAdapterPosition()), true, holder.text5).execute();
                 } else {
                     Toast.makeText(activity, "Must be logged in to vote on comments", Toast.LENGTH_SHORT).show();
                 }
@@ -155,7 +143,7 @@ public class CommentListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (User.currentToken(activity) != null) {
-                    new VoteTask(activity, manager.getCommentList().get(position), false, holder.text5).execute();
+                    new VoteTask(activity, manager.getCommentList().get(holder.getAdapterPosition()), false, holder.text5).execute();
                 } else {
                     Toast.makeText(activity, "Must be logged in to vote on comments", Toast.LENGTH_SHORT).show();
                 }
@@ -168,7 +156,7 @@ public class CommentListAdapter extends BaseAdapter {
         int paddingPixel = 16;
         float density = activity.getResources().getDisplayMetrics().density;
         int paddingDp = (int) (paddingPixel * density);
-        vi.setPadding(manager.getCommentList().get(position).getDepth() * paddingDp, vi.getPaddingTop(), vi.getPaddingRight(), vi.getPaddingBottom());
+        holder.layout.setPadding(manager.getCommentList().get(position).getDepth() * paddingDp, holder.layout.getPaddingTop(), holder.layout.getPaddingRight(), holder.layout.getPaddingBottom());
 
         int score = manager.getCommentList().get(position).getScore();
         String points = "0 points";
@@ -234,8 +222,6 @@ public class CommentListAdapter extends BaseAdapter {
                 }
             }
         });
-        return vi;
-
     }
 
     private AlertDialog getRealEditCommentDialog(final EditText txtUrl, final View view, final CommentListAdapter adapter, final Comment comment) {

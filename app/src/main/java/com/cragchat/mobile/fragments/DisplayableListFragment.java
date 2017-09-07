@@ -4,6 +4,8 @@ package com.cragchat.mobile.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,32 +21,39 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.RouteListAdapter;
+import com.cragchat.mobile.adapters.CommentListAdapter;
+import com.cragchat.mobile.adapters.DisplayableRecyclerAdapter;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.sql.LocalDatabase;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
-public class RouteListFragment extends Fragment {
+public class DisplayableListFragment extends Fragment {
 
-    private List<Route> allRoutes;
+    private List<Displayable> allRoutes;
     private YdsSorter sorter;
     private TypeSorter typeSorter;
     private View filterView;
-    private RouteListAdapter adap;
+    private DisplayableRecyclerAdapter adap;
     private PopupWindow popupWindow;
+    private RecyclerView recList;
 
-    public static RouteListFragment newInstance(Area a) {
-        RouteListFragment f = new RouteListFragment();
+    public static DisplayableListFragment newInstance() {
+        DisplayableListFragment f = new DisplayableListFragment();
         Bundle b = new Bundle();
-        b.putString("AREA", Displayable.encodeAsString(a));
         f.setArguments(b);
         return f;
+    }
+
+    public void setDisplayables(List<Displayable> list) {
+        allRoutes = list;
+        if (adap != null) {
+            adap.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -55,8 +64,6 @@ public class RouteListFragment extends Fragment {
 
         sorter = new YdsSorter(getContext());
         typeSorter = new TypeSorter();
-        Area thisArea = Displayable.decodeAreaString(getArguments().getString("AREA"));
-        allRoutes = LocalDatabase.getInstance(getActivity()).findRoutesWithin(thisArea);
 
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
@@ -67,10 +74,16 @@ public class RouteListFragment extends Fragment {
 
         spinner.setOnItemSelectedListener(listener);
 
-        ListView list = (ListView) view.findViewById(R.id.display_list);
-        adap = new RouteListAdapter((CragChatActivity) getActivity(), allRoutes);
-        list.setAdapter(adap);
-        list.setOnItemClickListener(adap);
+        adap = new DisplayableRecyclerAdapter((CragChatActivity)getActivity(), allRoutes);
+        recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        recList.setHasFixedSize(true);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+
+        recList.setAdapter(adap);
+        adap.notifyDataSetChanged();
 
         Button filterButton = view.findViewById(R.id.filter_button);
         filterView = getLayoutInflater().inflate(R.layout.fragment_filter, null);
@@ -134,8 +147,6 @@ public class RouteListFragment extends Fragment {
                 } else if (option.equals("Type")) {
                     Collections.sort(allRoutes, typeSorter);
                 }
-                ListView lv = (ListView) getView().findViewById(R.id.display_list);
-                BaseAdapter adap = (BaseAdapter) lv.getAdapter();
                 adap.notifyDataSetChanged();
             }
         }
@@ -146,7 +157,7 @@ public class RouteListFragment extends Fragment {
         }
     };
 
-    private class YdsSorter implements Comparator<Route> {
+    private class YdsSorter implements Comparator<Displayable> {
 
         private boolean high = false;
         private Context con;
@@ -160,11 +171,21 @@ public class RouteListFragment extends Fragment {
         }
 
         @Override
-        public int compare(Route one, Route two) {
-            if (!high) {
-                return two.getYds(con) - one.getYds(con);
+        public int compare(Displayable one, Displayable two) {
+            if (one instanceof Area && two instanceof Route) {
+                return -1;
+            } else if (two instanceof Area && one instanceof Route) {
+                return 1;
+            } else if (one instanceof Area && two instanceof Area) {
+                return -1;
             } else {
-                return one.getYds(con) - two.getYds(con);
+                Route routeOne = (Route) one;
+                Route routeTwo = (Route) two;
+                if (high) {
+                    return routeTwo.getYds(con) - routeOne.getYds(con);
+                } else {
+                    return routeOne.getYds(con) - routeTwo.getYds(con);
+                }
             }
         }
 
@@ -173,11 +194,21 @@ public class RouteListFragment extends Fragment {
 
     ;
 
-    private class TypeSorter implements Comparator<Route> {
+    private class TypeSorter implements Comparator<Displayable> {
 
         @Override
-        public int compare(Route one, Route two) {
-            return one.getType().compareTo(two.getType());
+        public int compare(Displayable one, Displayable two) {
+            if (one instanceof Area && two instanceof Route) {
+                return -1;
+            } else if (two instanceof Area && one instanceof Route) {
+                return 1;
+            } else if (one instanceof Area && two instanceof Area) {
+                return -1;
+            } else {
+                Route routeOne = (Route) one;
+                Route routeTwo = (Route) two;
+                return routeOne.getType().compareTo(routeTwo.getType());
+            }
         }
 
     }

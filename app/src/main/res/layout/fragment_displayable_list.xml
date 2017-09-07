@@ -20,34 +20,9 @@
         android:layout_marginTop="10dp"
         android:text="@string/filter"/>
 
-
-    <!--
-    <ImageView
-        android:id="@+id/sort_icon"
-        android:layout_margin="@dimen/eight_dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@id/filter_icon"
-        android:src="@drawable/ic_sort_black_24dp"
-        android:contentDescription="@string/sort"/>
-
-
-    <ImageView
-        android:id="@+id/filter_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_toEndOf="@id/route_sort_spinner"
-        android:layout_alignTop="@id/route_sort_spinner"
-        android:src="@drawable/ic_filter_list_black_24dp"
-        android:contentDescription="@string/filter"/> -->
-
-    <!-- List display area -->
-    <ListView
-        android:id="@+id/display_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/route_sort_spinner"
-        android:cacheColorHint="#00000000"
-        android:divider="@null" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comment_section_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/route_sort_spinner" />
 </RelativeLayout>

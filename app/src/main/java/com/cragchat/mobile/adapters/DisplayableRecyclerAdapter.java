@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
@@ -14,43 +13,87 @@ import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by tim on 7/25/17.
- */
+public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<DisplayableRecyclerAdapter.ViewHolder> {
 
-public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResultRecyclerAdapter.DisplayableHolder>
-        implements View.OnClickListener {
-
-    private CragChatActivity activity;
     private List<Displayable> displayables;
-    private RecyclerView mRecyclerView;
+    private CragChatActivity activity;
+    private List<Displayable> filtered;
 
-    public SearchResultRecyclerAdapter(CragChatActivity a, RecyclerView recyclerView) {
-        activity = a;
-        displayables = Collections.emptyList();
-        mRecyclerView = recyclerView;
+    public DisplayableRecyclerAdapter(CragChatActivity a, List<Displayable> routes) {
+        this.displayables = routes;
+        this.activity = a;
+        filtered = new ArrayList<>();
+    }
+
+    public void setDisplayables(List<Displayable> list) {
+        this.displayables = list;
+        notifyDataSetChanged();
+    }
+
+    public void addFilter(String string) {
+        for (Iterator<Displayable> routeIterator = displayables.iterator(); routeIterator.hasNext(); ) {
+            Displayable r = routeIterator.next();
+            if (r instanceof Route) {
+                Route route = (Route) r;
+                if (route.getType().equalsIgnoreCase(string)) {
+                    filtered.add(r);
+                    routeIterator.remove();
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void removeFilter(String string) {
+        for (Iterator<Displayable> routeIterator = filtered.iterator(); routeIterator.hasNext(); ) {
+            Displayable r = routeIterator.next();
+            if (r instanceof Route) {
+                Route route = (Route) r;
+                if (route.getType().toLowerCase().contains(string.toLowerCase())) {
+                    displayables.add(r);
+                    routeIterator.remove();
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
-    public DisplayableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemCount() {
+        return displayables.size();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.search_result_row_route, parent, false);
-        return new DisplayableHolder(itemView);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final DisplayableHolder holder, int position) {
-        final Displayable obj = displayables.get(position);
-        if (obj instanceof Route) {
-            Route r = (Route) obj;
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final Displayable displayable = (Displayable) displayables.get(position);
+        holder.rect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (activity.hasConnection()) {
+                    new CheckForRouteUpdateTask(displayable, activity).execute();
+                }
+                activity.launch(displayable);
+            }
+        });
+        if (displayable instanceof Route) {
+            Route r = (Route) displayable;
             holder.text1.setText(r.getName());
             String sters;
             String yds;
@@ -69,14 +112,14 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             holder.text4.setText(r.getType());
             holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
         } else {
-            Area a = (Area) obj;
+            Area a = (Area) displayable;
             holder.text1.setText(a.getName());
             List<Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
-            holder.text2.setText(within.size() + " routes");
+            holder.text2.setText(within.size() + " displayables");
             double average = 0;
             int size = 0;
             for (Displayable i : within) {
-                Route route = (Route)i;
+                Route route = (Route) i;
                 if (route.getYds(activity) != -1) {
                     average += route.getStars(activity);
                     size++;
@@ -94,44 +137,25 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             holder.text4.setVisibility(View.GONE);
             holder.icon.setImageResource(R.drawable.area_mountain);
         }
-
-        holder.layout.setTag(obj);
-        holder.layout.setOnClickListener(this);
     }
 
-    public void setResults(List<Displayable> list) {
-        displayables = list;
-    }
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-
-    @Override
-    public int getItemCount() {
-        return displayables.size();
-    }
-
-    @Override
-    public void onClick(View view) {
-        int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-        activity.launch(displayables.get(itemPosition));
-    }
-
-    public class DisplayableHolder extends RecyclerView.ViewHolder {
-
-        LinearLayout layout;
         TextView text1;
         TextView text2;
         TextView text3;
         TextView text4;
+        LinearLayout rect;
         ImageView icon;
 
-        public DisplayableHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            layout = (LinearLayout) itemView.findViewById(R.id.rectangle);
             text1 = (TextView) itemView.findViewById(R.id.list_row_one);
             text2 = (TextView) itemView.findViewById(R.id.list_row_two);
             text3 = (TextView) itemView.findViewById(R.id.list_row_three);
             text4 = (TextView) itemView.findViewById(R.id.list_row_four);
-            icon = itemView.findViewById(R.id.icon);
+            rect = (LinearLayout) itemView.findViewById(R.id.rectangle);
+            icon = (ImageView) itemView.findViewById(R.id.icon);
         }
     }
 }

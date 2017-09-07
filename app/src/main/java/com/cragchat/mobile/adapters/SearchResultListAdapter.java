@@ -102,13 +102,14 @@ public class SearchResultListAdapter extends BaseAdapter implements AdapterView.
         } else {
             Area a = (Area) results[position];
             holder.text1.setText(a.getName());
-            List<Route> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
+            List<Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
             holder.text2.setText(within.size() + " routes");
             double average = 0;
             int size = 0;
-            for (Route i : within) {
-                if (i.getYds(activity) != -1) {
-                    average += i.getStars(activity);
+            for (Displayable i : within) {
+                Route routea = (Route)i;
+                if (routea.getYds(activity) != -1) {
+                    average += routea.getStars(activity);
                     size++;
                 }
             }

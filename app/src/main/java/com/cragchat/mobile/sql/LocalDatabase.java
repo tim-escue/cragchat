@@ -501,8 +501,8 @@ public class LocalDatabase {
     /*
         Method for finding all areas within an area.
      */
-    public List<Area> findAreasWithin(Area area) {
-        List<Area> list = new LinkedList<>();
+    public List<Displayable> findAreasWithin(Area area) {
+        List<Displayable> list = new LinkedList<>();
         Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + area.getId() + "'", null);
         if (c.moveToFirst()) {
             Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
@@ -539,11 +539,11 @@ public class LocalDatabase {
     /*
         Retrieve all routes from within specified area
      */
-    public List<Route> findRoutesWithin(Area area) {
-        List<Route> list = new LinkedList<>();
-        List<Area> allAreas = findAreasWithin(area);
+    public List<Displayable> findRoutesWithin(Area area) {
+        List<Displayable> list = new LinkedList<>();
+        List<Displayable> allAreas = findAreasWithin(area);
         allAreas.add(area);
-        for (Area cur : allAreas) {
+        for (Displayable cur : allAreas) {
             Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + cur.getId() + "'", null);
             if (c.moveToFirst()) {
                 Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),

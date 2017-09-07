@@ -1,53 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/comment_section_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <Spinner
-            android:id="@+id/spinner_comment_sort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/sixteen_dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
+    <Spinner
+        android:id="@+id/spinner_comment_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/sixteen_dp"
+        android:padding="0dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_above="@+id/coordinator"
-            android:textSize="20sp"
-            android:text="Be the first to add a submission!!!"
-            android:visibility="gone"
-            android:id="@+id/list_empty" />
+    <TextView
+        android:id="@+id/list_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_comment_sort"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:text="Be the first to add a submission!!!"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/coordinator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/spinner_comment_sort">
 
-            <ListView
-                android:id="@+id/comment_section_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"/>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/button_add_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:backgroundTint="@color/accent"
-                android:src="@drawable/ic_add_white_24dp"
-                android:layout_gravity="bottom|end|right"
-                app:layout_anchorGravity="bottom|end|right"
-                app:layout_anchor="@id/comment_section_list"
-                app:borderWidth="0dp" />
-
-        </android.support.design.widget.CoordinatorLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comment_section_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinner_comment_sort" />
 
 </RelativeLayout>

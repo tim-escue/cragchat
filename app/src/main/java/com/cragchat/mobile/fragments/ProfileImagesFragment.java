@@ -38,8 +38,8 @@ public class ProfileImagesFragment extends Fragment {
 
         load(view);
 
-        Button b = (Button) view.findViewById(R.id.button_add_image);
-        b.setVisibility(View.GONE);
+      //  Button b = (Button) view.findViewById(R.id.button_add_image);
+     //   b.setVisibility(View.GONE);
         return view;
     }
 

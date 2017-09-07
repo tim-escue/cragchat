@@ -1,10 +1,10 @@
 package com.cragchat.mobile.activity;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -86,7 +86,7 @@ public class MainActivity extends NavigableActivity {
                 } else {
                     DialogFragment fragment = NotificationDialog.newInstance("You will not be able to view photos without external storage.\n" +
                             "If you would like to allow this feature please restart the app.");
-                    fragment.show(getFragmentManager(), "dialog");
+                    fragment.show(getSupportFragmentManager(), "dialog");
                 }
             }
         }

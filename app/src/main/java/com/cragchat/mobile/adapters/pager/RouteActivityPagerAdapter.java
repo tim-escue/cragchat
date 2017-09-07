@@ -2,6 +2,7 @@ package com.cragchat.mobile.adapters.pager;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,19 +23,19 @@ import java.util.Map;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
-    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, int routeId) {
-        super(context, fragmentManager, appBarLayout);
+    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, int routeId) {
+        super(context, fragmentManager, appBarLayout, floatingActionButton);
 
         addFragment(context.getString(R.string.title_beta),
-                CommentSectionFragment.newInstance(routeId, LocalDatabase.BETA), false);
+                CommentSectionFragment.newInstance(routeId, LocalDatabase.BETA), false, true);
         addFragment(context.getString(R.string.title_ratings),
-                RatingFragment.newInstance(routeId), false);
+                RatingFragment.newInstance(routeId), false, true);
         addFragment(context.getString(R.string.title_sends),
-                SendsFragment.newInstance(routeId), true);
+                SendsFragment.newInstance(routeId), true, true);
         addFragment(context.getString(R.string.title_location),
-                LocationFragment.newInstance(routeId), true);
+                LocationFragment.newInstance(routeId), true, true);
         addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(routeId), true);
+                ImageFragment.newInstance(routeId), true, true);
     }
     
 }

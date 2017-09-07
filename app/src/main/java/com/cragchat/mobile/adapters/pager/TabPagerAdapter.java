@@ -2,6 +2,7 @@ package com.cragchat.mobile.adapters.pager;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.fragments.CommentSectionFragment;
@@ -26,16 +28,18 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
     private SparseArray<PagerFragment> fragments;
     private int index;
     private AppBarLayout appBarLayout;
+    private FloatingActionButton fab;
 
-    public TabPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBar) {
+    public TabPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBar, FloatingActionButton fab) {
         super(fragmentManager);
         fragments = new SparseArray<>();
         index = 0;
         this.appBarLayout = appBar;
+        this.fab = fab;
     }
 
-    public void addFragment(String title, Fragment fragment, boolean alwaysShowAppBar) {
-        fragments.append(index++, new PagerFragment(title, fragment, alwaysShowAppBar));
+    public void addFragment(String title, Fragment fragment, boolean alwaysShowAppBar, boolean showFloatingActionButton) {
+        fragments.append(index++, new PagerFragment(title, fragment, alwaysShowAppBar, showFloatingActionButton));
     }
 
     @Override
@@ -55,19 +59,23 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-expandIfNecessary(position);
+        toggleOptionalViews(position);
     }
 
     @Override
     public void onPageSelected(int position) {
-        expandIfNecessary(position);
+        toggleOptionalViews(position);
     }
 
-    private void expandIfNecessary(int position) {
-        Log.d("HUH", "OK");
-        if (fragments.get(position).getExpandAppBar()) {
-            Log.d("HUdfadfdf", "OK");
+    private void toggleOptionalViews(int position) {
+        PagerFragment fragment = fragments.get(position);
+        if (fragment.getExpandAppBar()) {
             appBarLayout.setExpanded(true);
+        }
+        if (fragment.getShowFloatingActionButton()) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.GONE);
         }
     }
 
@@ -79,11 +87,17 @@ expandIfNecessary(position);
         private String title;
         private Fragment fragment;
         private boolean expandAppBar;
+        private boolean showFloatingActionButton;
 
-        PagerFragment(String title, Fragment fragment, boolean expandAppBar) {
+        PagerFragment(String title, Fragment fragment, boolean expandAppBar, boolean showFloatingActionButton) {
             this.title = title;
             this.fragment = fragment;
             this.expandAppBar = expandAppBar;
+            this.showFloatingActionButton = showFloatingActionButton;
+        }
+
+        public boolean getShowFloatingActionButton() {
+            return showFloatingActionButton;
         }
 
         public boolean getExpandAppBar() {

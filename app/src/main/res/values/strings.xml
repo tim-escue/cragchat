@@ -74,8 +74,8 @@
 
     <string-array name="route_sort_array">
         <item>YDS</item>
-        <item>Type</item>
-        <item>Name</item>
+        <item>TYPE</item>
+        <item>NAME</item>
     </string-array>
 
     <string-array name="area_sort_array">
@@ -127,8 +127,8 @@
     </string-array>
 
     <string-array name="spinner_comment_sort_options">
-        <item>Score</item>
-        <item>Date</item>
+        <item>SCORE</item>
+        <item>DATE</item>
     </string-array>
 
 </resources>

@@ -5,14 +5,21 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.pager.RouteActivityPagerAdapter;
+import com.cragchat.mobile.android.CircleImageView;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.fragments.NotificationDialog;
@@ -29,16 +36,20 @@ public class RouteActivity extends DisplayableActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //addContent(R.layout.activity_route);
+        addContent(R.layout.activity_route);
 
         Intent intent = getIntent();
         route = null;
         try {
-            route = Displayable.decodeRoute(new JSONObject(intent.getStringExtra(CragChatActivity.DATA_STRING)));
+            route = Displayable.decodeRoute(
+                    new JSONObject(intent.getStringExtra(CragChatActivity.DATA_STRING)));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(route.getName());
         getSupportActionBar().setSubtitle(route.getSubTitle(this));
 
@@ -54,40 +65,40 @@ public class RouteActivity extends DisplayableActivity {
         textView.setText(sters);
 
         int tabInd = intent.getIntExtra("TAB", 0);
+
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this, getSupportFragmentManager(), appBarLayout, route.getId());
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        FloatingActionButton floatingActionButton = findViewById(R.id.add_button);
+
+        ImageView routeImage = findViewById(R.id.route_image);
+        routeImage.setImageResource(route.getType().equalsIgnoreCase("sport") ?
+                R.drawable.bolt_img : R.drawable.nuts);
+
+        final RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this,
+                getSupportFragmentManager(), appBarLayout, floatingActionButton, route.getId());
+        final ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = pageAdapter.getItem(pager.getCurrentItem());
+                if (fragment instanceof View.OnClickListener) {
+                    View.OnClickListener clickListener = (View.OnClickListener) fragment;
+                    clickListener.onClick(view);
+                }
+            }
+        });
+
         pager.setAdapter(pageAdapter);
         pager.setCurrentItem(tabInd);
         pager.addOnPageChangeListener(pageAdapter);
 
-        TabLayout slab = (TabLayout) findViewById(R.id.sliding_tabs);
+        TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
     }
 
     @Override
     public Displayable getDisplayable() {
         return route;
-    }
-
-    public void rate(View v) {
-        if (User.currentToken(this) != null) {
-            Intent next = new Intent(this, RateRouteActivity.class);
-            next.putExtra("id", route.getId());
-            startActivity(next);
-        } else {
-            Toast.makeText(this, "Must be logged in to rate climb", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void submitSend(View v) {
-        if (User.currentToken(this) != null) {
-            Intent next = new Intent(this, SubmitSendActivity.class);
-            next.putExtra("id", route.getId());
-            startActivity(next);
-        } else {
-            Toast.makeText(this, "Must be logged in to submit send", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void onClick(View v) {

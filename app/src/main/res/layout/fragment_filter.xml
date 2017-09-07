@@ -10,21 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/route_label"
-            style="@style/TextLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_margin="@dimen/sixteen_dp"
-            android:text="Route type" />
-
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/sport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/route_label"
+            android:layout_alignParentTop="true"
             android:layout_margin="@dimen/sixteen_dp"
             android:checked="true"
             android:text="Sport"

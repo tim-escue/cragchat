@@ -1,22 +1,26 @@
 package com.cragchat.mobile.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.SubmitSendActivity;
 import com.cragchat.mobile.adapters.SendListAdapter;
 import com.cragchat.mobile.descriptor.Send;
 import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.user.User;
 
 import java.util.List;
 
 
-public class SendsFragment extends Fragment {
+public class SendsFragment extends Fragment implements View.OnClickListener {
 
 
     public static SendsFragment newInstance(int displayableId) {
@@ -53,4 +57,14 @@ public class SendsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (User.currentToken(getActivity()) != null) {
+            Intent next = new Intent(getContext(), SubmitSendActivity.class);
+            next.putExtra("id", id);
+            startActivity(next);
+        } else {
+            Toast.makeText(getContext(), "Must be logged in to submit send", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
