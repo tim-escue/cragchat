@@ -1,4 +1,4 @@
-package com.cragchat.mobile.android;
+package com.cragchat.mobile.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -20,7 +20,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.cragchat.mobile.R;
 

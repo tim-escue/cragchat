@@ -3,13 +3,15 @@ package com.cragchat.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.RatingListAdapter;
+import com.cragchat.mobile.adapters.recycler.RatingRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Rating;
 import com.cragchat.mobile.sql.LocalDatabase;
 
@@ -35,15 +37,9 @@ public class ProfileRatingsFragment extends Fragment {
 
         List<Rating> ratings = LocalDatabase.getInstance(getContext()).getProfileRatings(getActivity(), getArguments().getString("username"));
 
-        final RatingListAdapter adapter = new RatingListAdapter(getActivity(), ratings, true);
-        ListView lv = (ListView) view.findViewById(R.id.list_ratings);
-
-        if (ratings.size() == 0) {
-            lv.setEmptyView(view.findViewById(R.id.list_empty));
-        }
-
-        lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        final RatingRecyclerAdapter adapter = new RatingRecyclerAdapter(getActivity(), ratings, false);
+        RecyclerView recyclerView = view.findViewById(R.id.list_ratings);
+        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
 
         return view;
     }

@@ -15,42 +15,10 @@
         android:text="Be the first to rate this route!!!"
         android:visibility="gone"
         android:id="@+id/list_empty" />
-    <!--
-        <ListView
+
+        <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_ratings"
-                android:layout_weight="1"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp">
-        </ListView>
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
 
-        <Button
-                android:id="@+id/button_add_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rate this climb"
-                    android:clickable="true"
-        android:onClick="rate"/>
-    -->
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/list_ratings"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/button_add_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/accent"
-            android:src="@drawable/ic_add_white_24dp"
-            android:onClick="rate"
-            app:layout_anchor="@id/list_ratings"
-            app:layout_anchorGravity="bottom|right|end"
-            app:borderWidth="0dp" />
-
-    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

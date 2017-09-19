@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.adapters.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
@@ -42,7 +41,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
     public DisplayableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.search_result_row_route, parent, false);
+                inflate(R.layout.displayable_recycler_row, parent, false);
         return new DisplayableHolder(itemView);
     }
 

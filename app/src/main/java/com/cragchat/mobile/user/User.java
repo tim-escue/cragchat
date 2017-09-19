@@ -12,7 +12,7 @@ public class User {
     private static final String NAME = "userName";
     private static final String PRIVATE = "private";
 
-    public static String currentToken(Activity context) {
+    public static String currentToken(Context context) {
         return getPreference(context, TOKEN);
     }
 
@@ -20,7 +20,7 @@ public class User {
         return getPreference(context, NAME);
     }
 
-    private static String getPreference(Activity context, String pref) {
+    private static String getPreference(Context context, String pref) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
         String token = sharedPref.getString(pref, "null");
         if (token.equals("null")) {

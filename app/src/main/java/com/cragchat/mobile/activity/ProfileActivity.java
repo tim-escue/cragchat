@@ -8,8 +8,9 @@ import android.support.v7.widget.Toolbar;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.adapters.pager.ProfilePagerAdapter;
+import com.cragchat.mobile.search.NavigableActivity;
 
-public class ProfileActivity extends SearchActivity {
+public class ProfileActivity extends NavigableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);

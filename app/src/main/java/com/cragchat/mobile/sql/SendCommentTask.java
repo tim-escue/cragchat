@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.cragchat.mobile.adapters.CommentListAdapter;
+import com.cragchat.mobile.adapters.recycler.CommentRecyclerAdapter;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.user.User;
@@ -12,11 +12,11 @@ import com.cragchat.mobile.user.User;
 public class SendCommentTask extends AsyncTask<String, Integer, String> {
 
     private Activity activity;
-    private CommentListAdapter adapter;
+    private CommentRecyclerAdapter adapter;
     private String[] params;
     private String table;
 
-    public SendCommentTask(Activity activity, CommentListAdapter adapter, String table) {
+    public SendCommentTask(Activity activity, CommentRecyclerAdapter adapter, String table) {
         this.adapter = adapter;
         this.activity = activity;
         this.table = table;

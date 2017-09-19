@@ -1,8 +1,5 @@
 package com.cragchat.mobile.search;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -16,24 +13,24 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.LoginActivity;
 import com.cragchat.mobile.activity.MainActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.adapters.SearchResultRecyclerAdapter;
-import com.cragchat.mobile.sql.SearchQueryTask;
+import com.cragchat.mobile.adapters.recycler.SearchResultRecyclerAdapter;
+import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.sql.SearchQueryTaskNew;
 import com.cragchat.mobile.user.User;
 
-import static android.R.id.list;
+import org.json.JSONObject;
 
 public class NavigableActivity extends CragChatActivity {
 

@@ -17,6 +17,7 @@ import com.cragchat.mobile.descriptor.Rating;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.descriptor.Send;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class LocalDatabase {
         // c.close();
     }
 
-    public void store(Activity act, String str) {
+    public void store(Context act, String str) {
         //System.out.println("STORING " + str);
         Toast.makeText(act, "Submission will be posted next time application obtains a data connection.", Toast.LENGTH_SHORT).show();
         ContentValues vals = new ContentValues();
@@ -123,12 +124,20 @@ public class LocalDatabase {
         return comments;
     }
 
+    public List<Comment> getCommentsForTable(int id, String table) {
+        return getComments(id, " AND TABLE_NAME LIKE '" + table + "'");
+    }
+
+    public List<Comment> getAllComments(int id) {
+        return getComments(id, "");
+    }
+
     /*
-        Retrieve all comments for a Displayable
+        Recursively retrieves all comments for a Displayable
      */
-    public List<Comment> getCommentsFor(int id, String table) {
+    public List<Comment> getComments(int id, String paramString) {
         List<Comment> comments = new LinkedList<>();
-        Cursor c = query("SELECT * FROM BETA WHERE DISPLAY_ID='" + id + "' AND DEPTH='0' AND TABLE_NAME LIKE '" + table + "'");
+        Cursor c = query("SELECT * FROM BETA WHERE DISPLAY_ID='" + id + "' AND DEPTH='0'" + paramString);
         int j = 0;
         while (c.moveToNext()) {
             Comment cur = new Comment(
@@ -142,11 +151,27 @@ public class LocalDatabase {
                     c.getString(Comment.COLUMN_AUTHOR_NAME),
                     c.getString(Comment.COLUMN_TABLE_NAME));
             comments.add(cur);
-            getCommentsFor(cur, table);
+            getCommentsFor(cur, paramString);
         }
         c.close();
         //Log.d("LocalDatabase", "parent comments found: " + comments.size());
         return comments;
+    }
+
+    /*
+        Recursive part of function
+     */
+    private void getCommentsFor(Comment parent, String paramString) {
+        Cursor c = query("SELECT * FROM BETA WHERE PARENT_ID='" + parent.getId()+ "'" + paramString);
+
+        while (c.moveToNext()) {
+            Comment current = new Comment(c.getString(Comment.COLUMN_TEXT),
+                    c.getInt(Comment.COLUMN_ID), c.getInt(Comment.COLUMN_SCORE), c.getString(Comment.COLUMN_DATE),
+                    c.getInt(Comment.COLUMN_DISPLAY_ID), c.getInt(Comment.COLUMN_PARENT_ID), c.getInt(Comment.COLUMN_DEPTH), c.getString(Comment.COLUMN_AUTHOR_NAME), c.getString(Comment.COLUMN_TABLE_NAME));
+            parent.addChild(current);
+            getCommentsFor(current, paramString);
+        }
+        c.close();
     }
 
     public List<Comment> getCommentsForProfile(Activity con, String username) {
@@ -228,22 +253,6 @@ public class LocalDatabase {
         return ratings;
     }
 
-    /*
-        Recursive part of function
-     */
-    private void getCommentsFor(Comment parent, String table) {
-        Cursor c = query("SELECT * FROM BETA WHERE PARENT_ID='" + parent.getId() + "' AND TABLE_NAME LIKE '" + table + "'");
-
-        while (c.moveToNext()) {
-            Comment current = new Comment(c.getString(Comment.COLUMN_TEXT),
-                    c.getInt(Comment.COLUMN_ID), c.getInt(Comment.COLUMN_SCORE), c.getString(Comment.COLUMN_DATE),
-                    c.getInt(Comment.COLUMN_DISPLAY_ID), c.getInt(Comment.COLUMN_PARENT_ID), c.getInt(Comment.COLUMN_DEPTH), c.getString(Comment.COLUMN_AUTHOR_NAME), c.getString(Comment.COLUMN_TABLE_NAME));
-            //Log.d("CCCU", " Child found for " + parent.getId() + " with id of " + current.getId());
-            parent.addChild(current);
-            getCommentsFor(current, table);
-        }
-        c.close();
-    }
 
     public void updateComment(int score, int id) {
         String sql = "UPDATE BETA SET SCORE='" + score + "' WHERE ID='" + id + "'";
@@ -501,8 +510,8 @@ public class LocalDatabase {
     /*
         Method for finding all areas within an area.
      */
-    public List<Displayable> findAreasWithin(Area area) {
-        List<Displayable> list = new LinkedList<>();
+    public List<Area> findAreasWithin(Area area) {
+        List<Area> list = new LinkedList<>();
         Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + area.getId() + "'", null);
         if (c.moveToFirst()) {
             Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
@@ -517,7 +526,7 @@ public class LocalDatabase {
         Recursive part of method
      */
     private List<Area> findAreasWithinRecursive(Area area) {
-        List<Area> list = new LinkedList<>();
+        List<Area> list = new ArrayList<>();
 
         Cursor cTop = db.rawQuery("SELECT * FROM IDS_DISPLAYABLE WHERE PARENT_ID LIKE '" + area.getId() + "'", null);
         while (cTop.moveToNext()) {
@@ -541,7 +550,7 @@ public class LocalDatabase {
      */
     public List<Displayable> findRoutesWithin(Area area) {
         List<Displayable> list = new LinkedList<>();
-        List<Displayable> allAreas = findAreasWithin(area);
+        List<Area> allAreas = findAreasWithin(area);
         allAreas.add(area);
         for (Displayable cur : allAreas) {
             Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + cur.getId() + "'", null);

@@ -12,17 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.CommentListAdapter;
-import com.cragchat.mobile.adapters.DisplayableRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.DisplayableRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
@@ -30,6 +30,8 @@ import com.cragchat.mobile.descriptor.Route;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static android.view.View.GONE;
 
 
 public class DisplayableListFragment extends Fragment {
@@ -40,7 +42,7 @@ public class DisplayableListFragment extends Fragment {
     private View filterView;
     private DisplayableRecyclerAdapter adap;
     private PopupWindow popupWindow;
-    private RecyclerView recList;
+    private boolean hideFilter;
 
     public static DisplayableListFragment newInstance() {
         DisplayableListFragment f = new DisplayableListFragment();
@@ -54,6 +56,10 @@ public class DisplayableListFragment extends Fragment {
         if (adap != null) {
             adap.notifyDataSetChanged();
         }
+    }
+
+    public void hideFilterAndSortButtons() {
+        hideFilter = true;
     }
 
     @Override
@@ -75,48 +81,46 @@ public class DisplayableListFragment extends Fragment {
         spinner.setOnItemSelectedListener(listener);
 
         adap = new DisplayableRecyclerAdapter((CragChatActivity)getActivity(), allRoutes);
-        recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
-        recList.setHasFixedSize(true);
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
 
-        recList.setAdapter(adap);
-        adap.notifyDataSetChanged();
+        if (!hideFilter) {
+            filterView = getLayoutInflater().inflate(R.layout.fragment_filter, null);
+            LinearLayout filterButton = view.findViewById(R.id.filter_button);
+            SwitchCompat switchButton = filterView.findViewById(R.id.sport);
+            switchButton.setOnCheckedChangeListener(filterListener);
+            switchButton = filterView.findViewById(R.id.trad);
+            switchButton.setOnCheckedChangeListener(filterListener);
+            switchButton = filterView.findViewById(R.id.toprope);
+            switchButton.setOnCheckedChangeListener(filterListener);
 
-        Button filterButton = view.findViewById(R.id.filter_button);
-        filterView = getLayoutInflater().inflate(R.layout.fragment_filter, null);
-
-        SwitchCompat switchButton = filterView.findViewById(R.id.sport);
-        switchButton.setOnCheckedChangeListener(filterListener);
-        switchButton = filterView.findViewById(R.id.trad);
-        switchButton.setOnCheckedChangeListener(filterListener);
-        switchButton = filterView.findViewById(R.id.toprope);
-        switchButton.setOnCheckedChangeListener(filterListener);
-
-        Button doneButton = filterView.findViewById(R.id.done_button);
-        doneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupWindow.dismiss();
-            }
-        });
-
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (popupWindow == null || !popupWindow.isShowing()) {
-                    popupWindow = new PopupWindow(
-                            filterView,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                    popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.showAsDropDown(view);
+            Button doneButton = filterView.findViewById(R.id.done_button);
+            doneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popupWindow.dismiss();
                 }
-            }
-        });
+            });
+
+            filterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (popupWindow == null || !popupWindow.isShowing()) {
+                        popupWindow = new PopupWindow(
+                                filterView,
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+                        popupWindow.setOutsideTouchable(true);
+                        popupWindow.showAsDropDown(view);
+                    }
+                }
+            });
+        } else {
+            RelativeLayout sortAndFilterOptions = view.findViewById(R.id.sort_filter_options);
+            sortAndFilterOptions.setVisibility(GONE);
+        }
 
         Collections.sort(allRoutes);
         return view;
@@ -139,12 +143,12 @@ public class DisplayableListFragment extends Fragment {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
-                if (option.equals("Name")) {
+                if (option.equals("NAME")) {
                     Collections.sort(allRoutes);
                 } else if (option.equals("YDS")) { //Used to be YDS: Low -> High
                     sorter.setHigh(false);
                     Collections.sort(allRoutes, sorter);
-                } else if (option.equals("Type")) {
+                } else if (option.equals("TYPE")) {
                     Collections.sort(allRoutes, typeSorter);
                 }
                 adap.notifyDataSetChanged();
@@ -177,7 +181,7 @@ public class DisplayableListFragment extends Fragment {
             } else if (two instanceof Area && one instanceof Route) {
                 return 1;
             } else if (one instanceof Area && two instanceof Area) {
-                return -1;
+                return 0;
             } else {
                 Route routeOne = (Route) one;
                 Route routeTwo = (Route) two;

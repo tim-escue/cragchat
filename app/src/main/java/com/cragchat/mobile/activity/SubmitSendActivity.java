@@ -10,10 +10,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.SendSendTask;
 import com.cragchat.mobile.user.User;
 
-public class SubmitSendActivity extends SearchActivity {
+public class SubmitSendActivity extends NavigableActivity {
 
     private int id;
 

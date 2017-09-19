@@ -31,11 +31,11 @@ public class RouteActivityPagerAdapter extends TabPagerAdapter {
         addFragment(context.getString(R.string.title_ratings),
                 RatingFragment.newInstance(routeId), false, true);
         addFragment(context.getString(R.string.title_sends),
-                SendsFragment.newInstance(routeId), true, true);
+                SendsFragment.newInstance(routeId), false, true);
         addFragment(context.getString(R.string.title_location),
-                LocationFragment.newInstance(routeId), true, true);
+                LocationFragment.newInstance(routeId), false, true);
         addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(routeId), true, true);
+                ImageFragment.newInstance(routeId), false, true);
     }
     
 }

@@ -1,13 +1,13 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.adapters.recycler;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,72 +29,33 @@ import com.cragchat.mobile.sql.LocalDatabase;
 import java.io.File;
 import java.util.List;
 
-public class RecentActivityAdapter extends BaseAdapter {
+/**
+ * Created by tim on 7/25/17.
+ */
+
+public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentActivityRecyclerAdapter.DisplayableHolder> {
 
     private CragChatActivity activity;
-    private static LayoutInflater inflater;
     private List<Object> activities;
 
-    public RecentActivityAdapter(CragChatActivity a, List<Object> activities) {
+    public RecentActivityRecyclerAdapter(CragChatActivity a, List<Object> activities) {
         activity = a;
-        inflater = activity.getLayoutInflater();
         this.activities = activities;
     }
 
     @Override
-    public int getCount() {
-        return activities.size();
+    public DisplayableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.
+                from(parent.getContext()).
+                inflate(R.layout.item_list_recent_activity, parent, false);
+        return new DisplayableHolder(itemView);
     }
 
     @Override
-    public Object getItem(int position) {
-        return activities.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public static class ViewHolder {
-        LinearLayout layout;
-        TextView text1;
-        TextView text2;
-        ImageView imageView;
-        ProgressBar progress;
-        View divider;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        final ViewHolder holder;
-
-        if (convertView == null) {
-
-            /****** Inflate tabitem.xml file for each row ( Defined below ) *******/
-            vi = inflater.inflate(R.layout.item_list_recent_activity, null);
-
-            /****** View Holder Object to contain tabitem.xml file elements ******/
-
-            holder = new ViewHolder();
-            holder.text1 = (TextView) vi.findViewById(R.id.text_recent_activity);
-            holder.text2 = (TextView) vi.findViewById(R.id.text_recent_activity_text);
-            holder.layout = (LinearLayout) vi.findViewById(R.id.layout_recent_activity);
-            holder.imageView = (ImageView) vi.findViewById(R.id.image_recent_activity);
-            holder.progress = (ProgressBar) vi.findViewById(R.id.progress_image_load);
-            holder.divider = vi.findViewById(R.id.divider);
-
-            /************  Set holder with LayoutInflater ************/
-            vi.setTag(holder);
-        } else {
-            holder = (ViewHolder) vi.getTag();
-        }
-
-        holder.divider.setVisibility(View.VISIBLE);
-        holder.text2.setVisibility(View.VISIBLE);
+    public void onBindViewHolder(final DisplayableHolder holder, int position) {
         final Object obj = activities.get(position);
         String content = "null";
+        holder.divider.setVisibility(View.VISIBLE);
         if (obj instanceof Rating) {
             holder.imageView.setVisibility(View.GONE);
 
@@ -112,13 +73,7 @@ public class RecentActivityAdapter extends BaseAdapter {
                     }
                 });
                 content = "<font color='#33A5FF'>" + rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" + disp.getName() + "</font>";
-                holder.text1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.launch(disp, 2);
 
-                    }
-                });
                 String ratingStrin = "YDS: \t" + disp.getYdsString(activity, rating.getYds()) + "\nStars: \t" + rating.getStars();
                 holder.text2.setVisibility(View.VISIBLE);
 
@@ -217,7 +172,30 @@ public class RecentActivityAdapter extends BaseAdapter {
         }
         holder.text1.setText(Html.fromHtml(content));
 
-        return vi;
+    }
 
+    @Override
+    public int getItemCount() {
+        return activities.size();
+    }
+
+    public class DisplayableHolder extends RecyclerView.ViewHolder {
+
+        LinearLayout layout;
+        TextView text1;
+        TextView text2;
+        ImageView imageView;
+        ProgressBar progress;
+        View divider;
+
+        public DisplayableHolder(View itemView) {
+            super(itemView);
+            text1 = (TextView) itemView.findViewById(R.id.text_recent_activity);
+            text2 = (TextView) itemView.findViewById(R.id.text_recent_activity_text);
+            layout = (LinearLayout) itemView.findViewById(R.id.layout_recent_activity);
+            imageView = (ImageView) itemView.findViewById(R.id.image_recent_activity);
+            progress = (ProgressBar) itemView.findViewById(R.id.progress_image_load);
+            divider = itemView.findViewById(R.id.divider);
+        }
     }
 }

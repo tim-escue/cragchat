@@ -1,5 +1,6 @@
 package com.cragchat.mobile.sql;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class SendImageTask extends AsyncTask<String, Integer, List<String>> {
 
-    private CragChatActivity activity;
+    private Context activity;
     private String caption;
     private int parentId;
     private long cur;
@@ -27,7 +28,7 @@ public class SendImageTask extends AsyncTask<String, Integer, List<String>> {
     private ImageFragment frag;
     private String token;
 
-    public SendImageTask(CragChatActivity activity, String token, Uri uri, int parentId, String caption, ImageFragment frag) {
+    public SendImageTask(Context activity, String token, Uri uri, int parentId, String caption, ImageFragment frag) {
         this.activity = activity;
         this.caption = caption;
         this.parentId = parentId;

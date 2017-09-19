@@ -1,110 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/black">
 
-    <LinearLayout
-        android:id="@+id/layout_edit_options"
+     <com.cragchat.mobile.view.ImageEditView
+        android:id="@+id/image_edit_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"/>
+
+    <!-- <include layout="@layout/simple_toolbar"
+        android:id="@+id/toolbarholder"/> -->
+
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="0"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_rotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rotate" />
-
-        <Button
-            android:id="@+id/button_add_beta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Visual Beta" />
-
-        <Button
-            android:id="@+id/button_add_caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Caption" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_edit_current"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="0"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/text_edit_instructions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Touch image"
-            android:textColor="@color/red" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/layout_edit_options"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="top">
 
-            <Button
-                android:id="@+id/button_undo_last"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Undo Last" />
+            <ImageView
+                android:id="@+id/button_paint"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:src="@drawable/ic_format_paint_white_24dp"/>
 
-            <Button
-                android:id="@+id/button_stop_editting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Done" />
+            <ImageView
+                android:id="@+id/button_color_picker"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:src="@drawable/ic_color_lens_white_24dp"/>
 
-            <Button
-                android:id="@+id/button_edit_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel" />
 
         </LinearLayout>
 
+    </HorizontalScrollView>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ImageView
-            android:id="@+id/image_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_image_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="0">
-
-        <Button
-            android:id="@+id/button_submit_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit Image"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

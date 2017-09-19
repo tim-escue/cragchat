@@ -13,8 +13,8 @@ public class CommentManager {
     private Comparator<Comment> currentComparator;
 
     public CommentManager() {
-        comments = new LinkedList<>();
-        parents = new ArrayList<>(20);
+        comments = new ArrayList<>();
+        parents = new ArrayList<>();
         currentComparator = scoreComparator;
     }
 
@@ -48,7 +48,7 @@ public class CommentManager {
         return null;
     }
 
-    public void constructList() {
+    private void constructList() {
         comments.clear();
         for (Comment i : parents) {
             comments.add(i);

@@ -8,9 +8,10 @@ import android.widget.EditText;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.fragments.NotificationDialog;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.RegisterTask;
 
-public class RegisterActivity extends SearchActivity {
+public class RegisterActivity extends NavigableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);

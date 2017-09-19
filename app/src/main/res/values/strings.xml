@@ -11,18 +11,26 @@
     <string name="title_location">Location</string>
     <string name="title_images">Images</string>
     <string name="title_recent_activity">Recent Activity</string>
-    <string name="title_routes">Routes</string>
-    <string name="title_areas">Areas</string>
+    <string name="title_routes">Routes (%1$d)</string>
+    <string name="title_areas">Areas (%1$d)</string>
     <string name="title_discussion">Discussion</string>
 
     <!-- Menu Items -->
     <string name="more_options">More options</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
-    <string name="filter">Filter</string>
+    <string name="filter">FILTER</string>
 
     <!-- Generic climbing -->
     <string name="routes">Routes</string>
+    <string name="areas">Areas</string>
+    <string name="crags">Crags</string>
+
+    <string name="number_of_routes">%1$s Routes</string>
+
+    <!-- Generic data -->
+    <string name="comments">Comments</string>
+
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -38,6 +46,7 @@
     <string name="string_add_comment">Add Comment</string>
     <string name="string_submissions">Submissions </string>
     <string name="pick_edit_option">Select type</string>
+    <string name="cd_crag_image">Crag Image</string>
 
 
     <string-array name="array_edit_options">

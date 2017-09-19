@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
@@ -12,10 +13,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LoginTask;
 import com.cragchat.mobile.sql.SendResetTask;
 
-public class LoginActivity extends SearchActivity {
+public class LoginActivity extends NavigableActivity {
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -25,8 +27,8 @@ public class LoginActivity extends SearchActivity {
 
     public void auth(View v) {
         if (hasConnection()) {
-            String username = ((EditText) findViewById(R.id.login_username)).getText().toString();
-            String password = ((EditText) findViewById(R.id.login_password)).getText().toString();
+            String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
+            String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
             new LoginTask(this, username, password).execute();
         } else {
             Toast.makeText(this, "Must have data connection to log in", Toast.LENGTH_LONG).show();

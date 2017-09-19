@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.adapters.recycler;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -6,22 +6,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.activity.SearchActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
 import com.cragchat.mobile.sql.LocalDatabase;
@@ -31,30 +27,36 @@ import com.cragchat.mobile.sql.VoteTask;
 import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.util.FormatUtil;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.view.View.GONE;
 
-public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.ViewHolder> {
+public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecyclerAdapter.ViewHolder> {
 
     private Activity activity;
     private CommentManager manager;
     private static LayoutInflater inflater;
     private String table;
     private ViewHolder lastOpened;
+    private Date currentTime;
 
-    public CommentListAdapter(Activity a, CommentManager manager, String table) {
+    public CommentRecyclerAdapter(Activity a, CommentManager manager, String table) {
         activity = a;
         this.manager = manager;
         inflater = activity.getLayoutInflater();
         this.table = table;
+        currentTime = Calendar.getInstance().getTime();
     }
 
     public void addComment(Comment m) {
-        if (manager.getCommentList().size() == 0) {
-            activity.findViewById(R.id.list_empty).setVisibility(GONE);
+        if (m != null) {
+            if (manager.getCommentList().size() == 0) {
+                activity.findViewById(R.id.list_empty).setVisibility(GONE);
+            }
+            manager.addComment(m);
+            currentTime = Calendar.getInstance().getTime();
         }
-        manager.addComment(m);
     }
 
     @Override
@@ -178,7 +180,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((SearchActivity) activity).hasConnection()) {
+                if (((CragChatActivity) activity).hasConnection()) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", comment.getAuthorName());
                     activity.startActivity(intent);
@@ -188,15 +190,16 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             }
         });
         String date = comment.getDate();
+        Date dateObject = null;
         try {
-            Date dateObject = FormatUtil.RAW_FORMAT.parse(comment.getDate());
-            date = FormatUtil.MONTH_DAY_YEAR.format(dateObject);
+            dateObject = FormatUtil.RAW_FORMAT.parse(comment.getDate());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.text2.setText(date);
+
+        holder.text2.setText(dateObject != null ? elapsed(dateObject, currentTime) : date);
         holder.text3.setText(comment.getText());
-        final CommentListAdapter adapter = this;
+        final CommentRecyclerAdapter adapter = this;
         holder.text4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +227,37 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         });
     }
 
-    private AlertDialog getRealEditCommentDialog(final EditText txtUrl, final View view, final CommentListAdapter adapter, final Comment comment) {
+    public static final long secondsInMilli = 1000;
+    public static final long minutesInMilli = secondsInMilli * 60;
+    public static final long hoursInMilli = minutesInMilli * 60;
+    public static final long daysInMilli = hoursInMilli * 24;
+
+    public String elapsed(Date startDate, Date endDate) {
+        long different = endDate.getTime() - startDate.getTime();
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+        if (elapsedDays > 0) {
+            return elapsedDays + " days ago";
+        }
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+        if (elapsedHours > 0) {
+            return elapsedHours + " hours ago";
+        }
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+        if (elapsedMinutes > 0) {
+            return elapsedMinutes + " minutes ago";
+        }
+
+        long elapsedSeconds = different / secondsInMilli;
+        return elapsedSeconds + " seconds ago";
+    }
+
+    private AlertDialog getRealEditCommentDialog(final EditText txtUrl, final View view, final CommentRecyclerAdapter adapter, final Comment comment) {
         AlertDialog dialog = null;
         dialog = new AlertDialog.Builder(view.getContext())
                 .setTitle("Edit")
@@ -271,7 +304,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         return dialog;
     }
 
-    private AlertDialog getEditCommentDialog(final EditText txtUrl, final View view, final CommentListAdapter adapter, final Comment comment) {
+    private AlertDialog getEditCommentDialog(final EditText txtUrl, final View view, final CommentRecyclerAdapter adapter, final Comment comment) {
         AlertDialog dialog = null;
         dialog = new AlertDialog.Builder(view.getContext())
                 .setTitle("Reply")

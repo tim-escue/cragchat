@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:textColor="@color/accent"
+                android:textColor="@color/primary"
                 android:textSize="14sp" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:id="@+id/comment_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="end" />
 

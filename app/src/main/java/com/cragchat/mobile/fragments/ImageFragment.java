@@ -23,11 +23,13 @@ import com.cragchat.mobile.user.User;
 
 import java.util.List;
 
-import static com.cragchat.mobile.activity.DisplayableActivity.PICK_IMAGE;
-
 
 public class ImageFragment extends Fragment implements View.OnClickListener {
 
+    public static final int PICK_IMAGE = 873;
+    private List<Image> images;
+    private int id;
+    private ImageAdapter adap;
 
     public static ImageFragment newInstance(int displayableId) {
         ImageFragment f = new ImageFragment();
@@ -37,9 +39,6 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
         return f;
     }
 
-    private List<Image> images;
-    private int id;
-    private ImageAdapter adap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {

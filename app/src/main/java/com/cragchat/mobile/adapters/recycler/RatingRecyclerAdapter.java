@@ -1,11 +1,11 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.adapters.recycler;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,14 +19,14 @@ import com.cragchat.mobile.util.FormatUtil;
 
 import java.util.List;
 
-public class RatingListAdapter extends BaseAdapter {
+public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAdapter.ViewHolder> {
 
     private CragChatActivity activity;
     private static LayoutInflater inflater;
     private List<Rating> ratings;
     private boolean forProfile;
 
-    public RatingListAdapter(Activity a, List<Rating> ratings, boolean forProfile) {
+    public RatingRecyclerAdapter(Activity a, List<Rating> ratings, boolean forProfile) {
         activity = (CragChatActivity) a;
         inflater = activity.getLayoutInflater();
         this.ratings = ratings;
@@ -34,58 +34,42 @@ public class RatingListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return ratings.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return ratings.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public static class ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text1;
         TextView text2;
         TextView text3;
         TextView text4;
-        //TextView text9;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            text1 = (TextView) itemView.findViewById(R.id.item_rating_username);
+            text2 = (TextView) itemView.findViewById(R.id.item_rating_date);
+            text3 = (TextView) itemView.findViewById(R.id.item_rating_yds);
+            text4 = (TextView) itemView.findViewById(R.id.item_rating_stars);
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        ViewHolder holder;
+    public RatingRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.
+                from(parent.getContext()).
+                inflate(R.layout.item_list_rating, parent, false);
+        return new RatingRecyclerAdapter.ViewHolder(itemView);
+    }
 
-        if (convertView == null) {
+    @Override
+    public void onBindViewHolder(final RatingRecyclerAdapter.ViewHolder holder, int position) {
 
-            /****** Inflate tabitem.xml file for each row ( Defined below ) *******/
-            vi = inflater.inflate(R.layout.item_list_rating, null);
-
-            /****** View Holder Object to contain tabitem.xml file elements ******/
-
-            holder = new ViewHolder();
-            holder.text1 = (TextView) vi.findViewById(R.id.item_rating_username);
-            holder.text2 = (TextView) vi.findViewById(R.id.item_rating_date);
-            holder.text3 = (TextView) vi.findViewById(R.id.item_rating_yds);
-            holder.text4 = (TextView) vi.findViewById(R.id.item_rating_stars);
-            //  holder.text9 = (TextView) vi.findViewById(R.id.item_rating_time);
-
-            /************  Set holder with LayoutInflater ************/
-            vi.setTag(holder);
-        } else {
-            holder = (ViewHolder) vi.getTag();
-        }
 
         final Rating rating = ratings.get(position);
         String title;
         if (forProfile) {
             title = LocalDatabase.getInstance(activity).findExact(rating.getRouteId()).getName();
-            vi.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Displayable disp = LocalDatabase.getInstance(activity).findExact(rating.getRouteId());
@@ -111,7 +95,6 @@ public class RatingListAdapter extends BaseAdapter {
         holder.text2.setText(FormatUtil.getFormattedDate(rating.getDate()));
         holder.text3.setText("Yds: " + activity.getResources().getStringArray(R.array.yds_options)[rating.getYds()]);
         holder.text4.setText("Stars: " + String.valueOf(rating.getStars()));
-        return vi;
 
     }
 }

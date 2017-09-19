@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
+    android:paddingTop="@dimen/sixteen_dp"
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingEnd="@dimen/sixteen_dp">
+
+            <TextView
+                android:id="@+id/routes_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:text="@string/routes"/>
+
+            <TextView
+                android:id="@+id/number_routes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/routes_label"
+                android:layout_alignStart="@id/routes_label"/>
+
+            <TextView
+                android:id="@+id/areas_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:layout_alignTop="@id/routes_label"
+                android:layout_toEndOf="@id/routes_label"
+                android:text="@string/title_areas"/>
+
+            <TextView
+                android:id="@+id/number_areas"
+                style="@style/TextValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/areas_label"
+                android:layout_below="@id/areas_label"/>
+
+            <TextView
+                android:id="@+id/comments_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/numbers_label"
+                android:layout_toEndOf="@id/areas_label"
+                android:text="@string/comments"/>
+
+            <TextView
+                android:id="@+id/number_comments"
+                style="@style/TextValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/comments_label"
+                android:layout_below="@id/comments_label"/>
+
+
+</RelativeLayout>

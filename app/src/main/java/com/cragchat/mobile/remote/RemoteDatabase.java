@@ -677,7 +677,7 @@ public class RemoteDatabase {
         return null;
     }
 
-    public static List<String> uploadFile(Activity con, Uri uri, String userToken, int displayId, String caption) {
+    public static List<String> uploadFile(Context con, Uri uri, String userToken, int displayId, String caption) {
         try {
             MultipartUtility utility = new MultipartUtility("http://" + URL_ROOT + "/routedb/insertThis.php", "UTF-8");
 

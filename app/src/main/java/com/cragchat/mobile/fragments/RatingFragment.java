@@ -4,15 +4,17 @@ package com.cragchat.mobile.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.RateRouteActivity;
-import com.cragchat.mobile.adapters.RatingListAdapter;
+import com.cragchat.mobile.adapters.recycler.RatingRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Rating;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.user.User;
@@ -41,15 +43,10 @@ public class RatingFragment extends Fragment implements View.OnClickListener {
 
         List<Rating> ratings = LocalDatabase.getInstance(getContext()).getRatingsFor(id);
 
-        final RatingListAdapter adapter = new RatingListAdapter(getActivity(), ratings, false);
-        ListView lv = (ListView) view.findViewById(R.id.list_ratings);
+        final RatingRecyclerAdapter adapter = new RatingRecyclerAdapter(getActivity(), ratings, false);
+        RecyclerView recyclerView = view.findViewById(R.id.list_ratings);
+        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
 
-        if (ratings.size() == 0) {
-            lv.setEmptyView(view.findViewById(R.id.list_empty));
-        }
-
-        lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
         return view;
     }

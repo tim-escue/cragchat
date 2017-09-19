@@ -1,4 +1,4 @@
-package com.cragchat.mobile.android;
+package com.cragchat.mobile.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

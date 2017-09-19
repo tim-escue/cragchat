@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="12dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="32dp"
+        app:cardElevation="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/crag_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:layout_marginStart="@dimen/sixteen_dp"
+                android:layout_marginTop="72dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/primary_dark"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/numbers_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_marginStart="@dimen/sixteen_dp"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:layout_below="@id/crag_name"
+                android:text="@string/routes"/>
+
+            <TextView
+                android:id="@+id/number_routes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sixteen_dp"
+                android:layout_below="@id/numbers_label"
+                android:layout_alignStart="@id/numbers_label"/>
+
+            <TextView
+                android:id="@+id/areas_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:layout_alignTop="@id/numbers_label"
+                android:layout_toEndOf="@id/numbers_label"
+                android:text="@string/areas"/>
+
+            <TextView
+                android:id="@+id/number_areas"
+                style="@style/TextValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/areas_label"
+                android:layout_below="@id/areas_label"/>
+
+            <TextView
+                android:id="@+id/comments_label"
+                style="@style/TextLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/numbers_label"
+                android:layout_toEndOf="@id/areas_label"
+                android:text="@string/comments"/>
+
+            <TextView
+                android:id="@+id/number_comments"
+                style="@style/TextValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/comments_label"
+                android:layout_below="@id/comments_label"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <com.cragchat.mobile.view.CircleImageView
+        android:id="@+id/crag_icon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/cd_crag_image"
+        android:elevation="@dimen/eight_dp"
+        android:src="@drawable/ozone"
+        app:civ_border_color="@color/primary"
+        app:civ_border_width="2dp" />
+
+</RelativeLayout>

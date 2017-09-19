@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.RecentActivityRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.RecentActivityRecyclerAdapter;
 import com.cragchat.mobile.descriptor.Datable;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;

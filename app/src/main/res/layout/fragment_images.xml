@@ -17,11 +17,4 @@
         android:stretchMode="columnWidth"
         android:gravity="center"/>
 
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_add_image"
-        android:text="Add image"
-        android:layout_weight="0"
-        android:onClick="addImage"/>
-
 </LinearLayout>

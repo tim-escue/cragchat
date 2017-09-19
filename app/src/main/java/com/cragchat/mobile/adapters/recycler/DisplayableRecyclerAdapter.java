@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.adapters.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -76,7 +76,7 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.search_result_row_route, parent, false);
+                inflate(R.layout.displayable_recycler_row, parent, false);
         return new ViewHolder(itemView);
     }
 

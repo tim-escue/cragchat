@@ -3,8 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="0dp"
-    android:layout_marginTop="0dp"
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
 
@@ -19,10 +17,10 @@
             android:id="@+id/text_recent_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/sixteen_dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_marginTop="@dimen/sixteen_dp" />
+            android:layout_marginStart="@dimen/twelve_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:layout_marginBottom="@dimen/sixteen_dp"/>
 
 
         <View
@@ -30,17 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider"
-            android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_marginEnd="@dimen/sixteen_dp"/>
+            android:layout_marginStart="@dimen/twelve_dp"
+            android:layout_marginEnd="@dimen/twelve_dp"/>
 
         <TextView
             android:id="@+id/text_recent_activity_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/sixteen_dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_marginTop="@dimen/sixteen_dp" />
+            android:layout_margin="@dimen/sixteen_dp" />
 
 
         <ImageView

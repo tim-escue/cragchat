@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,7 +28,16 @@ public class MainActivity extends NavigableActivity {
 
         addContent(R.layout.activity_main);
 
+        setupToolBar();
+
         handlePermission();
+    }
+
+    private void setupToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        toolbar.setTitle(R.string.crags);
+        setSupportActionBar(toolbar);
     }
 
     public void onClick(View v) {

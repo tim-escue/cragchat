@@ -30,8 +30,8 @@ public class UpdateRouteCommentsImagesTask extends AsyncTask<Void, Integer, List
     }
 
     protected void onPostExecute(List<String> allComments) {
-        List<Comment> betaComments = db.getCommentsFor(id, "BETA");
-        betaComments.addAll(db.getCommentsFor(id, "DISCUSSION"));
+        List<Comment> betaComments = db.getCommentsForTable(id, "BETA");
+        betaComments.addAll(db.getCommentsForTable(id, "DISCUSSION"));
         if (allComments != null) {
             for (String i : allComments) {
                 String[] args = i.split("###");

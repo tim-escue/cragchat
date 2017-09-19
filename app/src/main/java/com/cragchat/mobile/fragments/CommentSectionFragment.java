@@ -2,7 +2,6 @@ package com.cragchat.mobile.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,17 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.CommentListAdapter;
+import com.cragchat.mobile.adapters.recycler.CommentRecyclerAdapter;
+import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
 import com.cragchat.mobile.sql.LocalDatabase;
@@ -32,7 +29,7 @@ import com.cragchat.mobile.user.User;
 public class CommentSectionFragment extends Fragment implements View.OnClickListener {
 
     private CommentManager manager;
-    private CommentListAdapter adapter;
+    private CommentRecyclerAdapter adapter;
 
     public static CommentSectionFragment newInstance(int displayId, String table) {
         CommentSectionFragment f = new CommentSectionFragment();
@@ -50,8 +47,7 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
 
         manager = new CommentManager();
 
-        //Log.d("ROUTE_COMMENTS", "Attempting to load comments for " + getArguments().getString("display_id"));
-        for (Comment i : LocalDatabase.getInstance(getContext()).getCommentsFor(Integer.parseInt(getArguments().getString("display_id")), getArguments().getString("table"))) {
+        for (Comment i : LocalDatabase.getInstance(getContext()).getCommentsForTable(Integer.parseInt(getArguments().getString("display_id")), getArguments().getString("table"))) {
             manager.addComment(i);
         }
         manager.sortByScore();
@@ -65,14 +61,9 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
 
         spinner.setOnItemSelectedListener(listener);
 
-        adapter = new CommentListAdapter(getActivity(), manager, getArguments().getString("table"));
+        adapter = new CommentRecyclerAdapter(getActivity(), manager, getArguments().getString("table"));
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
-        recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
-        recList.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
 
        if (manager.getCommentList().size() == 0) {
            TextView empty = (TextView) view.findViewById(R.id.list_empty);
@@ -82,7 +73,7 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
         return view;
     }
 
-    AlertDialog getCommentDialog(final EditText txtUrl, final View view, final CommentListAdapter adapter) {
+    AlertDialog getCommentDialog(final EditText txtUrl, final View view, final CommentRecyclerAdapter adapter) {
         AlertDialog dialog = null;
         dialog = new AlertDialog.Builder(view.getContext())
                 .setTitle("Add Comment")

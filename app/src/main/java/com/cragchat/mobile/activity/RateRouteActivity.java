@@ -10,10 +10,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.SendRatingTask;
 import com.cragchat.mobile.user.User;
 
-public class RateRouteActivity extends SearchActivity {
+public class RateRouteActivity extends NavigableActivity {
 
     private int id;
 

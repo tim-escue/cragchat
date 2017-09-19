@@ -2,50 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/ozone">
+    android:layout_height="match_parent">
 
     <include layout="@layout/simple_toolbar" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="25dp"
-        android:layout_margin="8dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Username:" />
+                android:background="@null"
+                android:hint="Username"
+                android:imeOptions="actionDone"
+                android:maxLines="1" />
 
-            <EditText
-                android:id="@+id/login_username"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
 
-        </LinearLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Password:" />
+                android:background="@null"
+                android:hint="Password"
+                android:imeOptions="actionDone"
+                android:maxLines="1" />
 
-            <EditText
-                android:id="@+id/login_password"
-                android:inputType="textPassword"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/login_button"
@@ -81,7 +74,6 @@
             android:clickable="true"
             android:onClick="requestReset" />
 
-    </LinearLayout>
 
 
 </LinearLayout>
