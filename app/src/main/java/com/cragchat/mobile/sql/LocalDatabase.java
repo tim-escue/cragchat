@@ -34,7 +34,7 @@ public class LocalDatabase {
      */
     private LocalDatabase() {
         try {
-            db = SQLiteDatabase.openOrCreateDatabase("/data/data/chat.crag.cragchat/routedb", null);
+            db = SQLiteDatabase.openOrCreateDatabase("/data/data/com.cragchat.mobile/routedb", null);
             db.execSQL("CREATE TABLE IF NOT EXISTS ROUTES (ID INTEGER(11), NAME VARCHAR(255), ROUTE_TYPE VARCHAR(255), LATITUDE DOUBLE(12,8), LONGITUDE DOUBLE(12,8), REVISION INTEGER(11))");
             db.execSQL("CREATE TABLE IF NOT EXISTS AREAS (ID INTEGER(11), NAME VARCHAR(255), LATITUDE DOUBLE(12,8), LONGITUDE DOUBLE(12,8), REVISION INTEGER(11))");
             db.execSQL("CREATE TABLE IF NOT EXISTS IDS_DISPLAYABLE (ID INTEGER(11), PARENT_ID INTEGER(11), REVISION INTEGER(11))");

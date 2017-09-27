@@ -57,37 +57,6 @@ public class SendImageTask extends AsyncTask<String, Integer, List<String>> {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), uri);
                         String path = Image.getAlbumStorageDir("routedb").getPath();
-                        /*File f = new File(path+"/" + image.getName());
-                        if (!f.exists()) {
-                            f.createNewFile();
-                        }
-                        FileOutputStream out = null;
-                        int size = bitmap.getByteCount();
-                        double percentage = 100;
-                        //System.out.println("size:" + size);
-                        Log.e("COMPRESSING", "SIZE IS: " + size);
-                        if (size > 10000000) {
-                            int div = size / 10000000;
-                            Log.e("COMPRESSING", "div: " + size);
-                            percentage = (double) 100 / (div);
-                        }
-                        System.out.println("percentage:"  + percentage);
-                        try {
-                            out = new FileOutputStream(f);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, (int) percentage, out); // bmp is your Bitmap instance
-                            // PNG is a lossless format, the compression factor (100) is ignored
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            try {
-                                if (out != null) {
-                                    out.close();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }*/
-
                         Bitmap thumb = ThumbnailUtils.extractThumbnail(bitmap, 96, 96);
                         File saveThumb = new File(path + "/thumb_" + image.getName());
                         if (!saveThumb.exists()) {

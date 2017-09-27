@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.recycler.SearchResultRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.SearchResultRecyclerAdapter;
 import com.cragchat.mobile.descriptor.Displayable;
 
 import java.util.List;

@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.SubmitSendActivity;
-import com.cragchat.mobile.adapters.recycler.SendRecyclerAdapter;
-import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
+import com.cragchat.mobile.view.adapters.recycler.SendRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Send;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.user.User;

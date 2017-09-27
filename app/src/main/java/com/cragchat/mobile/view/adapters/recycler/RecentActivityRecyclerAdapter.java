@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters.recycler;
+package com.cragchat.mobile.view.adapters.recycler;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

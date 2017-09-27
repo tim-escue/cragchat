@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.pager.LocationPagerAdapter;
+import com.cragchat.mobile.view.adapters.pager.LocationPagerAdapter;
 
 public class LocationFragment extends Fragment {
 

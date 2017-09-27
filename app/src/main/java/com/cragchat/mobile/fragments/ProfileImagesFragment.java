@@ -6,11 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.ImageAdapter;
+import com.cragchat.mobile.view.adapters.ImageAdapter;
 import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.sql.LocalDatabase;
 

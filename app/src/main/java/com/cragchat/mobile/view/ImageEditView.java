@@ -5,30 +5,51 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 
+import com.cragchat.mobile.remote.RemoteDatabase;
+import com.cragchat.mobile.sql.LocalDatabase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 public class ImageEditView extends AppCompatImageView {
 
     private Bitmap mBitmap;
     private Canvas mCanvas;
-    private List<Path> mPaths;
+    private List<Point> points;
     private Paint mBitmapPaint;
     private Paint mPaint;
     private int bitmapEndX;
     private int bitmapEndY;
     private int bitmapStartX;
     private int bitmapStartY;
-    private float[] matrixValues;
+    private int lastX;
+    private int lastY;
+    private boolean stopped;
+    private boolean drawing;
+    private int bitmapWidth;
+    private int bitmapHeight;
+    private Stack<Path> pointMap;
+    private List<Point> currentPoitns;
 
+    public void setDrawColor(int color) {
+        mPaint.setColor(color);
+    }
 
     public ImageEditView(Context context) {
         this(context, null);
@@ -40,7 +61,7 @@ public class ImageEditView extends AppCompatImageView {
 
     public ImageEditView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mPaths = new ArrayList<>();
+        points = new ArrayList<>();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -50,34 +71,39 @@ public class ImageEditView extends AppCompatImageView {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(20);
-        matrixValues = new float[9];
+        stopped = true;
+        drawing = false;
+        final float[] matrixValues = new float[9];
+        currentPoitns = new ArrayList<>();
+        pointMap = new Stack<>();
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                getImageMatrix().getValues(matrixValues);
+                if (mBitmap == null) {
+                    getImageMatrix().getValues(matrixValues);
 
-                final float scaleX = matrixValues[Matrix.MSCALE_X];
-                final float scaleY = matrixValues[Matrix.MSCALE_Y];
+                    final float scaleX = matrixValues[Matrix.MSCALE_X];
+                    final float scaleY = matrixValues[Matrix.MSCALE_Y];
 
-                final Drawable d = getDrawable();
-                if (d != null) {
-                    final int origW = d.getIntrinsicWidth();
-                    final int origH = d.getIntrinsicHeight();
+                    final Drawable d = getDrawable();
+                    if (d != null) {
+                        final int origW = d.getIntrinsicWidth();
+                        final int origH = d.getIntrinsicHeight();
 
-                    int bitmapWidth = Math.round(origW * scaleX);
-                    int bitmapHeight = Math.round(origH * scaleY);
+                        bitmapWidth = Math.round(origW * scaleX);
+                        bitmapHeight = Math.round(origH * scaleY);
 
-                    int imgViewW = getWidth();
-                    int imgViewH = getHeight();
+                        int imgViewW = getWidth();
+                        int imgViewH = getHeight();
 
-                    bitmapStartY = (imgViewH - bitmapHeight) / 2;
-                    bitmapStartX = (imgViewW - bitmapWidth) / 2;
-                    Log.d("metris", "imgViewW" + imgViewW + " imageViewH" + imgViewH + " bitmapWidth" + bitmapWidth + " bitmapHeiht" + bitmapHeight + " bitmapStartX" + bitmapStartX);
+                        bitmapStartY = (imgViewH - bitmapHeight) / 2;
+                        bitmapStartX = (imgViewW - bitmapWidth) / 2;
 
-                    bitmapEndX = bitmapStartX + bitmapWidth;
-                    bitmapEndY = bitmapStartY + bitmapHeight;
-                    mBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
-                    mCanvas = new Canvas(mBitmap);
+                        bitmapEndX = bitmapStartX + bitmapWidth;
+                        bitmapEndY = bitmapStartY + bitmapHeight;
+                        mBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+                        mCanvas = new Canvas(mBitmap);
+                    }
                 }
             }
         });
@@ -86,64 +112,119 @@ public class ImageEditView extends AppCompatImageView {
     @Override
     public void setImageBitmap(Bitmap bitmap) {
         super.setImageBitmap(bitmap);
-        mPaths.clear();
+        points.clear();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d("ON DRAW", "DR");
         super.onDraw(canvas);
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, bitmapStartX, bitmapStartY, mBitmapPaint);
         }
     }
 
-    int[] points = new int[4];
-    int lastX;
-    int lastY;
-    boolean stopped = true;
+    public Bitmap scaleDown() {
+
+        Bitmap bitmap = ((BitmapDrawable)getDrawable()).getBitmap();
+        Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, bitmap.getWidth(),
+                bitmap.getHeight(), true);
+        mBitmap.recycle();
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(newBitmap, 0, 0, mBitmapPaint);
+        return bitmap;
+    }
+
+    public void setDrawing(boolean drawing) {
+        this.drawing = drawing;
+    }
+
+    public void undoLast() {
+        if (pointMap.size() > 0) {
+            pointMap.pop();
+            mBitmap.recycle();
+            mBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(mBitmap);
+            int lastColor = mPaint.getColor();
+            int lastStroke = (int)mPaint.getStrokeWidth();
+            for (Path path : pointMap) {
+                List<Point> list = path.points;
+                mPaint.setColor(path.color);
+                mPaint.setStrokeWidth(path.stroke);
+                for (int i = 0; i < list.size() -1; i++) {
+                    Point start = list.get(i);
+                    Point next = list.get(i + 1);
+                    mCanvas.drawLine(start.x, start.y, next.x, next.y, mPaint);
+                }
+            }
+            mPaint.setColor(lastColor);
+            mPaint.setStrokeWidth(lastStroke);
+            invalidate();
+        }
+    }
+
+    public void setStroke(int stroke) {
+        mPaint.setStrokeWidth(stroke);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-        if (x >= bitmapStartX && x <= bitmapEndX && y >= bitmapStartY && y <= bitmapEndY) {
-
-            x = x - bitmapStartX;
-            y = y - bitmapStartY;
-            if (stopped) {
-                lastX = x;
-                lastY = y;
-                points = new int[]{lastX, lastY, x, y};
-                stopped = false;
-            } else {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        stopped = true;
-                    case MotionEvent.ACTION_DOWN:
-                        int xDelta = lastX - x;
-                        int yDelta = lastY - y;
-                        if (xDelta < -10 || xDelta > 10 || yDelta < -10 || yDelta > 10) {
-                            points = new int[]{lastX, lastY, x, y};
-                            lastX = x;
-                            lastY = y;
-                            mCanvas.drawLine(points[0], points[1], points[2], points[3], mPaint);
-                            invalidate();
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        points = new int[]{lastX, lastY, x, y};
-                        mCanvas.drawLine(points[0], points[1], points[2], points[3], mPaint);
-                        invalidate();
-                        lastX = x;
-                        lastY = y;
-                        break;
+        if (drawing) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            if (x >= bitmapStartX && x <= bitmapEndX && y >= bitmapStartY && y <= bitmapEndY) {
+                int curX = x - bitmapStartX;
+                int curY = y - bitmapStartY;
+                if (stopped) {
+                    lastX = curX;
+                    lastY = curY;
+                    stopped = false;
+                    currentPoitns = new ArrayList<>();
+                    currentPoitns.add(new Point(lastX, lastY));
+                } else {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_UP:
+                            stopped = true;
+                            pointMap.push(new Path(currentPoitns, mPaint.getColor(), (int) mPaint.getStrokeWidth()));
+                            break;
+                        case MotionEvent.ACTION_DOWN:
+                            int xDelta = lastX - curX;
+                            int yDelta = lastY - curY;
+                            if (xDelta < -10 || xDelta > 10 || yDelta < -10 || yDelta > 10) {
+                                addPoint(curX, curY);
+                            }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            addPoint(curX, curY);
+                            break;
+                    }
                 }
+            } else {
+                stopped = true;
+                pointMap.push(new Path(currentPoitns, mPaint.getColor(),(int) mPaint.getStrokeWidth()));
             }
-        } else {
-            stopped = true;
         }
         return true;
+    }
+
+    class Path {
+
+        private List<Point> points;
+        private int color;
+        private int stroke;
+
+        public Path(List<Point> points, int color, int stroke) {
+            this.points = points;
+            this.color = color;
+            this.stroke = stroke;
+        }
+    }
+
+    private void addPoint(int curX, int curY) {
+        mCanvas.drawLine(lastX, lastY, curX, curY, mPaint);
+        invalidate();
+        lastX = curX;
+        lastY = curY;
+        currentPoitns.add(new Point(curX, curY));
     }
 }
 

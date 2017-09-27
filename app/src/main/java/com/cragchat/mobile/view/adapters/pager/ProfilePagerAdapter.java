@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters.pager;
+package com.cragchat.mobile.view.adapters.pager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

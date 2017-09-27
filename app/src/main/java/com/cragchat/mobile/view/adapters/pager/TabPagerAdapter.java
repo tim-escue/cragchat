@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters.pager;
+package com.cragchat.mobile.view.adapters.pager;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
@@ -6,22 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
-
-import com.cragchat.mobile.R;
-import com.cragchat.mobile.fragments.CommentSectionFragment;
-import com.cragchat.mobile.fragments.ImageFragment;
-import com.cragchat.mobile.fragments.LocationFragment;
-import com.cragchat.mobile.fragments.RatingFragment;
-import com.cragchat.mobile.fragments.SendsFragment;
-import com.cragchat.mobile.sql.LocalDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
 

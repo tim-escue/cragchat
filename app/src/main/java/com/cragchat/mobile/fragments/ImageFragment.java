@@ -10,18 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
-import com.cragchat.mobile.adapters.ImageAdapter;
+import com.cragchat.mobile.view.adapters.ImageAdapter;
 import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.user.User;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ImageFragment extends Fragment implements View.OnClickListener {
@@ -30,6 +34,9 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
     private List<Image> images;
     private int id;
     private ImageAdapter adap;
+
+    @BindView(R.id.list_empty)
+    TextView empty;
 
     public static ImageFragment newInstance(int displayableId) {
         ImageFragment f = new ImageFragment();
@@ -43,8 +50,10 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View view = inflater.inflate(R.layout.fragment_images, container, false);
+
+        ButterKnife.bind(this, view);
+
         id = Integer.parseInt(getArguments().getString("id"));
 
         load (view);
@@ -56,11 +65,12 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
         images = LocalDatabase.getInstance(getContext()).getImagesFor(id);
 
-        if (images != null && v != null) {
+        if (images != null && images.size() > 0&& v != null) {
             GridView gridview = (GridView) v.findViewById(R.id.thumbnail_grid);
             adap  = new ImageAdapter(getContext(), images.toArray(new Image[images.size()]));
             gridview.setAdapter(adap);
-
+        } else {
+            empty.setVisibility(View.VISIBLE);
         }
     }
 

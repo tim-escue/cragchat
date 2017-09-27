@@ -17,8 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.pager.RouteActivityPagerAdapter;
-import com.cragchat.mobile.adapters.pager.TabPagerAdapter;
+import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
+import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.search.NavigableActivity;

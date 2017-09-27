@@ -13,6 +13,8 @@ import java.util.Map;
 
 public abstract class Displayable implements Comparable<Displayable> {
 
+    //Empty constructor for FireBase
+    public Displayable() {}
 
     public abstract String getName();
 
@@ -69,7 +71,7 @@ public abstract class Displayable implements Comparable<Displayable> {
         return new JSONObject(map);
     }
 
-    public String getYdsString(Activity activity, int yds) {
+    public static String getYdsString(Activity activity, int yds) {
         return yds != -1 ? activity.getResources().getStringArray(R.array.yds_options)[yds] : "Not rated";
     }
 

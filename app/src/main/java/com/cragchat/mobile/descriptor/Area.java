@@ -6,6 +6,7 @@ import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
 import com.cragchat.mobile.sql.LocalDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Area extends Displayable {
@@ -21,6 +22,7 @@ public class Area extends Displayable {
     private double longitude;
     private int id;
     private int routeCount;
+
     private int areaCount;
     private int commentCount;
     private List<Area> subAreas;
@@ -35,6 +37,9 @@ public class Area extends Displayable {
         this.routeCount = -1;
         this.areaCount = -1;
         this.commentCount = -1;
+    }
+
+    public Area() {
     }
 
     public String getName() {
@@ -93,4 +98,16 @@ public class Area extends Displayable {
     public int getId() {
         return id;
     }
+
+   //N public FireBaseArea toFireBaseArea() {
+//        List<Long> areas = new ArrayList<>(subAreas.size());
+       // for (Area i : subAreas) {
+           // areas.add(Long.valueOf(i.getId()));
+       // }
+       // List<Long> route = new ArrayList<>(routes.size());
+        //for (Displayable i : routes) {
+         //   route.add(Long.valueOf(i.getId()));
+        //}
+    //    return new FireBaseArea(name, latitude, longitude, null, null, );
+   // }
 }

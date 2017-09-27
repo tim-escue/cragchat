@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters.pager;
+package com.cragchat.mobile.view.adapters.pager;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;

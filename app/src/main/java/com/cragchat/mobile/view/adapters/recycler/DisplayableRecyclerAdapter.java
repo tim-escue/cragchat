@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters.recycler;
+package com.cragchat.mobile.view.adapters.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,11 +16,12 @@ import com.cragchat.mobile.descriptor.Route;
 import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<DisplayableRecyclerAdapter.ViewHolder> {
 
@@ -95,28 +96,32 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
         if (displayable instanceof Route) {
             Route r = (Route) displayable;
             holder.text1.setText(r.getName());
-            String sters;
-            String yds;
+            StringBuilder info = new StringBuilder();
             if (r.getYds(activity) == -1) {
-                yds = "Not rated";
-                sters = "Not rated";
-                holder.text3.setVisibility(View.GONE);
+                info.append("Not rated");
             } else {
-                yds = r.getYdsString(activity, r.getYds(activity));
-                sters = r.getStarsString(activity) + " stars";
-                holder.text3.setVisibility(View.VISIBLE);
+                info.append(Displayable.getYdsString(activity, r.getYds(activity)));
+                info.append(" ");
+                info.append(r.getStarsString(activity));
+                info.append(" stars");
             }
-            holder.text2.setText(yds);
-            holder.text3.setText(sters);
-            holder.text4.setVisibility(View.VISIBLE);
-            holder.text4.setText(r.getType());
+            holder.text2.setText(info.toString());
             holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
         } else {
             Area a = (Area) displayable;
             holder.text1.setText(a.getName());
-            List<Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
-            holder.text2.setText(within.size() + " displayables");
-            double average = 0;
+            List<? extends Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
+            StringBuilder info = new StringBuilder();
+            info.append(within.size());
+            info.append(" routes");
+            within = LocalDatabase.getInstance(activity).findAreasWithin(a);
+            if (within.size() > 0) {
+                info.append(" ");
+                info.append(within.size());
+                info.append(" areas");
+            }
+            holder.text2.setText(info.toString());
+            /*double average = 0;
             int size = 0;
             for (Displayable i : within) {
                 Route route = (Route) i;
@@ -132,30 +137,28 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
                 avString = formatter.format(average) + " stars";
             } else {
                 avString = "No ratings";
-            }
-            holder.text3.setText("Route avg: " + avString);
-            holder.text4.setVisibility(View.GONE);
+            }*/
             holder.icon.setImageResource(R.drawable.area_mountain);
         }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.list_row_one)
         TextView text1;
+
+        @BindView(R.id.list_row_two)
         TextView text2;
-        TextView text3;
-        TextView text4;
+
+        @BindView(R.id.rectangle)
         LinearLayout rect;
+
+        @BindView(R.id.icon)
         ImageView icon;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            text1 = (TextView) itemView.findViewById(R.id.list_row_one);
-            text2 = (TextView) itemView.findViewById(R.id.list_row_two);
-            text3 = (TextView) itemView.findViewById(R.id.list_row_three);
-            text4 = (TextView) itemView.findViewById(R.id.list_row_four);
-            rect = (LinearLayout) itemView.findViewById(R.id.rectangle);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

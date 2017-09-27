@@ -33,6 +33,8 @@ public class Route extends Displayable {
         this.longitude = longitude;
     }
 
+
+
     private static Map<Integer, RouteInfo> infos;
 
     private class RouteInfo {

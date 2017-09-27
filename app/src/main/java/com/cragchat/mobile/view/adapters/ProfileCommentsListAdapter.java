@@ -1,4 +1,4 @@
-package com.cragchat.mobile.adapters;
+package com.cragchat.mobile.view.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

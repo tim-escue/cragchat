@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.recycler.RatingRecyclerAdapter;
-import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
+import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Rating;
 import com.cragchat.mobile.sql.LocalDatabase;
 

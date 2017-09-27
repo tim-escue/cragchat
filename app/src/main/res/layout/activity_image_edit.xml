@@ -26,7 +26,8 @@
             android:id="@+id/layout_edit_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top">
+            android:layout_gravity="top"
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/button_paint"
@@ -36,15 +37,55 @@
                 android:src="@drawable/ic_format_paint_white_24dp"/>
 
             <ImageView
+                android:id="@+id/button_caption"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:src="@drawable/add_caption"/>
+
+            <ImageView
+                android:id="@+id/button_stroke"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_line_weight_white_24dp"/>
+
+            <ImageView
                 android:id="@+id/button_color_picker"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_color_lens_white_24dp"/>
 
 
+            <ImageView
+                android:id="@+id/button_undo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_undo_white_24dp"/>
+
+            <ImageView
+                android:id="@+id/button_done"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_done_white_24dp"/>
         </LinearLayout>
 
     </HorizontalScrollView>
+
+    <ImageView
+        android:id="@+id/button_submit_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/sixteen_dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_done_white_24dp"/>
 
 </RelativeLayout>

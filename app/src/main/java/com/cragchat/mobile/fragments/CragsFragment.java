@@ -1,23 +1,18 @@
 package com.cragchat.mobile.fragments;
 
-import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.recycler.CragsFragmentRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.CragsFragmentRecyclerAdapter;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.sql.UpdateRecentActivityTask;
 
 /**
  * Created by timde on 9/9/2017.
@@ -49,7 +44,9 @@ public class CragsFragment extends Fragment {
 
         CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter((CragChatActivity)getActivity());
         Area ozone = (Area)LocalDatabase.getInstance(getContext()).findExact("Ozone");
-        adapter.addItem(ozone);
+        if (ozone != null) {
+            adapter.addItem(ozone);
+        }
 
         recList.setAdapter(adapter);
 

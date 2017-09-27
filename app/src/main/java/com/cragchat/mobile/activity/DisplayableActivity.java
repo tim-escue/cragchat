@@ -1,38 +1,22 @@
 package com.cragchat.mobile.activity;
 
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.adapters.pager.TabPagerAdapter;
+import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.fragments.NotificationDialog;
-import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.user.User;
 
 import org.json.JSONObject;
 

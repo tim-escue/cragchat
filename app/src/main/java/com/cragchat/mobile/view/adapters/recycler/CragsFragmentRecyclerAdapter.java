@@ -1,28 +1,19 @@
-package com.cragchat.mobile.adapters.recycler;
+package com.cragchat.mobile.view.adapters.recycler;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
-import com.cragchat.mobile.sql.LocalDatabase;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFragmentRecyclerAdapter.ViewHolder> {

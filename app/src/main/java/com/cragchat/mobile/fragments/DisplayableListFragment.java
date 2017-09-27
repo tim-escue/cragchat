@@ -21,8 +21,8 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.adapters.recycler.DisplayableRecyclerAdapter;
-import com.cragchat.mobile.adapters.recycler.RecyclerUtils;
+import com.cragchat.mobile.view.adapters.recycler.DisplayableRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.descriptor.Area;
 import com.cragchat.mobile.descriptor.Displayable;
 import com.cragchat.mobile.descriptor.Route;
