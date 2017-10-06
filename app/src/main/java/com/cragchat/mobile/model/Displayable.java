@@ -1,4 +1,4 @@
-package com.cragchat.mobile.descriptor;
+package com.cragchat.mobile.model;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,22 +41,22 @@ public abstract class Displayable implements Comparable<Displayable> {
 
     @Override
     public String toString() {
-        if (this instanceof Route) {
-            return encodeRoute((Route) this).toString();
-        } else if (this instanceof Area) {
-            return encodeAsString((Area) this);
+        if (this instanceof LegacyRoute) {
+            return encodeRoute((LegacyRoute) this).toString();
+        } else if (this instanceof LegacyArea) {
+            return encodeAsString((LegacyArea) this);
         }
         return "NULL_STRING(toString()displayable)";
     }
 
-    public static String encodeAsString(Area a) {
+    public static String encodeAsString(LegacyArea a) {
         return "AREA#" + a.getId() + "#" + a.getName() + "#" + a.getLatitude() + "#" + a.getLongitude() + "#" + a.getRevision();
     }
 
-    public static Area decodeAreaString(String s) {
+    public static LegacyArea decodeAreaString(String s) {
         String[] split = s.split("#");
-        return new Area(Integer.parseInt(split[1 + Area.COLUMN_ID]), split[1 + Area.COLUMN_NAME],
-                Double.parseDouble(split[1 + Area.COLUMN_LATITUDE]), Double.parseDouble(split[1 + Area.COLUMN_LONGITUDE]), Integer.parseInt(split[1 + Area.COLUMN_REVISION]));
+        return new LegacyArea(Integer.parseInt(split[1 + LegacyArea.COLUMN_ID]), split[1 + LegacyArea.COLUMN_NAME],
+                Double.parseDouble(split[1 + LegacyArea.COLUMN_LATITUDE]), Double.parseDouble(split[1 + LegacyArea.COLUMN_LONGITUDE]), Integer.parseInt(split[1 + LegacyArea.COLUMN_REVISION]));
     }
 ///    public Rating(int routeId, int yds, int stars, String style, int pitches, int timeSeconds, String userName, String date, String sendType, int attempts) {
 
@@ -75,7 +75,7 @@ public abstract class Displayable implements Comparable<Displayable> {
         return yds != -1 ? activity.getResources().getStringArray(R.array.yds_options)[yds] : "Not rated";
     }
 
-    public static JSONObject encodeRoute(Route route) {
+    public static JSONObject encodeRoute(LegacyRoute route) {
         Map<String, String> map = new HashMap<>();
         map.put("objectType", "route");
         map.put("id", String.valueOf(route.getId()));
@@ -88,10 +88,10 @@ public abstract class Displayable implements Comparable<Displayable> {
     }
 
     public String getSubTitle(Context context) {
-        Area[] hierarchy = LocalDatabase.getInstance(context).getHierarchy(this);
+        LegacyArea[] hierarchy = LocalDatabase.getInstance(context).getHierarchy(this);
         StringBuilder subtitle = new StringBuilder();
         for (int i = 0; i < hierarchy.length; i++) {
-            Area area = hierarchy[i];
+            LegacyArea area = hierarchy[i];
             if (i != 0) {
                 subtitle.append(" -> ");
             }
@@ -110,9 +110,9 @@ public abstract class Displayable implements Comparable<Displayable> {
         return null;
     }
 
-    public static Route decodeRoute(JSONObject obj) {
+    public static LegacyRoute decodeRoute(JSONObject obj) {
         try {
-            return new Route(obj.getInt("id"), obj.getString("name"), obj.getString("type"), obj.getDouble("latitude"), obj.getDouble("longitude"), obj.getInt("revision"));
+            return new LegacyRoute(obj.getInt("id"), obj.getString("name"), obj.getString("type"), obj.getDouble("latitude"), obj.getDouble("longitude"), obj.getInt("revision"));
         } catch (Exception e) {
             e.printStackTrace();
         }

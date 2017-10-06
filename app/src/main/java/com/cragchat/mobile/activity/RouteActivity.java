@@ -17,12 +17,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
-import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.database.Database;
+import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
+import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
 import org.json.JSONObject;
 
@@ -40,19 +44,9 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
         floatingActionButton = findViewById(R.id.add_button);
 
         String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        try {
-            route = Displayable.decodeRoute(
-                    new JSONObject(displayableString));
-        } catch (Exception e) {
-            Log.e("DisplayableActivity", "Could not decode route");
-            e.printStackTrace();
-        }
+        route = Database.getInstance().getRoute(displayableString);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        /*collapsingToolbarLayout.setTitle(area.getName());
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.white)); */
-        // collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.primary));
         collapsingToolbarLayout.setTitleEnabled(false);
 
         setupToolbar();
@@ -63,23 +57,19 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
         textView.setText(route.getType());
 
         textView = (TextView) findViewById(R.id.yds_scale);
-        String yds = route.getYdsString(this, route.getYds(this));
+        String yds = FormatUtil.getYdsString(this, route.getYds());
         textView.setText(yds);
 
         textView = (TextView) findViewById(R.id.stars);
-        String sters = route.getStarsString(this);
+        String sters = FormatUtil.getStarsString(route.getStars());
         textView.setText(sters);
 
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(this);
 
-        /*ImageView routeImage = findViewById(R.id.route_image);
-        routeImage.setImageResource(route.getType().equalsIgnoreCase("sport") ?
-                R.drawable.bolt_img : R.drawable.nuts);*/
-
         final RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this,
-                getSupportFragmentManager(), appBarLayout, floatingActionButton, route.getId());
+                getSupportFragmentManager(), appBarLayout, floatingActionButton, route.getKey());
         final ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
 
         setAddButtonPagerAndAdapter(pager, pageAdapter);
@@ -119,7 +109,19 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(route.getName());
-        getSupportActionBar().setSubtitle(route.getSubTitle(this));
+        StringBuilder subTitle = new StringBuilder();
+
+        Area current = route.getParent();
+        int count = 0;
+        while (current != null) {
+            if (count > 0) {
+                subTitle.insert(0, " -> ");
+            }
+            subTitle.insert(0, current.getName());
+            count++;
+            current = current.getParent();
+        }
+        getSupportActionBar().setSubtitle(subTitle.toString());
 
     }
 
@@ -136,12 +138,7 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Displayable parent = LocalDatabase.getInstance(this).getParent(route);
-            if (parent != null) {
-                launch(parent);
-            } else {
-                startActivity(new Intent(this, MainActivity.class));
-            }
+            launch(route.getParent());
         }
         return super.onOptionsItemSelected(item);
     }

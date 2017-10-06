@@ -10,12 +10,12 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Image;
-import com.cragchat.mobile.descriptor.Rating;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.descriptor.Send;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Rating;
+import com.cragchat.mobile.model.Send;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -355,7 +355,7 @@ public class LocalDatabase {
 
     }
 
-    public void insert(Area r) {
+    public void insert(LegacyArea r) {
         //Log.d("LOCALDB", "inserting " + r.getName());
         ContentValues vals = new ContentValues();
         vals.put("NAME", r.getName());
@@ -373,7 +373,7 @@ public class LocalDatabase {
 
     }
 
-    public void insert(Route r) {
+    public void insert(LegacyRoute r) {
         ContentValues vals = new ContentValues();
         vals.put("NAME", r.getName());
         vals.put("ROUTE_TYPE", r.getType());
@@ -423,8 +423,8 @@ public class LocalDatabase {
     }
 
     public void update(Displayable d, CragChatActivity act) {
-        if (d instanceof Route) {
-            Route r = (Route) d;
+        if (d instanceof LegacyRoute) {
+            LegacyRoute r = (LegacyRoute) d;
             String sql = "UPDATE ROUTES SET LATITUDE = '" + r.getLatitude() + "', LONGITUDE = '" + r.getLongitude() + "', REVISION = '" + r.getRevision() + "' WHERE ID='" + r.getId() + "'";
             db.execSQL(sql);
             new UpdateRouteCommentsImagesTask(this, act, r).execute();
@@ -445,18 +445,18 @@ public class LocalDatabase {
     /*
         Get parent list. Parent[0]->Children[n]
      */
-    public Area[] getHierarchy(Displayable child) {
-        List<Area> list = new LinkedList<>();
-        Area parent;
+    public LegacyArea[] getHierarchy(Displayable child) {
+        List<LegacyArea> list = new LinkedList<>();
+        LegacyArea parent;
         while ((parent = getParent(child)) != null) {
             list.add(parent);
             child = parent;
         }
         Collections.reverse(list);
-        return list.toArray(new Area[list.size()]);
+        return list.toArray(new LegacyArea[list.size()]);
     }
 
-    public Area getParent(Displayable area) {
+    public LegacyArea getParent(Displayable area) {
         Cursor cTop = db.rawQuery("SELECT * FROM IDS_DISPLAYABLE WHERE ID LIKE '" + area.getId() + "'", null);
         if (cTop.moveToFirst()) {
             int parentId = cTop.getInt(Id.COLUMN_PARENT_ID);
@@ -464,8 +464,8 @@ public class LocalDatabase {
             if (c.moveToFirst()) {
                 Cursor cArea = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + c.getInt(Id.COLUMN_ID) + "'", null);
                 if (cArea.moveToFirst()) {
-                    Area a = new Area(cArea.getInt(Area.COLUMN_ID), cArea.getString(Area.COLUMN_NAME),
-                            cArea.getDouble(Area.COLUMN_LATITUDE), cArea.getDouble(Area.COLUMN_LONGITUDE), cArea.getInt(Area.COLUMN_REVISION));
+                    LegacyArea a = new LegacyArea(cArea.getInt(LegacyArea.COLUMN_ID), cArea.getString(LegacyArea.COLUMN_NAME),
+                            cArea.getDouble(LegacyArea.COLUMN_LATITUDE), cArea.getDouble(LegacyArea.COLUMN_LONGITUDE), cArea.getInt(LegacyArea.COLUMN_REVISION));
                     cArea.close();
                     c.close();
                     cTop.close();
@@ -489,17 +489,17 @@ public class LocalDatabase {
 
         Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE NAME LIKE '%" + item + "%'", null);
         while (c.moveToNext()) {
-            Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
-                    c.getDouble(Area.COLUMN_LATITUDE), c.getDouble(Area.COLUMN_LONGITUDE), c.getInt(Area.COLUMN_REVISION));
+            LegacyArea a = new LegacyArea(c.getInt(LegacyArea.COLUMN_ID), c.getString(LegacyArea.COLUMN_NAME),
+                    c.getDouble(LegacyArea.COLUMN_LATITUDE), c.getDouble(LegacyArea.COLUMN_LONGITUDE), c.getInt(LegacyArea.COLUMN_REVISION));
             list.add(a);
         }
         c.close();
 
         c = db.rawQuery("SELECT * FROM ROUTES WHERE NAME LIKE '%" + item + "%'", null);
         while (c.moveToNext()) {
-            Route r = new Route(c.getInt(Route.COLUMN_ID), c.getString(Route.COLUMN_NAME),
-                    c.getString(Route.COLUMN_ROUTE_TYPE),
-                    c.getDouble(Route.COLUMN_LATITUDE), c.getDouble(Route.COLUMN_LONGITUDE), c.getInt(Route.COLUMN_REVISION));
+            LegacyRoute r = new LegacyRoute(c.getInt(LegacyRoute.COLUMN_ID), c.getString(LegacyRoute.COLUMN_NAME),
+                    c.getString(LegacyRoute.COLUMN_ROUTE_TYPE),
+                    c.getDouble(LegacyRoute.COLUMN_LATITUDE), c.getDouble(LegacyRoute.COLUMN_LONGITUDE), c.getInt(LegacyRoute.COLUMN_REVISION));
             list.add(r);
         }
         c.close();
@@ -510,12 +510,12 @@ public class LocalDatabase {
     /*
         Method for finding all areas within an area.
      */
-    public List<Area> findAreasWithin(Area area) {
-        List<Area> list = new LinkedList<>();
+    public List<LegacyArea> findAreasWithin(LegacyArea area) {
+        List<LegacyArea> list = new LinkedList<>();
         Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + area.getId() + "'", null);
         if (c.moveToFirst()) {
-            Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
-                    c.getDouble(Area.COLUMN_LATITUDE), c.getDouble(Area.COLUMN_LONGITUDE), c.getInt(Area.COLUMN_REVISION));
+            LegacyArea a = new LegacyArea(c.getInt(LegacyArea.COLUMN_ID), c.getString(LegacyArea.COLUMN_NAME),
+                    c.getDouble(LegacyArea.COLUMN_LATITUDE), c.getDouble(LegacyArea.COLUMN_LONGITUDE), c.getInt(LegacyArea.COLUMN_REVISION));
             list.addAll(findAreasWithinRecursive(a));
         }
         c.close();
@@ -525,16 +525,16 @@ public class LocalDatabase {
     /*
         Recursive part of method
      */
-    private List<Area> findAreasWithinRecursive(Area area) {
-        List<Area> list = new ArrayList<>();
+    private List<LegacyArea> findAreasWithinRecursive(LegacyArea area) {
+        List<LegacyArea> list = new ArrayList<>();
 
         Cursor cTop = db.rawQuery("SELECT * FROM IDS_DISPLAYABLE WHERE PARENT_ID LIKE '" + area.getId() + "'", null);
         while (cTop.moveToNext()) {
             int areaId = cTop.getInt(Id.COLUMN_ID);
             Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + areaId + "'", null);
             if (c.moveToFirst()) {
-                Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
-                        c.getDouble(Area.COLUMN_LATITUDE), c.getDouble(Area.COLUMN_LONGITUDE), c.getInt(Area.COLUMN_REVISION));
+                LegacyArea a = new LegacyArea(c.getInt(LegacyArea.COLUMN_ID), c.getString(LegacyArea.COLUMN_NAME),
+                        c.getDouble(LegacyArea.COLUMN_LATITUDE), c.getDouble(LegacyArea.COLUMN_LONGITUDE), c.getInt(LegacyArea.COLUMN_REVISION));
                 list.add(a);
                 list.addAll(findAreasWithinRecursive(a));
             }
@@ -548,24 +548,24 @@ public class LocalDatabase {
     /*
         Retrieve all routes from within specified area
      */
-    public List<Displayable> findRoutesWithin(Area area) {
+    public List<Displayable> findRoutesWithin(LegacyArea area) {
         List<Displayable> list = new LinkedList<>();
-        List<Area> allAreas = findAreasWithin(area);
+        List<LegacyArea> allAreas = findAreasWithin(area);
         allAreas.add(area);
         for (Displayable cur : allAreas) {
             Cursor c = db.rawQuery("SELECT * FROM AREAS WHERE ID LIKE '" + cur.getId() + "'", null);
             if (c.moveToFirst()) {
-                Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
-                        c.getDouble(Area.COLUMN_LATITUDE), c.getDouble(Area.COLUMN_LONGITUDE), c.getInt(Area.COLUMN_REVISION));
+                LegacyArea a = new LegacyArea(c.getInt(LegacyArea.COLUMN_ID), c.getString(LegacyArea.COLUMN_NAME),
+                        c.getDouble(LegacyArea.COLUMN_LATITUDE), c.getDouble(LegacyArea.COLUMN_LONGITUDE), c.getInt(LegacyArea.COLUMN_REVISION));
                 c.close();
                 c = db.rawQuery("SELECT * FROM IDS_DISPLAYABLE WHERE PARENT_ID LIKE '" + a.getId() + "'", null);
                 while (c.moveToNext()) {
                     int routeId = c.getInt(Id.COLUMN_ID);
                     Cursor cRoute = db.rawQuery("SELECT * FROM ROUTES WHERE ID LIKE '" + routeId + "'", null);
                     if (cRoute.moveToFirst()) {
-                        Route r = new Route(cRoute.getInt(Route.COLUMN_ID), cRoute.getString(Route.COLUMN_NAME),
-                                cRoute.getString(Route.COLUMN_ROUTE_TYPE),
-                                cRoute.getDouble(Route.COLUMN_LATITUDE), cRoute.getDouble(Route.COLUMN_LONGITUDE), cRoute.getInt(Route.COLUMN_REVISION));
+                        LegacyRoute r = new LegacyRoute(cRoute.getInt(LegacyRoute.COLUMN_ID), cRoute.getString(LegacyRoute.COLUMN_NAME),
+                                cRoute.getString(LegacyRoute.COLUMN_ROUTE_TYPE),
+                                cRoute.getDouble(LegacyRoute.COLUMN_LATITUDE), cRoute.getDouble(LegacyRoute.COLUMN_LONGITUDE), cRoute.getInt(LegacyRoute.COLUMN_REVISION));
                         list.add(r);
                     }
                     cRoute.close();
@@ -593,17 +593,17 @@ public class LocalDatabase {
     public Displayable findExactArgs(String args) {
         Cursor c = db.rawQuery("SELECT * FROM AREAS " + args, null);
         if (c.moveToFirst()) {
-            Area a = new Area(c.getInt(Area.COLUMN_ID), c.getString(Area.COLUMN_NAME),
-                    c.getDouble(Area.COLUMN_LATITUDE), c.getDouble(Area.COLUMN_LONGITUDE), c.getInt(Area.COLUMN_REVISION));
+            LegacyArea a = new LegacyArea(c.getInt(LegacyArea.COLUMN_ID), c.getString(LegacyArea.COLUMN_NAME),
+                    c.getDouble(LegacyArea.COLUMN_LATITUDE), c.getDouble(LegacyArea.COLUMN_LONGITUDE), c.getInt(LegacyArea.COLUMN_REVISION));
             c.close();
             return a;
         }
 
         c = db.rawQuery("SELECT * FROM ROUTES " + args, null);
         if (c.moveToFirst()) {
-            Route r = new Route(c.getInt(Route.COLUMN_ID), c.getString(Route.COLUMN_NAME),
-                    c.getString(Route.COLUMN_ROUTE_TYPE),
-                    c.getDouble(Route.COLUMN_LATITUDE), c.getDouble(Route.COLUMN_LONGITUDE), c.getInt(Route.COLUMN_REVISION));
+            LegacyRoute r = new LegacyRoute(c.getInt(LegacyRoute.COLUMN_ID), c.getString(LegacyRoute.COLUMN_NAME),
+                    c.getString(LegacyRoute.COLUMN_ROUTE_TYPE),
+                    c.getDouble(LegacyRoute.COLUMN_LATITUDE), c.getDouble(LegacyRoute.COLUMN_LONGITUDE), c.getInt(LegacyRoute.COLUMN_REVISION));
             c.close();
             return r;
         }

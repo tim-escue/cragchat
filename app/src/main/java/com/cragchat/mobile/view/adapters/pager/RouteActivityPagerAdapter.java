@@ -15,10 +15,10 @@ import com.cragchat.mobile.sql.LocalDatabase;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
-    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, int routeId) {
+    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, String routeKey) {
         super(context, fragmentManager, appBarLayout, floatingActionButton);
 
-        addFragment(context.getString(R.string.title_beta),
+        /*addFragment(context.getString(R.string.title_beta),
                 CommentSectionFragment.newInstance(routeId, LocalDatabase.BETA), false, true);
         addFragment(context.getString(R.string.title_ratings),
                 RatingFragment.newInstance(routeId), false, true);
@@ -27,7 +27,7 @@ public class RouteActivityPagerAdapter extends TabPagerAdapter {
         addFragment(context.getString(R.string.title_location),
                 LocationFragment.newInstance(routeId), false, true);
         addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(routeId), false, true);
+                ImageFragment.newInstance(routeId), false, true);*/
     }
     
 }

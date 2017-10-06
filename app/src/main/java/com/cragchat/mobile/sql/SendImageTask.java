@@ -8,9 +8,8 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.fragments.ImageFragment;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;
 

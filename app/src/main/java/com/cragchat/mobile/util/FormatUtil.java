@@ -1,5 +1,14 @@
 package com.cragchat.mobile.util;
 
+import android.app.Activity;
+import android.content.Context;
+
+import com.cragchat.mobile.R;
+
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 
 /**
@@ -23,5 +32,14 @@ public class FormatUtil {
             e.printStackTrace();
         }
         return rawDateString;
+    }
+
+    public static String getYdsString(Context context, int yds) {
+        return yds != -1 ? context.getResources().getStringArray(R.array.yds_options)[yds] : "Not rated";
+    }
+
+    public static String getStarsString(double stars) {
+        DecimalFormat format = new DecimalFormat("#.##");
+        return format.format(stars);
     }
 }

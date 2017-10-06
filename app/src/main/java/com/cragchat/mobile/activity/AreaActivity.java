@@ -1,7 +1,6 @@
 package com.cragchat.mobile.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,58 +9,35 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.RelmTest;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
+import com.cragchat.mobile.database.Database;
+import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
-import io.realm.ObjectServerError;
-import io.realm.PermissionManager;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.SyncConfiguration;
-import io.realm.SyncCredentials;
-import io.realm.SyncUser;
-import io.realm.permissions.AccessLevel;
-import io.realm.permissions.PermissionRequest;
-import io.realm.permissions.UserCondition;
-
-import static io.realm.ErrorCode.INVALID_CREDENTIALS;
-import static io.realm.ErrorCode.UNKNOWN_ACCOUNT;
 
 public class AreaActivity extends NavigableActivity {
 
     private Area area;
-
     private FloatingActionButton floatingActionButton;
-
-    private SyncUser user;
-    String authUrl = "http://ec2-52-34-138-217.us-west-2.compute.amazonaws.com:9080/auth";
-    String realmUrl = "realm://ec2-52-34-138-217.us-west-2.compute.amazonaws.com:9080/crags";
+    private Realm mRealm;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         addContent(R.layout.activity_displayable_new);
 
+        mRealm = Realm.getDefaultInstance();
+
         floatingActionButton = findViewById(R.id.add_button);
 
-        area = Displayable.decodeAreaString(getIntent().getStringExtra(CragChatActivity.DATA_STRING));
-        area.loadStatistics(this);
-
-        Realm.init(AreaActivity.this);
-
-        new LoginTask().execute();
-
+        String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
+        area = Database.getInstance().getArea(areaKey);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -82,90 +58,12 @@ public class AreaActivity extends NavigableActivity {
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
 
-
-    }
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    class LoginTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            SyncCredentials myCredentials = SyncCredentials.usernamePassword("timsqdev@gmail.com", "88k88k88k", false);
-
-            user = SyncUser.login(myCredentials, authUrl);
-
-            return null;
-        }
-
-
-        protected void onPostExecute(String feed) {
-            user.getPermissionManager().applyPermissions(new PermissionRequest(UserCondition.noExistingPermissions(), realmUrl, AccessLevel.WRITE), new PermissionManager.ApplyPermissionsCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d("PERMISSION CHANGE", "updated");
-                    new RealmTask().execute();
-                }
-
-                @Override
-                public void onError(ObjectServerError objectServerError) {
-
-                }
-            });
-
-        }
-
-    }
-    class RealmTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            SyncConfiguration config = new SyncConfiguration.Builder(user, realmUrl)
-                    .build();
-            Realm.setDefaultConfiguration(config);
-            return null;
-        }
-
-
-        protected void onPostExecute(String feed) {
-            Realm realm = Realm.getDefaultInstance();
-           final RealmResults<RelmTest> results = realm.where(RelmTest.class).findAll();
-            Log.d("resultsrealm", results.size()+ " IS SIZE");
-
-            for (RelmTest i : results) {
-                Log.d("name", i.getName());
-            }
-
-            realm.close();
-        }
-
-    }
-
-    class RealmTaskTwo extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            return null;
-        }
-
-
-        protected void onPostExecute(String feed) {
-
-        }
-
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 
     public int getInitialTabIndex() {
@@ -178,7 +76,20 @@ public class AreaActivity extends NavigableActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(area.getName());
-        getSupportActionBar().setSubtitle(area.getSubTitle(this));
+
+        StringBuilder subTitle = new StringBuilder();
+        Area current = area.getParent();
+        int count = 0;
+        while (current != null) {
+            if (count > 0) {
+                subTitle.insert(0, " -> ");
+            }
+            subTitle.insert(0, current.getName());
+            count++;
+            current = current.getParent();
+        }
+        getSupportActionBar().setSubtitle(subTitle.toString());
+       // getSupportActionBar().setSubtitle(area.getSubTitle(this));
 
     }
 
@@ -208,7 +119,7 @@ public class AreaActivity extends NavigableActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Displayable parent = LocalDatabase.getInstance(this).getParent(area);
+            Area parent = area.getParent();
             if (parent != null) {
                 launch(parent);
             } else {
@@ -217,4 +128,6 @@ public class AreaActivity extends NavigableActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

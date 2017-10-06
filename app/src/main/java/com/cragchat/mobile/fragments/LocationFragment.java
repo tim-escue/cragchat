@@ -14,10 +14,10 @@ import com.cragchat.mobile.view.adapters.pager.LocationPagerAdapter;
 
 public class LocationFragment extends Fragment {
 
-    public static LocationFragment newInstance(int routeId) {
+    public static LocationFragment newInstance(String routeId) {
         LocationFragment f = new LocationFragment();
         Bundle b = new Bundle();
-        b.putInt("routeId", routeId);
+        b.putString("routeId", routeId);
         f.setArguments(b);
         return f;
     }

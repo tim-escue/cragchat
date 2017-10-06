@@ -1,4 +1,4 @@
-package com.cragchat.mobile.descriptor;
+package com.cragchat.mobile.model;
 
 
 public class Rating implements Datable {

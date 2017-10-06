@@ -3,11 +3,11 @@ package com.cragchat.mobile.remote;
 import android.content.Context;
 
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Image;
-import com.cragchat.mobile.descriptor.Rating;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.descriptor.Send;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Rating;
+import com.cragchat.mobile.model.Send;
 
 import org.json.JSONObject;
 
@@ -28,7 +28,7 @@ public class ResponseHandler {
                         Rating r = Displayable.decodeRating(json);
                         return r;
                     case "route":
-                        Route route = Displayable.decodeRoute(json);
+                        LegacyRoute route = Displayable.decodeRoute(json);
                         return route;
                     case "image":
                         Image image = Image.decode(json);

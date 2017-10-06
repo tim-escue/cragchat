@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.sql.GrabImageTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 

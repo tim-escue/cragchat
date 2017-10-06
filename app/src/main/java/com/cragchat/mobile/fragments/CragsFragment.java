@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.view.adapters.recycler.CragsFragmentRecyclerAdapter;
-import com.cragchat.mobile.descriptor.Area;
+import com.cragchat.mobile.model.LegacyArea;
 import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.view.adapters.recycler.CragsFragmentRecyclerAdapter;
 
 /**
  * Created by timde on 9/9/2017.
@@ -43,7 +43,8 @@ public class CragsFragment extends Fragment {
         recList.setLayoutManager(llm);
 
         CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter((CragChatActivity)getActivity());
-        Area ozone = (Area)LocalDatabase.getInstance(getContext()).findExact("Ozone");
+        LegacyArea ozone = (LegacyArea)LocalDatabase.getInstance(getContext()).findExact("Ozone");
+//        Log.d("SO weird", "ozone is:" + ozone.toString());
         if (ozone != null) {
             adapter.addItem(ozone);
         }

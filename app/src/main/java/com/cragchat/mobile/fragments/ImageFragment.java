@@ -16,11 +16,11 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
-import com.cragchat.mobile.view.adapters.ImageAdapter;
-import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.user.User;
+import com.cragchat.mobile.view.adapters.ImageAdapter;
 
 import java.util.List;
 
@@ -38,10 +38,10 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.list_empty)
     TextView empty;
 
-    public static ImageFragment newInstance(int displayableId) {
+    public static ImageFragment newInstance(String displayableId) {
         ImageFragment f = new ImageFragment();
         Bundle b = new Bundle();
-        b.putString("id", ""+displayableId);
+        b.putString("id", displayableId);
         f.setArguments(b);
         return f;
     }
@@ -63,7 +63,7 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
     public void load(View v) {
 
-        images = LocalDatabase.getInstance(getContext()).getImagesFor(id);
+        images = null;//LocalDatabase.getInstance(getContext()).getImagesFor(id);
 
         if (images != null && images.size() > 0&& v != null) {
             GridView gridview = (GridView) v.findViewById(R.id.thumbnail_grid);

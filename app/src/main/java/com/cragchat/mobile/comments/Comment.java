@@ -2,7 +2,7 @@ package com.cragchat.mobile.comments;
 
 import android.app.Activity;
 
-import com.cragchat.mobile.descriptor.Datable;
+import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.user.User;
 
 import org.json.JSONObject;

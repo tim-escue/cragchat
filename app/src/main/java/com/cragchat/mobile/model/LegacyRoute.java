@@ -1,4 +1,4 @@
-package com.cragchat.mobile.descriptor;
+package com.cragchat.mobile.model;
 
 import android.content.Context;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Route extends Displayable {
+public class LegacyRoute extends Displayable {
 
     public static final int COLUMN_ID = 0;
     public static final int COLUMN_NAME = 1;
@@ -24,8 +24,8 @@ public class Route extends Displayable {
     private double latitude;
     private double longitude;
 
-    public Route(int id, String name, String type,
-                 double latitude, double longitude, int revision) {
+    public LegacyRoute(int id, String name, String type,
+                       double latitude, double longitude, int revision) {
         super(id, revision);
         this.name = name;
         this.type = type;

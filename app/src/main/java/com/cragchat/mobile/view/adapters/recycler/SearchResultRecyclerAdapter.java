@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
 import com.cragchat.mobile.sql.LocalDatabase;
 
 import java.util.Collections;
@@ -49,8 +49,8 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
     @Override
     public void onBindViewHolder(final DisplayableHolder holder, int position) {
         final Displayable displayable = displayables.get(position);
-        if (displayable instanceof Route) {
-            Route r = (Route) displayable;
+        if (displayable instanceof LegacyRoute) {
+            LegacyRoute r = (LegacyRoute) displayable;
             holder.text1.setText(r.getName());
             StringBuilder info = new StringBuilder();
             if (r.getYds(activity) == -1) {
@@ -64,7 +64,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             holder.text2.setText(info.toString());
             holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
         } else {
-            Area a = (Area) displayable;
+            LegacyArea a = (LegacyArea) displayable;
             holder.text1.setText(a.getName());
             List<? extends Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
             StringBuilder info = new StringBuilder();
@@ -80,7 +80,7 @@ public class SearchResultRecyclerAdapter extends RecyclerView.Adapter<SearchResu
             /*double average = 0;
             int size = 0;
             for (Displayable i : within) {
-                Route route = (Route) i;
+                LegacyRoute route = (LegacyRoute) i;
                 if (route.getYds(activity) != -1) {
                     average += route.getStars(activity);
                     size++;

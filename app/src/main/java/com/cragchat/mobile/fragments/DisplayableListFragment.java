@@ -21,13 +21,12 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
 import com.cragchat.mobile.view.adapters.recycler.DisplayableRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import static android.view.View.GONE;
 
 public class DisplayableListFragment extends Fragment {
 
-    private List<Displayable> allRoutes;
+    private List<Object> allRoutes;
     private YdsSorter sorter;
     private TypeSorter typeSorter;
     private View filterView;
@@ -51,7 +50,7 @@ public class DisplayableListFragment extends Fragment {
         return f;
     }
 
-    public void setDisplayables(List<Displayable> list) {
+    public void setDisplayables(List list) {
         allRoutes = list;
         if (adap != null) {
             adap.notifyDataSetChanged();
@@ -122,7 +121,7 @@ public class DisplayableListFragment extends Fragment {
             sortAndFilterOptions.setVisibility(GONE);
         }
 
-        Collections.sort(allRoutes);
+      //  Collections.sort(allRoutes);
         return view;
     }
 
@@ -144,12 +143,12 @@ public class DisplayableListFragment extends Fragment {
             if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("NAME")) {
-                    Collections.sort(allRoutes);
+                  //  Collections.sort(allRoutes);
                 } else if (option.equals("YDS")) { //Used to be YDS: Low -> High
                     sorter.setHigh(false);
-                    Collections.sort(allRoutes, sorter);
+                  //  Collections.sort(allRoutes, sorter);
                 } else if (option.equals("TYPE")) {
-                    Collections.sort(allRoutes, typeSorter);
+                  //  Collections.sort(allRoutes, typeSorter);
                 }
                 adap.notifyDataSetChanged();
             }
@@ -176,15 +175,15 @@ public class DisplayableListFragment extends Fragment {
 
         @Override
         public int compare(Displayable one, Displayable two) {
-            if (one instanceof Area && two instanceof Route) {
+            if (one instanceof LegacyArea && two instanceof LegacyRoute) {
                 return -1;
-            } else if (two instanceof Area && one instanceof Route) {
+            } else if (two instanceof LegacyArea && one instanceof LegacyRoute) {
                 return 1;
-            } else if (one instanceof Area && two instanceof Area) {
+            } else if (one instanceof LegacyArea && two instanceof LegacyArea) {
                 return 0;
             } else {
-                Route routeOne = (Route) one;
-                Route routeTwo = (Route) two;
+                LegacyRoute routeOne = (LegacyRoute) one;
+                LegacyRoute routeTwo = (LegacyRoute) two;
                 if (high) {
                     return routeTwo.getYds(con) - routeOne.getYds(con);
                 } else {
@@ -202,15 +201,15 @@ public class DisplayableListFragment extends Fragment {
 
         @Override
         public int compare(Displayable one, Displayable two) {
-            if (one instanceof Area && two instanceof Route) {
+            if (one instanceof LegacyArea && two instanceof LegacyRoute) {
                 return -1;
-            } else if (two instanceof Area && one instanceof Route) {
+            } else if (two instanceof LegacyArea && one instanceof LegacyRoute) {
                 return 1;
-            } else if (one instanceof Area && two instanceof Area) {
+            } else if (one instanceof LegacyArea && two instanceof LegacyArea) {
                 return -1;
             } else {
-                Route routeOne = (Route) one;
-                Route routeTwo = (Route) two;
+                LegacyRoute routeOne = (LegacyRoute) one;
+                LegacyRoute routeTwo = (LegacyRoute) two;
                 return routeOne.getType().compareTo(routeTwo.getType());
             }
         }

@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
-import com.cragchat.mobile.descriptor.Displayable;
+import com.cragchat.mobile.model.Displayable;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
 import org.json.JSONObject;
 

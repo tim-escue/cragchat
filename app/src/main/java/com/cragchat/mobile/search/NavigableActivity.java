@@ -24,9 +24,9 @@ import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.LoginActivity;
 import com.cragchat.mobile.activity.MainActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.view.adapters.recycler.SearchResultRecyclerAdapter;
 import com.cragchat.mobile.sql.SearchQueryTaskNew;
 import com.cragchat.mobile.user.User;
+import com.cragchat.mobile.view.adapters.recycler.SearchResultRecyclerAdapter;
 
 public class NavigableActivity extends CragChatActivity {
 

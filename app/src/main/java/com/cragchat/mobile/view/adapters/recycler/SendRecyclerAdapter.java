@@ -12,8 +12,8 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Send;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.util.FormatUtil;
 

@@ -1,4 +1,4 @@
-package com.cragchat.mobile.descriptor;
+package com.cragchat.mobile.model;
 
 import android.content.Context;
 
@@ -6,10 +6,9 @@ import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.CommentManager;
 import com.cragchat.mobile.sql.LocalDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Area extends Displayable {
+public class LegacyArea extends Displayable {
 
     public static final int COLUMN_ID = 0;
     public static final int COLUMN_NAME = 1;
@@ -25,10 +24,10 @@ public class Area extends Displayable {
 
     private int areaCount;
     private int commentCount;
-    private List<Area> subAreas;
+    private List<LegacyArea> subAreas;
     private List<Displayable> routes;
 
-    public Area(int id, String name, double latitude, double longitude, int revision) {
+    public LegacyArea(int id, String name, double latitude, double longitude, int revision) {
         super(id, revision);
         this.name = name;
         this.latitude = latitude;
@@ -39,7 +38,7 @@ public class Area extends Displayable {
         this.commentCount = -1;
     }
 
-    public Area() {
+    public LegacyArea() {
     }
 
     public String getName() {
@@ -50,7 +49,7 @@ public class Area extends Displayable {
         return latitude;
     }
 
-    public List<Area> getSubAreas() {
+    public List<LegacyArea> getSubAreas() {
         return subAreas;
     }
 
@@ -65,7 +64,7 @@ public class Area extends Displayable {
         subAreas = db.findAreasWithin(this);
         areaCount = subAreas.size();
         commentCount = 0;
-        for (Area area : subAreas) {
+        for (LegacyArea area : subAreas) {
             List<Comment> parentComments = db.getComments(area.getId(), "");
             CommentManager manager = new CommentManager();
 
@@ -98,16 +97,4 @@ public class Area extends Displayable {
     public int getId() {
         return id;
     }
-
-   //N public FireBaseArea toFireBaseArea() {
-//        List<Long> areas = new ArrayList<>(subAreas.size());
-       // for (Area i : subAreas) {
-           // areas.add(Long.valueOf(i.getId()));
-       // }
-       // List<Long> route = new ArrayList<>(routes.size());
-        //for (Displayable i : routes) {
-         //   route.add(Long.valueOf(i.getId()));
-        //}
-    //    return new FireBaseArea(name, latitude, longitude, null, null, );
-   // }
 }

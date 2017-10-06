@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.model.Image;
 
 import java.io.File;
 import java.io.FileOutputStream;

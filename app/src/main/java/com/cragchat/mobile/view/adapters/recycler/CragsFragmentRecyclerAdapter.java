@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.descriptor.Area;
+import com.cragchat.mobile.model.LegacyArea;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFragmentRecyclerAdapter.ViewHolder> {
 
-    private List<Area> displayables;
+    private List<LegacyArea> displayables;
     private CragChatActivity activity;
 
     public CragsFragmentRecyclerAdapter(CragChatActivity activity) {
@@ -26,7 +26,7 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
         this.activity = activity;
     }
 
-    public void addItem(@NonNull Area displayable) {
+    public void addItem(@NonNull LegacyArea displayable) {
         displayables.add(displayable);
         notifyDataSetChanged();
     }
@@ -46,7 +46,7 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Area crag = displayables.get(position);
+        final LegacyArea crag = displayables.get(position);
         crag.loadStatistics(activity);
         holder.name.setText(crag.getName());
         holder.routeNumber.setText(String.valueOf(crag.getRouteCount()));

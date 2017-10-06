@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.RateRouteActivity;
-import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
-import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-import com.cragchat.mobile.descriptor.Rating;
+import com.cragchat.mobile.model.Rating;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.user.User;
+import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 
 import java.util.List;
 

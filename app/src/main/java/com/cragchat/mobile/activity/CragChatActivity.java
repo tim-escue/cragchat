@@ -11,9 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
 import com.cragchat.mobile.sql.LocalDatabase;
@@ -29,6 +30,30 @@ public class CragChatActivity extends AppCompatActivity {
         lastConnection = 0;
     }
 
+    public void launch(Area area) {
+        launch(area, 0);
+    }
+
+    public void launch(Area area, int tab) {
+        Intent intent = new Intent(this, AreaActivity.class);
+        intent.putExtra(DATA_STRING, area.getKey());
+        intent.putExtra("TAB", tab);
+        intent.putExtra(NavigableActivity.USE_HOME_ICON, false);
+        startActivity(intent);
+    }
+
+    public void launch(Route route) {
+        launch(route, 0);
+    }
+
+    public void launch(Route route, int tab) {
+        Intent intent = new Intent(this, AreaActivity.class);
+        intent.putExtra(DATA_STRING, route.getKey());
+        intent.putExtra("TAB", tab);
+        intent.putExtra(NavigableActivity.USE_HOME_ICON, false);
+        startActivity(intent);
+    }
+
     public void launch(Displayable r) {
         launch(r, 0);
     }
@@ -37,12 +62,12 @@ public class CragChatActivity extends AppCompatActivity {
         Intent intent;
         String encoded;
 
-        if (r instanceof Route) {
+        if (r instanceof LegacyRoute) {
             intent = new Intent(this, RouteActivity.class);
             encoded = r.toString();
         } else {
             intent = new Intent(this, AreaActivity.class);
-            encoded = Displayable.encodeAsString((Area) r);
+            encoded = r.getName();
         }
         intent.putExtra(NavigableActivity.USE_HOME_ICON, false);
         intent.putExtra("TAB", tab);

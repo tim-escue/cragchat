@@ -3,8 +3,8 @@ package com.cragchat.mobile.sql;
 import android.os.AsyncTask;
 
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.descriptor.Send;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;
 
@@ -46,7 +46,7 @@ public class SendSendTask extends AsyncTask<Void, Integer, List<String>> {
                 }
             }
             if (openAfter) {
-                Route r = (Route) LocalDatabase.getInstance(con).findExact(id);
+                LegacyRoute r = (LegacyRoute) LocalDatabase.getInstance(con).findExact(id);
                 con.launch(r, 4);
             }
         }

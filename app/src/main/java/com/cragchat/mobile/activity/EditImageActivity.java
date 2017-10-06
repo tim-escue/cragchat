@@ -9,11 +9,9 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,12 +20,10 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Image;
 import com.cragchat.mobile.fragments.ColorPickerDialog;
-import com.cragchat.mobile.fragments.NotificationDialog;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.sql.SendImageTask;
 import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.view.ImageEditView;
@@ -40,10 +36,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -54,29 +48,14 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
     private Displayable displayable;
     private String captionString;
 
-    @BindView(R.id.image_edit_view)
-    ImageEditView imageEditView;
-
-    @BindView(R.id.button_paint)
-    ImageView paint;
-
-    @BindView(R.id.button_done)
-    ImageView done;
-
-    @BindView(R.id.button_color_picker)
-    ImageView pickColor;
-
-    @BindView(R.id.button_undo)
-    ImageView undo;
-
-    @BindView(R.id.button_stroke)
-    ImageView stroke;
-
-    @BindView(R.id.button_caption)
-    ImageView caption;
-
-    @BindView(R.id.button_submit_image)
-    ImageView submit;
+    @BindView(R.id.image_edit_view) ImageEditView imageEditView;
+    @BindView(R.id.button_paint) ImageView paint;
+    @BindView(R.id.button_done) ImageView done;
+    @BindView(R.id.button_color_picker) ImageView pickColor;
+    @BindView(R.id.button_undo) ImageView undo;
+    @BindView(R.id.button_stroke) ImageView stroke;
+    @BindView(R.id.button_caption) ImageView caption;
+    @BindView(R.id.button_submit_image) ImageView submit;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);

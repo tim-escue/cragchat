@@ -3,7 +3,7 @@ package com.cragchat.mobile.sql;
 import android.os.AsyncTask;
 
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.Image;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.remote.RemoteDatabase;
 
 import java.util.List;

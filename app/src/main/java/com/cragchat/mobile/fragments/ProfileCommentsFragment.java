@@ -12,10 +12,10 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.view.adapters.ProfileCommentsListAdapter;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.ProfileCommentManager;
 import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.view.adapters.ProfileCommentsListAdapter;
 
 public class ProfileCommentsFragment extends Fragment {
 

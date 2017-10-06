@@ -11,9 +11,9 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
 import com.cragchat.mobile.comments.ProfileCommentManager;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
 import com.cragchat.mobile.sql.LocalDatabase;
 
 public class ProfileCommentsListAdapter extends BaseAdapter {
@@ -84,7 +84,7 @@ public class ProfileCommentsListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 final Displayable disp = LocalDatabase.getInstance(activity).findExact(comment.getDisplayId());
 
-                if (disp instanceof Route) {
+                if (disp instanceof LegacyRoute) {
                     int i = 0;
                     if (comment.getTable().equals("DISCUSSION")) {
                         i = 1;
@@ -92,7 +92,7 @@ public class ProfileCommentsListAdapter extends BaseAdapter {
                         i = 3;
                     }
                     activity.launch(disp, i);
-                } else if (disp instanceof Area) {
+                } else if (disp instanceof LegacyArea) {
                     int i = 0;
                     if (comment.getTable().equals("DISCUSSION")) {
                         i = 1;

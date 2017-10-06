@@ -3,7 +3,7 @@ package com.cragchat.mobile.sql;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.cragchat.mobile.descriptor.Send;
+import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;
 

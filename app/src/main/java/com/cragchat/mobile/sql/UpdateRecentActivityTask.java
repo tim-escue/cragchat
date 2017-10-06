@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.view.adapters.recycler.RecentActivityRecyclerAdapter;
-import com.cragchat.mobile.descriptor.Datable;
+import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;
+import com.cragchat.mobile.view.adapters.recycler.RecentActivityRecyclerAdapter;
 
 import java.util.Collections;
 import java.util.Comparator;

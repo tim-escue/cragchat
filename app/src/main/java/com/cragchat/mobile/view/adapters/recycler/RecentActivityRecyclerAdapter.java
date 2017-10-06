@@ -18,11 +18,11 @@ import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Image;
-import com.cragchat.mobile.descriptor.Rating;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
+import com.cragchat.mobile.model.Rating;
 import com.cragchat.mobile.sql.GrabImageTask;
 import com.cragchat.mobile.sql.LocalDatabase;
 
@@ -160,9 +160,9 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
                 holder.text1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (disp instanceof Route) {
+                        if (disp instanceof LegacyRoute) {
                             activity.launch(disp, 5);
-                        } else if (disp instanceof Area) {
+                        } else if (disp instanceof LegacyArea) {
                             activity.launch(disp, 4);
                         }
                     }

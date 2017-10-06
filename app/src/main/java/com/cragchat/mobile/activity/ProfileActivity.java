@@ -7,8 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.view.adapters.pager.ProfilePagerAdapter;
 import com.cragchat.mobile.search.NavigableActivity;
+import com.cragchat.mobile.view.adapters.pager.ProfilePagerAdapter;
 
 public class ProfileActivity extends NavigableActivity {
 

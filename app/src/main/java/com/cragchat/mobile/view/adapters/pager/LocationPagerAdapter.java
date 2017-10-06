@@ -22,7 +22,7 @@ public class LocationPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MapFragment.newInstance(parentId);
             case 1:
-                return CommentSectionFragment.newInstance(parentId, "LOCATION");
+                return CommentSectionFragment.newInstance(3, "LOCATION");
             default:
                 return null;
         }

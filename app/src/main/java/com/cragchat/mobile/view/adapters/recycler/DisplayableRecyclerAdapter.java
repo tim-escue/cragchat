@@ -10,11 +10,9 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
-import com.cragchat.mobile.sql.CheckForRouteUpdateTask;
-import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.Route;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,24 +23,24 @@ import butterknife.ButterKnife;
 
 public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<DisplayableRecyclerAdapter.ViewHolder> {
 
-    private List<Displayable> displayables;
+    private List<Object> displayables;
     private CragChatActivity activity;
-    private List<Displayable> filtered;
+    private List<Object> filtered;
 
-    public DisplayableRecyclerAdapter(CragChatActivity a, List<Displayable> routes) {
+    public DisplayableRecyclerAdapter(CragChatActivity a, List<Object> routes) {
         this.displayables = routes;
         this.activity = a;
         filtered = new ArrayList<>();
     }
 
-    public void setDisplayables(List<Displayable> list) {
+    public void setDisplayables(List<Object> list) {
         this.displayables = list;
         notifyDataSetChanged();
     }
 
     public void addFilter(String string) {
-        for (Iterator<Displayable> routeIterator = displayables.iterator(); routeIterator.hasNext(); ) {
-            Displayable r = routeIterator.next();
+        for (Iterator<Object> routeIterator = displayables.iterator(); routeIterator.hasNext(); ) {
+            Object r = routeIterator.next();
             if (r instanceof Route) {
                 Route route = (Route) r;
                 if (route.getType().equalsIgnoreCase(string)) {
@@ -55,8 +53,8 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
     }
 
     public void removeFilter(String string) {
-        for (Iterator<Displayable> routeIterator = filtered.iterator(); routeIterator.hasNext(); ) {
-            Displayable r = routeIterator.next();
+        for (Iterator<Object> routeIterator = filtered.iterator(); routeIterator.hasNext(); ) {
+            Object r = routeIterator.next();
             if (r instanceof Route) {
                 Route route = (Route) r;
                 if (route.getType().toLowerCase().contains(string.toLowerCase())) {
@@ -83,26 +81,30 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Displayable displayable = (Displayable) displayables.get(position);
-        holder.rect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (activity.hasConnection()) {
-                    new CheckForRouteUpdateTask(displayable, activity).execute();
+        final Object displayable = displayables.get(position);
+        if (displayable instanceof Area) {
+
+            holder.rect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // if (activity.hasConnection()) {
+                    //     new CheckForRouteUpdateTask(displayable, activity).execute();
+                    // }
+                    activity.launch((Area) displayable);
                 }
-                activity.launch(displayable);
-            }
-        });
+
+            });
+        }
         if (displayable instanceof Route) {
             Route r = (Route) displayable;
             holder.text1.setText(r.getName());
             StringBuilder info = new StringBuilder();
-            if (r.getYds(activity) == -1) {
+            if (r.getYds() == -1) {
                 info.append("Not rated");
             } else {
-                info.append(Displayable.getYdsString(activity, r.getYds(activity)));
+                info.append(Displayable.getYdsString(activity, r.getYds()));
                 info.append(" ");
-                info.append(r.getStarsString(activity));
+                info.append(r.getStars());
                 info.append(" stars");
             }
             holder.text2.setText(info.toString());
@@ -110,14 +112,14 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
         } else {
             Area a = (Area) displayable;
             holder.text1.setText(a.getName());
-            List<? extends Displayable> within = LocalDatabase.getInstance(activity).findRoutesWithin(a);
+            List<? extends Route> routes = a.getRoutes();
             StringBuilder info = new StringBuilder();
-            info.append(within.size());
+            info.append(routes.size());
             info.append(" routes");
-            within = LocalDatabase.getInstance(activity).findAreasWithin(a);
-            if (within.size() > 0) {
+            List<? extends Area> subAreas = a.getSubAreas();
+            if (subAreas.size() > 0) {
                 info.append(" ");
-                info.append(within.size());
+                info.append(subAreas.size());
                 info.append(" areas");
             }
             holder.text2.setText(info.toString());

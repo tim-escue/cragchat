@@ -15,9 +15,9 @@ import android.util.Log;
 
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.descriptor.Area;
-import com.cragchat.mobile.descriptor.Displayable;
-import com.cragchat.mobile.descriptor.Route;
+import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.LegacyRoute;
 import com.cragchat.mobile.sql.SendCommentEditTask;
 import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.sql.SendImageTask;
@@ -250,9 +250,9 @@ public class RemoteDatabase {
             while ((message = in.readLine()) != null) {
                 message = message.trim();
                 if (message.startsWith("JSON="))
-                    list.add(Route.decodeRoute(new JSONObject(message.split("=")[1].trim())));
+                    list.add(LegacyRoute.decodeRoute(new JSONObject(message.split("=")[1].trim())));
                 else if (message.startsWith("AREA"))
-                    list.add(Area.decodeAreaString(message));
+                    list.add(LegacyArea.decodeAreaString(message));
                 //System.out.println(message.trim());
             }
             in.close();
