@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.model.LegacyArea;
+import com.cragchat.mobile.model.Area;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFragmentRecyclerAdapter.ViewHolder> {
 
-    private List<LegacyArea> displayables;
+    private List<Area> displayables;
     private CragChatActivity activity;
 
     public CragsFragmentRecyclerAdapter(CragChatActivity activity) {
@@ -26,7 +26,7 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
         this.activity = activity;
     }
 
-    public void addItem(@NonNull LegacyArea displayable) {
+    public void addItem(@NonNull Area displayable) {
         displayables.add(displayable);
         notifyDataSetChanged();
     }
@@ -46,12 +46,10 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final LegacyArea crag = displayables.get(position);
-        crag.loadStatistics(activity);
+        final Area crag = displayables.get(position);
         holder.name.setText(crag.getName());
-        holder.routeNumber.setText(String.valueOf(crag.getRouteCount()));
-        holder.areaNumber.setText(String.valueOf(crag.getAreaCount()));
-        holder.comments.setText(String.valueOf(crag.getCommentCount()));
+        holder.routeNumber.setText(String.valueOf(crag.getRoutes().size()));
+        holder.areaNumber.setText(String.valueOf(crag.getSubAreas().size()));
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +63,6 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
         TextView name;
         TextView routeNumber;
         TextView areaNumber;
-        TextView comments;
         ImageView icon;
         RelativeLayout itemLayout;
 
@@ -75,7 +72,6 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
             icon = itemView.findViewById(R.id.crag_icon);
             areaNumber = itemView.findViewById(R.id.number_areas);
             routeNumber = itemView.findViewById(R.id.number_routes);
-            comments = itemView.findViewById(R.id.number_comments);
             itemLayout = itemView.findViewById(R.id.item_layout);
         }
     }

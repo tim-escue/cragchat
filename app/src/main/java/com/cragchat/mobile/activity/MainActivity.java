@@ -18,6 +18,8 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.AuthenticatedUser;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.authentication.AuthenticationCallback;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.fragments.NotificationDialog;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LocalDatabase;
@@ -26,8 +28,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 
 public class MainActivity extends NavigableActivity {
 
@@ -35,15 +40,12 @@ public class MainActivity extends NavigableActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("Checking  in status", "logged");
         if (!Authentication.isLoggedIn(this)) {
-            //            Authentication.login(this, "anony@fakecrag.com", "anony@fakecrag.com", null);
-
             Log.d("AUTH", "Not Logged in");
             Authentication.login(this, "timsqdev@gmail.com", "88k88k88k", new AuthenticationCallback() {
                 @Override
                 public void onAuthenticateSuccess(AuthenticatedUser user) {
-                    Log.d("LOGGED", "in now!!");
+
                 }
 
                 @Override
@@ -51,35 +53,7 @@ public class MainActivity extends NavigableActivity {
                     Log.d("AUTHENTICATION", "FAILED");
                 }
             });
-        } else {
-           /*Realm.deleteRealm(Realm.getDefaultConfiguration());
-            final Realm m = Realm.getDefaultInstance();
-
-
-            m.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.deleteAll();
-                }
-            });
-            m.close();*/
-            /*Realm realm = Realm.getDefaultInstance();
-            Log.d("In hea", "fo so");
-            try {
-                final File file = new File(Environment.getExternalStorageDirectory().getPath().concat("/sample.realm"));
-                if (file.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.delete();
-                }
-
-                realm.writeCopyTo(file);
-                Toast.makeText(MainActivity.this, "Success export realm file", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                realm.close();
-                e.printStackTrace();
-            }*/
         }
-
 
         addContent(R.layout.activity_main);
 
@@ -120,7 +94,7 @@ public class MainActivity extends NavigableActivity {
             }
 
             if (hasConnection()) {
-                LocalDatabase.getInstance(this).updateAll(this);
+                // LocalDatabase.getInstance(this).updateAll(this);
             } else {
                 Toast.makeText(this, "Data connection not found - app will run in offline mode.", Toast.LENGTH_LONG).show();
             }

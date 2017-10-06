@@ -2,12 +2,18 @@ package com.cragchat.mobile.database;
 
 import android.content.Context;
 
+import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.MainActivity;
 import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 
+import java.util.List;
+import java.util.Scanner;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by timde on 9/28/2017.
@@ -15,7 +21,7 @@ import io.realm.Realm;
 
 public class RealmDatabase implements CragChatDatasource {
 
-    public RealmDatabase(Context context) {
+    RealmDatabase(Context context) {
         Realm.init(context);
     }
 
@@ -35,67 +41,66 @@ public class RealmDatabase implements CragChatDatasource {
         return area;
     }
 
-     /*
-        final Realm m = Realm.getDefaultInstance();
+    /*
+        //USED FOR CREATING REALM INITIAL DATA FROM RAW RESOURCE FILES
 
 
-        LegacyArea legacyOzone = (LegacyArea) LocalDatabase.getInstance(this).findExact("Ozone");
-        legacyOzone.loadStatistics(this);
-        final RealmArea ozone = new RealmArea(legacyOzone.getName(), legacyOzone.getName(), legacyOzone.getLatitude(), legacyOzone.getLongitude(), null,
-                new RealmList<RealmArea>(), new RealmList<RealmRoute>());
-        m.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(ozone);
+    Realm realm = Realm.getDefaultInstance();
+                    System.out.println("logged in successfully as timsqdev");
+                    realm.executeTransaction(new Realm.Transaction() {
+        @Override
+        public void execute(Realm realm) {
+            realm.deleteAll();
+            System.out.println("Creating ozone and other areas");
+            RealmArea ozone = new RealmArea("Ozone", "Ozone", 0, 0, null, new RealmList<RealmArea>(), new RealmList<RealmRoute>());
+            ozone = realm.copyToRealm(ozone);
+
+            Scanner scanner = new Scanner(MainActivity.this.getResources().openRawResource(R.raw.walls));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] params = line.split("#");
+                RealmArea newArea = new RealmArea(params[0], params[0] + ozone.getName(), 0, 0, ozone, new RealmList<RealmArea>(), new RealmList<RealmRoute>());
+                newArea = realm.copyToRealm(newArea);
+                ozone.getSubAreas().add(newArea);
             }
-        });
-        final RealmArea ozoneNew = m.where(RealmArea.class).equalTo("name", "Ozone").findFirst();
-        for (final LegacyArea legacyArea : legacyOzone.getSubAreas()) {
-            legacyArea.loadStatistics(this);
+            scanner.close();
 
-            m.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    final RealmArea newArea = new RealmArea(legacyArea.getName(), legacyArea.getName() + ozoneNew.getName(), legacyArea.getLatitude(), legacyArea.getLongitude(), ozoneNew,
-                            new RealmList<RealmArea>(), new RealmList<RealmRoute>());
-                    RealmArea created = m.copyToRealm(newArea);
-                    ozoneNew.getSubAreas().add(created);
+            System.out.println("Creating routes");
+            scanner = new Scanner(MainActivity.this.getResources().openRawResource(R.raw.routes));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] params = line.split("#");
+
+                String type = params[3];
+                if (type.contains("Top Rope")) {
+                    type = "Trad"; // only one rout ehas tope rope and its other type is trad
                 }
-            });
-            final RealmArea newArea = m.where(RealmArea.class).equalTo("name", legacyArea.getName()).findFirst();
 
+                RealmArea parent = realm.where(RealmArea.class).equalTo("name", params[2]).findFirst();
+                RealmRoute route = new RealmRoute(params[0] + parent.getName(), params[0], type, 0, 0, parent);
+                route = realm.copyToRealm(route);
+                parent.getRoutes().add(route);
+            }
 
-            for (Displayable disp : legacyArea.getRoutes()) {
-                final LegacyRoute route = (LegacyRoute) disp;
-                m.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        RealmRoute r = realm.createObject(RealmRoute.class, route.getName() + newArea.getName());
-                        r.setName(route.getName());
-                        r.setLatitude(route.getLatitude());
-                        r.setLongitude(route.getLongitude());
-                        r.setType(route.getType());
-                        r.setStars(route.getStars(AreaActivity.this));
-                        r.setYds(route.getYds(AreaActivity.this));
-                        r.setParent(newArea);
-                        newArea.getRoutes().add(r);
-                    }
-                });
+            System.out.println("Finished copying to realm");
+            List<RealmArea> areas = realm.where(RealmArea.class).findAll();
+            System.out.println("Areas(" + areas.size() + "): ");
+            for (RealmArea area : areas) {
+                System.out.println("\t" + area.getName());
+                for (RealmArea subArea : area.getSubAreas()) {
+                    System.out.println("\t\t" + subArea.getName());
+                }
+                for (RealmRoute route : area.getRoutes()) {
+                    System.out.println("\t\t" + route.getName());
+                }
+            }
+            List<RealmRoute> routes = realm.where(RealmRoute.class).findAll();
+            System.out.println("Routes(" + routes.size() + "):  ");
+            for (RealmRoute route : routes) {
+                System.out.println("\t" + route.getName());
             }
         }
-        for (final Displayable disp : legacyOzone.getRoutes()) {
-            final RealmRoute route = m.where(RealmRoute.class).equalTo("name", disp.getName()).findFirst();
-            m.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    ozoneNew.getRoutes().add(route);
-                }
-            });
-        }
+    });
 
-        for (RealmArea ma : m.where(RealmArea.class).findAll()) {
-            Log.d("AREA:", ma.toString());
-        }
-        m.close();
      */
 }
