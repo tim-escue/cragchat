@@ -1,7 +1,13 @@
 package com.cragchat.mobile.database.models;
 
 import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Route;
+import com.cragchat.mobile.util.FormatUtil;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -26,8 +32,8 @@ public class RealmArea extends RealmObject implements Area {
     @PrimaryKey
     private String key;
     private String name;
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
     private RealmArea parent;
     private RealmList<RealmArea> subAreas;
     private RealmList<RealmRoute> routes;
@@ -37,7 +43,7 @@ public class RealmArea extends RealmObject implements Area {
      */
     public RealmArea() {}
 
-    public RealmArea(String name, String key, double latitude, double longitude, RealmArea parent, RealmList<RealmArea> subAreas, RealmList<RealmRoute> routes) {
+    public RealmArea(String name, String key, String latitude, String longitude, RealmArea parent, RealmList<RealmArea> subAreas, RealmList<RealmRoute> routes) {
         this.setName(name);
         this.setLatitude(latitude);
         this.setLongitude(longitude);
@@ -55,19 +61,40 @@ public class RealmArea extends RealmObject implements Area {
         this.name = name;
     }
 
-    public double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    @Override
+    public HashMap<String, Object> getMap() {
+        HashMap<String, Object> areaMap = new HashMap<>();
+        areaMap.put(RealmArea.FIELD_KEY, getKey());
+        areaMap.put(RealmArea.FIELD_NAME, getName());
+        areaMap.put(RealmArea.FIELD_PARENT, getParent() != null ? getParent().getKey() : "");
+        areaMap.put(RealmArea.FIELD_LATITUDE, getLatitude());
+        areaMap.put(RealmArea.FIELD_LONGITUDE, getLongitude());
+        List<String> subareas = new ArrayList<>();
+        for (Area i : getSubAreas()) {
+            subareas.add(i.getKey());
+        }
+        areaMap.put(RealmArea.FIELD_SUBAREAS, subareas);
+        List<String> routes = new ArrayList<>();
+        for (Route i : getRoutes()) {
+            routes.add(i.getKey());
+        }
+        areaMap.put(RealmArea.FIELD_ROUTES, routes);
+        return areaMap;
+    }
+
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 

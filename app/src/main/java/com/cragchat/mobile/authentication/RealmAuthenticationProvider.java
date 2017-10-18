@@ -1,6 +1,13 @@
 package com.cragchat.mobile.authentication;
 
+import android.util.Log;
+
 import com.cragchat.mobile.database.Database;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.ObjectServerError;
 import io.realm.Realm;
@@ -14,8 +21,8 @@ import io.realm.SyncUser;
 
 public class RealmAuthenticationProvider implements AuthenticationProvider {
 
-    private static String AUTHENTICATION_URL = "http://ec2-52-32-143-228.us-west-2.compute.amazonaws.com:9080/auth";
-    private static String REALM_URL = "realm://ec2-52-32-143-228.us-west-2.compute.amazonaws.com:9080/ozone";
+    private static String AUTHENTICATION_URL = "http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com:9080/auth";
+    private static String REALM_URL = "realm://ec2-54-148-84-77.us-west-2.compute.amazonaws.com:9080/ozone";
 
     private static SyncUser mUser;
 
@@ -34,10 +41,15 @@ public class RealmAuthenticationProvider implements AuthenticationProvider {
     }
 
     private void authenticate(String name, String password, boolean register, final AuthenticationCallback callback) {
-        SyncCredentials credentials = SyncCredentials.usernamePassword(name, password, register);
+        //SyncCredentials credentials = SyncCredentials.usernamePassword(name, password, register);
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("username", "timbob");
+        userMap.put("password", "timbob");
+        SyncCredentials credentials = SyncCredentials.custom(name, "custom/fooauth", userMap);
         SyncUser.loginAsync(credentials, AUTHENTICATION_URL, new SyncUser.Callback() {
             @Override
             public void onSuccess(SyncUser syncUser) {
+                Log.d("auth", "success, user:" + syncUser.toJson());
                 mUser = syncUser;
                 AuthenticatedUser user = new AuthenticatedUser(syncUser.getIdentity(), syncUser.toJson());
                 callback.onAuthenticateSuccess(user);
@@ -46,6 +58,7 @@ public class RealmAuthenticationProvider implements AuthenticationProvider {
 
             @Override
             public void onError(ObjectServerError objectServerError) {
+                Log.d("auth", objectServerError.getErrorCode().toString() + ": " +objectServerError.getErrorMessage());
                 callback.onAuthenticateFailed();
             }
         });

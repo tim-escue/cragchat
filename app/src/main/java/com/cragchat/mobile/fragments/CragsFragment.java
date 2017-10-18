@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.database.Database;
+import com.cragchat.mobile.database.RealmDatabase;
 import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.LegacyArea;
@@ -36,10 +37,6 @@ public class CragsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_crags, container, false);
 
-       // ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar1);
-       // RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.progressBox);
-       // layout.setVisibility(View.VISIBLE);
-
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.crags_recycler);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -48,10 +45,10 @@ public class CragsFragment extends Fragment {
 
         CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter((CragChatActivity)getActivity());
 
-        Area ozone = Database.getInstance().getArea("Ozone");
-        if (ozone != null) {
-            adapter.addItem(ozone);
-        }
+//        Area ozone = Database.getInstance().getArea("Ozone");
+   //     if (ozone != null) {
+     //       adapter.addItem(ozone);
+      //  }
 
         recList.setAdapter(adapter);
 

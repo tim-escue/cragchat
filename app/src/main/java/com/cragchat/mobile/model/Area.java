@@ -1,5 +1,6 @@
 package com.cragchat.mobile.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ public interface Area {
     Area getParent();
     List<? extends Area> getSubAreas();
     List<? extends Route> getRoutes();
-    double getLongitude();
-    double getLatitude();
+    String getLongitude();
+    String getLatitude();
+    HashMap<String, Object> getMap();
+
 }

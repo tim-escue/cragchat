@@ -1,10 +1,14 @@
 package com.cragchat.mobile.database.models;
 
 import com.cragchat.mobile.model.Route;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.HashMap;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class RealmRoute extends RealmObject implements Route {
 
     public static final String FIELD_KEY = "key";
@@ -12,15 +16,17 @@ public class RealmRoute extends RealmObject implements Route {
     public static final String FIELD_LATITUDE = "latitude";
     public static final String FIELD_LONGITUDE = "longitude";
     public static final String FIELD_PARENT = "parent";
-    public static final String FIELD_SUBAREAS = "subAreas";
-    public static final String FIELD_ROUTES = "routes";
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_STARS = "stars";
+    public static final String FIELD_YDS = "yds";
+
 
     @PrimaryKey
     private String key;
     private String name;
     private String type;
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
     private int yds;
     private double stars;
     private RealmArea parent;
@@ -28,7 +34,7 @@ public class RealmRoute extends RealmObject implements Route {
     public RealmRoute() {}
 
     public RealmRoute(String key, String name, String type,
-                      double latitude, double longitude, RealmArea parent) {
+                      String latitude, String longitude, RealmArea parent) {
         this.setName(name);
         this.setType(type);
         this.setLatitude(latitude);
@@ -45,11 +51,25 @@ public class RealmRoute extends RealmObject implements Route {
         return type;
     }
 
-    public double getLatitude() {
+    @Override
+    public HashMap<String, Object> getMap() {
+        HashMap<String, Object> routeMap = new HashMap<>();
+        routeMap.put(RealmRoute.FIELD_KEY, key);
+        routeMap.put(RealmRoute.FIELD_NAME, getName());
+        routeMap.put(RealmRoute.FIELD_LATITUDE, getLatitude());
+        routeMap.put(RealmRoute.FIELD_LONGITUDE, getLongitude());
+        routeMap.put(RealmRoute.FIELD_PARENT, getParent().getKey());
+        routeMap.put(RealmRoute.FIELD_TYPE, getType());
+        routeMap.put(RealmRoute.FIELD_STARS, getStars());
+        routeMap.put(RealmRoute.FIELD_YDS, getYds());
+        return routeMap;
+    }
+
+    public String getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
@@ -61,11 +81,11 @@ public class RealmRoute extends RealmObject implements Route {
         this.type = type;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 

@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Route;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * Created by tim on 8/12/17.
@@ -41,5 +45,35 @@ public class FormatUtil {
     public static String getStarsString(double stars) {
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(stars);
+    }
+
+    public static String areaListToString(List<? extends Area> list) {
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+        if (list.size() > 0) {
+            builder.append(list.get(index).getKey());
+            index++;
+        }
+        while (index < list.size()) {
+            builder.append(",");
+            builder.append(list.get(index).getKey());
+            index++;
+        }
+        return builder.toString();
+    }
+
+    public static String routeListToString(List<? extends Route> list) {
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+        if (list.size() > 0) {
+            builder.append(list.get(index).getKey());
+            index++;
+        }
+        while (index < list.size()) {
+            builder.append(",");
+            builder.append(list.get(index).getKey());
+            index++;
+        }
+        return builder.toString();
     }
 }
