@@ -44,7 +44,7 @@ public class RecentActivityFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-       // recList.addItemDecoration(new RecyclerViewMargin(48));
+        // recList.addItemDecoration(new RecyclerViewMargin(48));
 
         new UpdateRecentActivityTask(getActivity(), id, recList, layout).execute();
 

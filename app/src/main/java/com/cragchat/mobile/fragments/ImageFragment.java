@@ -6,37 +6,47 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
+import com.cragchat.mobile.activity.RouteActivity;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.database.models.RealmImage;
 import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.remote.RemoteDatabase;
-import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.user.User;
-import com.cragchat.mobile.view.adapters.ImageAdapter;
+import com.cragchat.mobile.view.adapters.recycler.ImageRecyclerAdapter;
+import com.cragchat.networkapi.ErrorHandlingObserverable;
+import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class ImageFragment extends Fragment implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 873;
-    private List<Image> images;
-    private int id;
-    private ImageAdapter adap;
+    private String key;
+    private ImageRecyclerAdapter adap;
+    private Realm mRealm;
 
     @BindView(R.id.list_empty)
     TextView empty;
+    @BindView(R.id.images_recycler)
+    RecyclerView recyclerView;
 
     public static ImageFragment newInstance(String displayableId) {
         ImageFragment f = new ImageFragment();
@@ -48,36 +58,68 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_images, container, false);
 
         ButterKnife.bind(this, view);
 
-        id = Integer.parseInt(getArguments().getString("id"));
+        mRealm = Realm.getDefaultInstance();
 
-        load (view);
+        key = getArguments().getString("id");
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        load();
+
+        if (NetworkApi.isConnected(getContext())) {
+            NetworkApi.getInstance().getImages(key)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new ErrorHandlingObserverable<List<RealmImage>>() {
+                        @Override
+                        public void onSuccess(final List<RealmImage> object) {
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.insertOrUpdate(object);
+                                }
+                            });
+                            realm.close();
+                            adap.updateData(mRealm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, key).findAll());
+                            if (object.size() > 0) {
+                                empty.setVisibility(View.GONE);
+                            }
+
+                        }
+                    });
+        }
+
 
         return view;
     }
 
-    public void load(View v) {
-
-        images = null;//LocalDatabase.getInstance(getContext()).getImagesFor(id);
-
-        if (images != null && images.size() > 0&& v != null) {
-            GridView gridview = (GridView) v.findViewById(R.id.thumbnail_grid);
-            adap  = new ImageAdapter(getContext(), images.toArray(new Image[images.size()]));
-            gridview.setAdapter(adap);
-        } else {
-            empty.setVisibility(View.VISIBLE);
+    public void load() {
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        RealmResults<RealmImage> images = mRealm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, key).findAll();
+        adap = new ImageRecyclerAdapter(images, true, (CragChatActivity) getActivity());
+        recyclerView.setAdapter(adap);
+        if (images.size() > 0) {
+            empty.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
-            if (User.currentToken(getActivity()) != null) {
+            if (Authentication.isLoggedIn(getContext())) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -95,25 +137,18 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data == null) {
-                //Log.d("RouteActivity", "No data");
                 return;
             }
             try {
-                //System.out.println("INTENT RECEIVED");
-                if (((CragChatActivity)getActivity()).hasConnection()) {
-                    Intent editImage = new Intent(getContext(), EditImageActivity.class);
-                    editImage.putExtra("image_uri", data.getData().toString());
-                    editImage.putExtra("displayable_id", id);
-                    startActivity(editImage);
-                    // new SendImageTask(this, User.currentToken(this), data.getData(), route.getId(), "nocap", imageFragment).execute();
-                } else {
-                    Toast.makeText(getContext(), "No data connection - storing comment to post it later.", Toast.LENGTH_LONG).show();
-                    LocalDatabase.getInstance(getContext()).store(getActivity(), "IMAGE###" + RemoteDatabase.getPath(getContext(), data.getData()) + "###" + User.currentToken(getActivity()) + "###" + id + "###" + "nocap");
-                }
+                Intent editImage = new Intent(getContext(), EditImageActivity.class);
+                editImage.putExtra("image_uri", data.getData().toString());
+                editImage.putExtra("displayable_id", key);
+                Activity activity = getActivity();
+                editImage.putExtra("entityType", activity instanceof RouteActivity ? "route" : "area");
+                startActivity(editImage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
         }
     }
 }

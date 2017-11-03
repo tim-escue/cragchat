@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App brand colors -->
+    <!-- App brand colors
     <color name="primary">#689F38</color>
     <color name="primary_dark">#558B2F</color>
-    <color name="primary_light">#9CCC65</color>
+    <color name="primary_light">#9CCC65</color> -->
+    <color name="primary">#424242</color>
+    <color name="primary_dark">#1b1b1b</color>
+    <color name="primary_light">#6d6d6d</color>
     <color name="accent">#8BC34A</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>

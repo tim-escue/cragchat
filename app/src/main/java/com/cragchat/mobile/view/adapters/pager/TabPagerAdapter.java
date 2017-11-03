@@ -1,6 +1,5 @@
 package com.cragchat.mobile.view.adapters.pager;
 
-import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
     private AppBarLayout appBarLayout;
     private FloatingActionButton fab;
 
-    public TabPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBar, FloatingActionButton fab) {
+    public TabPagerAdapter(FragmentManager fragmentManager, AppBarLayout appBar, FloatingActionButton fab) {
         super(fragmentManager);
         fragments = new SparseArray<>();
         index = 0;
@@ -46,7 +45,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        toggleOptionalViews(position);
+       // toggleOptionalViews(position);
     }
 
     @Override
@@ -56,13 +55,26 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     private void toggleOptionalViews(int position) {
         PagerFragment fragment = fragments.get(position);
-        if (fragment.getExpandAppBar()) {
+        if (appBarLayout != null && fragment.getExpandAppBar()) {
             appBarLayout.setExpanded(true);
         }
-        if (fragment.getShowFloatingActionButton()) {
-            fab.setVisibility(View.VISIBLE);
-        } else {
-            fab.setVisibility(View.GONE);
+        if (fab != null) {
+            System.out.println("togglefabhere");
+            if (fragment.getShowFloatingActionButton()) {
+                System.out.println("togglefabhere yes");
+                if (fab.getVisibility() != View.VISIBLE) {
+                   // fab.setVisibility(View.VISIBLE);
+                }
+                fab.show();
+            } else {
+                System.out.println("togglefabhere nod");
+
+                if (fab.getVisibility() != View.GONE) {
+                   // fab.setVisibility(View.GONE);
+
+                }
+                fab.hide();
+            }
         }
     }
 

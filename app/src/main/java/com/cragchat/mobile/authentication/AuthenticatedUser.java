@@ -21,4 +21,12 @@ public class AuthenticatedUser {
     public String getToken() {
         return token;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

@@ -16,6 +16,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
 
 
@@ -27,84 +28,49 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCdrtafxk2F8Np33kCgIET69Hs8Kvpy3Rk" />
 
-        <meta-data
-            android:name="android.app.default_searchable"
-            android:value="com.cragchat.mobile.activity.SearchActivity" />
-
         <activity
             android:name="com.cragchat.mobile.activity.MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/app_name">
 
-            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" />
         </activity>
 
-        <activity
-            android:name="com.cragchat.mobile.activity.RouteActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+        <activity android:name=".activity.ViewImageActivity" />
+
+        <activity android:name="com.cragchat.mobile.activity.RouteActivity" >
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" />
         </activity>
 
-        <activity
-            android:name="com.cragchat.mobile.activity.ProfileActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+        <activity android:name="com.cragchat.mobile.activity.ProfileActivity" >
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" />
         </activity>
 
-        <activity
-            android:name="com.cragchat.mobile.activity.AreaActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+        <activity android:name="com.cragchat.mobile.activity.AreaActivity" >
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" />
         </activity>
 
-        <activity
-            android:name="com.cragchat.mobile.activity.LoginActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name="com.cragchat.mobile.activity.LoginActivity" />
 
-        <activity
-            android:name="com.cragchat.mobile.activity.RegisterActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name="com.cragchat.mobile.activity.RegisterActivity" />
 
-        <activity
-            android:name="com.cragchat.mobile.activity.EditImageActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name="com.cragchat.mobile.activity.EditImageActivity" />
 
-        <activity
-            android:name="com.cragchat.mobile.activity.RateRouteActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name="com.cragchat.mobile.activity.RateRouteActivity" />
 
-        <activity
-            android:name="com.cragchat.mobile.activity.SubmitSendActivity"
-            android:screenOrientation="portrait">
+        <activity android:name="com.cragchat.mobile.activity.SubmitSendActivity" />
+
+        <activity android:name=".activity.SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

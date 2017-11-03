@@ -71,7 +71,7 @@ public class SendImageTask extends AsyncTask<String, Integer, List<String>> {
                         e.printStackTrace();
                     }
                     if (frag != null) {
-                        frag.load(frag.getView());
+                        //frag.load(frag.getView());
                     }
                     Toast.makeText(activity, "Image upload success!", Toast.LENGTH_LONG).show();
                 } else {

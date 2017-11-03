@@ -26,6 +26,7 @@ import com.cragchat.mobile.sql.SendCommentTask;
 import com.cragchat.mobile.sql.VoteTask;
 import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.networkapi.NetworkApi;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -71,7 +72,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
             }
         }
     }
-    
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text1;
         TextView text2;
@@ -136,7 +137,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                 if (User.currentToken(activity) != null) {
                     new VoteTask(activity, manager.getCommentList().get(holder.getAdapterPosition()), true, holder.text5).execute();
                 } else {
-                    Toast.makeText(activity, "Must be logged in to vote on comments", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Must be logged in to postCommentVote on comments", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -147,7 +148,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                 if (User.currentToken(activity) != null) {
                     new VoteTask(activity, manager.getCommentList().get(holder.getAdapterPosition()), false, holder.text5).execute();
                 } else {
-                    Toast.makeText(activity, "Must be logged in to vote on comments", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Must be logged in to postCommentVote on comments", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -180,7 +181,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
         holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((CragChatActivity) activity).hasConnection()) {
+                if (NetworkApi.isConnected(activity)) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", comment.getAuthorName());
                     activity.startActivity(intent);
@@ -266,7 +267,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String url = txtUrl.getText().toString();
-                        if (((CragChatActivity) activity).hasConnection()) {
+                        if (NetworkApi.isConnected(activity)) {
                             Comment newCom = new Comment(url, comment.getId(), comment.getScore(), comment.getDate(), comment.getDisplayId(),
                                     comment.getParent(), comment.getDepth(), comment.getAuthorName(), comment.getTable());
                             new SendCommentEditTask(activity, adapter, newCom).execute();
@@ -313,7 +314,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String url = txtUrl.getText().toString();
                         //  public static String insertComment(String table, String author, String text, String display_id, String parent, String depth) {
-                        if (((CragChatActivity) activity).hasConnection()) {
+                        if (NetworkApi.isConnected(activity)) {
                             new SendCommentTask(activity, adapter, table).execute(table, User.currentToken(activity), url, String.valueOf(comment.getDisplayId()),
                                     String.valueOf(comment.getId()), String.valueOf(comment.getDepth() + 1));
 

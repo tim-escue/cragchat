@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/sixteen_dp">
 
         <Spinner
             android:id="@+id/route_sort_spinner"
@@ -17,24 +18,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:padding="@dimen/sixteen_dp" />
+            android:layout_marginEnd="@dimen/sixteen_dp" />
 
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/route_sort_spinner"
-            android:paddingBottom="@dimen/sixteen_dp"
-            android:paddingEnd="@dimen/sixteen_dp"
-            android:paddingStart="@dimen/sixteen_dp"
-            android:paddingTop="14dp">
+            android:layout_alignBottom="@id/route_sort_spinner"
+            android:layout_toEndOf="@id/route_sort_spinner">
 
             <TextView
                 android:id="@+id/filter_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/eight_dp"
                 android:text="@string/filter"
                 android:textSize="16sp" />
@@ -42,26 +38,26 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_alignBottom="@id/filter_label"
+                android:layout_toEndOf="@id/filter_label"
                 android:alpha=".54"
                 android:src="@drawable/ic_filter_list_black_24dp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/sixteen_dp"
-            android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_below="@id/route_sort_spinner"
-            android:background="@color/divider" />
+        </RelativeLayout>
 
     </RelativeLayout>
 
+    <!-- <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@id/sort_filter_options"
+        android:layout_marginEnd="@dimen/sixteen_dp"
+        android:layout_marginStart="@dimen/sixteen_dp"
 
+        android:background="@color/divider" /> -->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/comment_section_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/sort_filter_options" />
+        android:layout_below="@id/sort_filter_options"/>
 </RelativeLayout>

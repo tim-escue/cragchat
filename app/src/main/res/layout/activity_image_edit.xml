@@ -13,7 +13,7 @@
         android:scaleType="fitCenter"/>
 
     <!-- <include layout="@layout/simple_toolbar"
-        android:id="@+id/toolbarholder"/> -->
+        andrkeyd:idkey@+id/toolbarholder"/> -->
 
     <HorizontalScrollView
         android:id="@+id/horizontal_scroll_view"

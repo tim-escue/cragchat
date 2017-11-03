@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,13 +22,15 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.database.models.RealmImage;
+import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.fragments.ColorPickerDialog;
-import com.cragchat.mobile.model.Displayable;
 import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.sql.SendImageTask;
-import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.view.ImageEditView;
+import com.cragchat.networkapi.ErrorHandlingObserverable;
+import com.cragchat.networkapi.NetworkApi;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -40,28 +44,57 @@ import java.io.InputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import static android.view.View.GONE;
 
 public class EditImageActivity extends CragChatActivity implements ColorPickerDialog.OnColorChangedListener {
 
-    private Displayable displayable;
+    private RealmObject entity;
     private String captionString;
+    private Realm mRealm;
+    private String entityType;
 
-    @BindView(R.id.image_edit_view) ImageEditView imageEditView;
-    @BindView(R.id.button_paint) ImageView paint;
-    @BindView(R.id.button_done) ImageView done;
-    @BindView(R.id.button_color_picker) ImageView pickColor;
-    @BindView(R.id.button_undo) ImageView undo;
-    @BindView(R.id.button_stroke) ImageView stroke;
-    @BindView(R.id.button_caption) ImageView caption;
-    @BindView(R.id.button_submit_image) ImageView submit;
+    @BindView(R.id.image_edit_view)
+    ImageEditView imageEditView;
+    @BindView(R.id.button_paint)
+    ImageView paint;
+    @BindView(R.id.button_done)
+    ImageView done;
+    @BindView(R.id.button_color_picker)
+    ImageView pickColor;
+    @BindView(R.id.button_undo)
+    ImageView undo;
+    @BindView(R.id.button_stroke)
+    ImageView stroke;
+    @BindView(R.id.button_caption)
+    ImageView caption;
+    @BindView(R.id.button_submit_image)
+    ImageView submit;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_image_edit);
         ButterKnife.bind(this);
-        displayable = LocalDatabase.getInstance(this).findExact(getIntent().getIntExtra("displayable_id", -1));
+        String entityKey = getIntent().getStringExtra("displayable_id");
+        entityType = getIntent().getStringExtra("entityType");
+        mRealm = Realm.getDefaultInstance();
+        Class<? extends RealmModel> classType;
+        if (entityType.equals("route")) {
+            classType = RealmRoute.class;
+        } else {
+            classType = RealmArea.class;
+        }
+        entity = (RealmObject) mRealm.where(classType).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
+
 
         final View decorView = getWindow().getDecorView();
         final int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -88,6 +121,10 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
 
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
 
     private static int getRotation(InputStream stream) {
         ExifInterface exifInterface = null;
@@ -187,21 +224,21 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
         }
     }
 
+
     @OnClick(R.id.button_submit_image)
     public void onSubmit() {
         File directory = Image.getAlbumStorageDir("routedb");
         Bitmap bitmap = imageEditView.scaleDown();
-        File newFile = new File(directory, bitmap.hashCode()+".png");
+        final File newFile = new File(directory, bitmap.hashCode() + ".png");
         FileOutputStream out = null;
         try {
-            Log.d("CREATEDFILE", newFile.getPath());
-
             if (newFile.exists()) {
                 newFile.createNewFile();
             }
             out = new FileOutputStream(newFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-            // PNG is a lossless format, the compression factor (100) is ignored
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            imageEditView.setVisibility(View.GONE);
+            imageEditView.setImageBitmap(null);
             bitmap.recycle();
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,8 +247,46 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                 if (out != null) {
                     out.close();
                 }
-                new SendImageTask(this, User.currentToken(this), Uri.fromFile(newFile), displayable.getId(),  captionString, null).execute();
-           launch(displayable);
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), newFile);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
+                        newFile.getName(), reqFile);
+                RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"),
+                        Authentication.getAuthenticatedUser(this).getToken());
+                if (captionString == null) {
+                    captionString = "";
+                }
+                RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), captionString);
+                String entityKey;
+                if (entity instanceof RealmRoute) {
+                    entityKey = ((RealmRoute)entity).getKey();
+                } else {
+                    entityKey = ((RealmArea)entity).getKey();
+                }
+                RequestBody entityTypeRequest = RequestBody.create(MediaType.parse("text/plain"), entityType);
+                RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
+
+                NetworkApi.getInstance().postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new ErrorHandlingObserverable<RealmImage>() {
+                                       @Override
+                                       public void onSuccess(final RealmImage object) {
+                                           Realm realm = Realm.getDefaultInstance();
+                                           realm.executeTransaction(new Realm.Transaction() {
+                                               @Override
+                                               public void execute(@NonNull Realm realm) {
+                                                   realm.copyToRealmOrUpdate(object);
+                                               }
+                                           });
+                                           realm.close();
+                                           newFile.delete();
+                                       }
+                                   }
+                        );
+                if (entity instanceof RealmRoute) {
+                    launch((RealmRoute) entity);
+                } else {
+                    launch((RealmArea) entity);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -220,17 +295,22 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
 
     @OnClick(R.id.button_caption)
     public void onClickCaption() {
-        showCaptionDIalog(new EditText(this));
+        showCaptionDIalog(captionString);
     }
 
-    void showCaptionDIalog(final EditText txtUrl) {
+    void showCaptionDIalog(String currentText) {
+        final EditText editText = new EditText(this);
+        editText.setHint("Enter caption here");
+        if (currentText != null) {
+            editText.setText(currentText);
+        }
         AlertDialog dialogParent = new AlertDialog.Builder(this)
                 .setTitle("Add Caption")
-                .setView(txtUrl)
+                .setView(editText)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String url = txtUrl.getText().toString().trim();
-                        if (!url.equals("")) {
+                        String url = editText.getText().toString().trim();
+                        if (!url.isEmpty()) {
                             captionString = url;
                         } else {
                             Toast.makeText(EditImageActivity.this, "Can't add empty comment", Toast.LENGTH_SHORT).show();
@@ -244,10 +324,10 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                                 .setMessage("Are you sure you want to delete this caption?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        final EditText newt = new EditText(EditImageActivity.this);
-                                        newt.setText(txtUrl.getText());
+                                        String currentText = editText.getText().toString();
                                         dialog.dismiss();
-                                        showCaptionDIalog(newt);                                    }
+                                        showCaptionDIalog(currentText);
+                                    }
                                 })
                                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
@@ -334,16 +414,14 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
         np.setValue(20);
         np.setMinValue(0);
         np.setWrapSelectorWheel(false);
-        b1.setOnClickListener(new View.OnClickListener()
-        {
+        b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageEditView.setStroke(np.getValue());
                 d.dismiss();
             }
         });
-        b2.setOnClickListener(new View.OnClickListener()
-        {
+        b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 d.dismiss();

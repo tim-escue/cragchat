@@ -1,0 +1,129 @@
+package com.cragchat.mobile.fragments;
+
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.database.models.RealmRoute;
+import com.cragchat.mobile.util.JsonUtil;
+import com.cragchat.mobile.view.adapters.recycler.AreaListRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
+import com.cragchat.networkapi.ErrorHandlingObserverable;
+import com.cragchat.networkapi.NetworkApi;
+
+import java.util.List;
+
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+
+import static android.view.View.GONE;
+
+
+public class AreaListFragment extends Fragment {
+
+    private static final String IDS_TAG = "routeIds";
+    private static final String AREA_TAG = "areaKey";
+
+    private String[] areaIds;
+    private String areaKey;
+
+    private AreaListRecyclerAdapter adap;
+    private Realm mRealm;
+
+    public static AreaListFragment newInstance(String areaKey, String[] areaIds) {
+        AreaListFragment f = new AreaListFragment();
+        Bundle b = new Bundle();
+        b.putStringArray(IDS_TAG, areaIds);
+        b.putString(AREA_TAG, areaKey);
+        f.setArguments(b);
+        return f;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
+
+        areaIds = getArguments().getStringArray(IDS_TAG);
+
+        if (NetworkApi.isConnected(getContext())) {
+            updateAreas(areaIds);
+        }
+
+        mRealm = Realm.getDefaultInstance();
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
+        ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
+                R.array.area_sort_array, R.layout.spinner_item);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterSpinner);
+
+        View filterView = view.findViewById(R.id.filter_button);
+        filterView.setVisibility(GONE);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String[] sortOptions = getContext().getResources().getStringArray(R.array.area_sort_array);
+                if (sortOptions[i].equals("Name")) {
+                    adap.sort(RealmArea.FIELD_NAME);
+                } else {
+                    adap.sort(RealmArea.FIELD_ROUTES);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        adap = new AreaListRecyclerAdapter(mRealm.where(RealmArea.class).in(RealmRoute.FIELD_KEY, areaIds).findAll(), true, (CragChatActivity) getActivity());
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        recList.setItemAnimator(new DefaultItemAnimator());
+        RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
+
+        return view;
+    }
+
+    private void updateAreas(String[] routeIds) {
+        String json = JsonUtil.stringArrayToJSon(routeIds);
+        NetworkApi.getInstance().getAreas(json)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new ErrorHandlingObserverable<List<RealmArea>>() {
+                    @Override
+                    public void onSuccess(final List<RealmArea> realmAreas) {
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.insertOrUpdate(realmAreas);
+                            }
+                        });
+                        realm.close();
+                    }
+                });
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
+
+}

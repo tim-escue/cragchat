@@ -1,6 +1,5 @@
 package com.cragchat.mobile.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,34 +15,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.Database;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Displayable;
-import com.cragchat.mobile.model.LegacyRoute;
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.util.FormatUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
-import org.json.JSONObject;
+import io.realm.Realm;
 
-public class RouteActivity extends NavigableActivity implements AppBarLayout.OnOffsetChangedListener {
+public class RouteActivity extends CragChatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private FloatingActionButton floatingActionButton;
-    private Route route;
+    private RealmRoute route;
     private LinearLayout header;
+    private Realm mRealm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addContent(R.layout.activity_route);
+        setContentView(R.layout.activity_route);
 
         floatingActionButton = findViewById(R.id.add_button);
+        mRealm = Realm.getDefaultInstance();
 
         String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        route = Database.getInstance().getRoute(displayableString);
+        route = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, displayableString).findFirst();
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -69,7 +67,7 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
         appBarLayout.addOnOffsetChangedListener(this);
 
         final RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this,
-                getSupportFragmentManager(), appBarLayout, floatingActionButton, route.getKey());
+                getSupportFragmentManager(), appBarLayout, floatingActionButton, route);
         final ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
 
         setAddButtonPagerAndAdapter(pager, pageAdapter);
@@ -80,6 +78,12 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
 
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 
     @Override
@@ -105,13 +109,12 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
 
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(route.getName());
         StringBuilder subTitle = new StringBuilder();
 
-        Area current = route.getParent();
+        Area current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, route.getParent()).findFirst();
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -119,7 +122,7 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = current.getParent();
+            current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, current.getParent()).findFirst();
         }
         getSupportActionBar().setSubtitle(subTitle.toString());
 
@@ -138,13 +141,9 @@ public class RouteActivity extends NavigableActivity implements AppBarLayout.OnO
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            launch(route.getParent());
+            launch(mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, route.getParent()).findFirst());
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onClick(View v) {
-        openDisplayable(v);
     }
 
 }

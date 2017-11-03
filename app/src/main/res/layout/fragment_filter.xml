@@ -42,7 +42,7 @@
             android:layout_below="@id/trad"
             android:layout_margin="@dimen/sixteen_dp"
             android:checked="true"
-            android:text="Top Rope"
+            android:text="Mixed"
             android:textOff="Hide"
             android:textOn="Show" />
 

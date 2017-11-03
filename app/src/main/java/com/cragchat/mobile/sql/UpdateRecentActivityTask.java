@@ -12,6 +12,7 @@ import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.remote.RemoteDatabase;
 import com.cragchat.mobile.remote.ResponseHandler;
 import com.cragchat.mobile.view.adapters.recycler.RecentActivityRecyclerAdapter;
+import com.cragchat.networkapi.NetworkApi;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,7 +58,7 @@ public class UpdateRecentActivityTask extends AsyncTask<Void, Integer, List<Stri
             bar.setVisibility(View.GONE);
             view.setVisibility(View.GONE);
             TextView tvv = (TextView) con.findViewById(R.id.empty_text);
-            if (!((CragChatActivity) con).hasConnection()) {
+            if (!NetworkApi.isConnected(con)) {
                 tvv.setText("Internet connection required to load recent activity");
                 tvv.setVisibility(View.VISIBLE);
             } else {

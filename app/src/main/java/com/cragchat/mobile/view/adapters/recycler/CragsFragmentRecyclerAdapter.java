@@ -1,6 +1,6 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,29 +11,19 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.model.Area;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
 
-public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFragmentRecyclerAdapter.ViewHolder> {
+public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea, CragsFragmentRecyclerAdapter.ViewHolder> {
 
-    private List<Area> displayables;
     private CragChatActivity activity;
 
-    public CragsFragmentRecyclerAdapter(CragChatActivity activity) {
-        this.displayables = new ArrayList<>();
+    public CragsFragmentRecyclerAdapter(@Nullable OrderedRealmCollection<RealmArea> data, boolean autoUpdate, CragChatActivity activity) {
+        super(data, autoUpdate);
         this.activity = activity;
-    }
-
-    public void addItem(@NonNull Area displayable) {
-        displayables.add(displayable);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemCount() {
-        return displayables.size();
     }
 
     @Override
@@ -46,14 +36,14 @@ public class CragsFragmentRecyclerAdapter extends RecyclerView.Adapter<CragsFrag
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Area crag = displayables.get(position);
+        final Area crag = getItem(position);
         holder.name.setText(crag.getName());
         holder.routeNumber.setText(String.valueOf(crag.getRoutes().size()));
         holder.areaNumber.setText(String.valueOf(crag.getSubAreas().size()));
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CragChatActivity)activity).launch(crag);
+                activity.launch(crag);
             }
         });
     }

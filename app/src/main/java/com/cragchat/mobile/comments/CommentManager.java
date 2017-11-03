@@ -23,7 +23,7 @@ public class CommentManager {
             parents.add(comment);
         } else {
             find(comment.getParent()).addChild(comment);
-            //Log.d("CommentManager", comment.getId() + " Adding as child to " + comment.getParent());
+            //Log.d("CommentManager", comment.getFilename() + " Adding as child to " + comment.getParent());
         }
         sort(currentComparator);
     }

@@ -1,18 +1,15 @@
 package com.cragchat.mobile.util;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.database.models.Tag;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 
 import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +20,11 @@ public class FormatUtil {
 
     public static final SimpleDateFormat RAW_FORMAT;
     public static final SimpleDateFormat MONTH_DAY_YEAR;
+    public static final long secondsInMilli = 1000;
+    public static final long minutesInMilli = secondsInMilli * 60;
+    public static final long hoursInMilli = minutesInMilli * 60;
+    public static final long daysInMilli = hoursInMilli * 24;
+
 
     static {
         RAW_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -38,6 +40,31 @@ public class FormatUtil {
         return rawDateString;
     }
 
+    public static String elapsed(Date startDate, Date endDate) {
+        long different = endDate.getTime() - startDate.getTime();
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+        if (elapsedDays > 0) {
+            return elapsedDays + " days ago";
+        }
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+        if (elapsedHours > 0) {
+            return elapsedHours + " hours ago";
+        }
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+        if (elapsedMinutes > 0) {
+            return elapsedMinutes + " minutes ago";
+        }
+
+        long elapsedSeconds = different / secondsInMilli;
+        return elapsedSeconds + " seconds ago";
+    }
+
     public static String getYdsString(Context context, int yds) {
         return yds != -1 ? context.getResources().getStringArray(R.array.yds_options)[yds] : "Not rated";
     }
@@ -45,6 +72,14 @@ public class FormatUtil {
     public static String getStarsString(double stars) {
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(stars);
+    }
+
+    public static String[] getStringArrayFromTags(List<Tag> tags) {
+        String[] areaIds = new String[tags.size()];
+        for (int i = 0; i < areaIds.length; i++) {
+            areaIds[i] = tags.get(i).getValue();
+        }
+        return areaIds;
     }
 
     public static String areaListToString(List<? extends Area> list) {

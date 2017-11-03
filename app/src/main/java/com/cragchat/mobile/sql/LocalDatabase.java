@@ -117,7 +117,7 @@ public class LocalDatabase {
                     c.getString(Comment.COLUMN_AUTHOR_NAME),
                     c.getString(Comment.COLUMN_TABLE_NAME));
             comments.add(cur);
-            //Log.d("CommentFOUND:", cur.getId() + ":ID parentid:" + cur.getParent());
+            //Log.d("CommentFOUND:", cur.getFilename() + ":ID parentid:" + cur.getParent());
         }
         c.close();
         //Log.d("LocalDatabase", "COMMENTS TOTAL: " + comments.size());
@@ -162,7 +162,7 @@ public class LocalDatabase {
         Recursive part of function
      */
     private void getCommentsFor(Comment parent, String paramString) {
-        Cursor c = query("SELECT * FROM BETA WHERE PARENT_ID='" + parent.getId()+ "'" + paramString);
+        Cursor c = query("SELECT * FROM BETA WHERE PARENT_ID='" + parent.getId() + "'" + paramString);
 
         while (c.moveToNext()) {
             Comment current = new Comment(c.getString(Comment.COLUMN_TEXT),
@@ -289,7 +289,7 @@ public class LocalDatabase {
         Insert into database.
      */
     public void insert(Comment c) {
-        //System.out.println("inserting comment:" + c.getId());
+        //System.out.println("inserting comment:" + c.getFilename());
         ContentValues vals = new ContentValues();
         vals.put("SCORE", c.getScore());
         vals.put("DATE", c.getDate());

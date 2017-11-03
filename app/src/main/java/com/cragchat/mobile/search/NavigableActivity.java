@@ -87,9 +87,13 @@ public class NavigableActivity extends CragChatActivity {
         TextInputEditText editText = (TextInputEditText) findViewById(R.id.search_edit_text);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 new SearchQueryTaskNew(NavigableActivity.this, mDrawerList).execute(s.toString());
@@ -139,12 +143,12 @@ public class NavigableActivity extends CragChatActivity {
                 getDrawerLayout().openDrawer(Gravity.START);
             }
         } else if (item.getItemId() == R.id.more) {
-            launchProfile(item);
+            openPopupMenu(item);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean launchProfile(MenuItem menuItem) {
+    public boolean openPopupMenu(MenuItem menuItem) {
         int layout = User.currentToken(this) != null ? R.menu.menu_profile : R.menu.menu_not_logged_in;
         PopupMenu popup = new PopupMenu(this, findViewById(R.id.more));
         popup.getMenuInflater().inflate(layout, popup.getMenu());

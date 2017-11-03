@@ -7,6 +7,7 @@ package com.cragchat.mobile.authentication;
 public interface AuthenticationCallback {
 
     void onAuthenticateSuccess(AuthenticatedUser user);
-    void onAuthenticateFailed();
+
+    void onAuthenticateFailed(String message);
 
 }

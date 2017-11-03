@@ -1,7 +1,10 @@
 package com.cragchat.mobile.model;
 
+import com.cragchat.mobile.database.models.Tag;
+
 import java.util.HashMap;
-import java.util.List;
+
+import io.realm.RealmList;
 
 /**
  * Created by timde on 9/27/2017.
@@ -10,12 +13,19 @@ import java.util.List;
 public interface Area {
 
     String getKey();
+
     String getName();
-    Area getParent();
-    List<? extends Area> getSubAreas();
-    List<? extends Route> getRoutes();
+
+    String getParent();
+
+    RealmList<Tag> getSubAreas();
+
+    RealmList<Tag> getRoutes();
+
     String getLongitude();
+
     String getLatitude();
+
     HashMap<String, Object> getMap();
 
 }

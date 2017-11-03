@@ -4,50 +4,51 @@ import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.fragments.DisplayableListFragment;
+import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.fragments.AreaListFragment;
+import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.fragments.ImageFragment;
 import com.cragchat.mobile.fragments.LocationFragment;
+import com.cragchat.mobile.fragments.RouteListFragment;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
-
-import java.util.List;
+import com.cragchat.mobile.util.FormatUtil;
 
 public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
     public AreaActivityPagerAdapter(Context context, FragmentManager fragmentManager,
-                                    AppBarLayout appBarLayout, Area area,
-                                    List<? extends Area> subAreas,
-                                    List<? extends Route> routes,
+                                    AppBarLayout appBarLayout, RealmArea area,
                                     FloatingActionButton floatingActionButton) {
-        super(context, fragmentManager, appBarLayout, floatingActionButton);
+        super(fragmentManager, appBarLayout, floatingActionButton);
 
         /*addFragment(context.getString(R.string.title_recent_activity),
                 RecentActivityFragment.newInstance(-343), false, false);*/
 
-        Log.d("Here122","here");
-        DisplayableListFragment routeList = DisplayableListFragment.newInstance();
-        routeList.setDisplayables(routes);
-        addFragment(context.getString(R.string.title_routes, routes.size()), routeList, false, false);
-        Log.d("Here124442","here");
+        RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
+                FormatUtil.getStringArrayFromTags(area.getRoutes()));
+        addFragment(context.getString(R.string.title_routes, area.getRoutes().size()),
+                routeList,
+                false,
+                false);
 
-        if (subAreas.size() > 0) {
-            DisplayableListFragment areaFragment = DisplayableListFragment.newInstance();
-            areaFragment.setDisplayables(subAreas);
-            areaFragment.hideFilterAndSortButtons();
-            addFragment(context.getString(R.string.title_areas, subAreas.size()), areaFragment, false, false);
+
+        if (area.getSubAreas().size() > 0) {
+            AreaListFragment areaFragment = AreaListFragment.newInstance(area.getKey(),
+                    FormatUtil.getStringArrayFromTags(area.getSubAreas()));
+            addFragment(context.getString(R.string.title_areas, area.getSubAreas().size()),
+                    areaFragment,
+                    false,
+                    false);
         }
-        Log.d("Here143243222","here");
 
-        /*addFragment(context.getString(R.string.title_discussion),
-                CommentSectionFragment.newInstance(area.getId(), LocalDatabase.DISCUSSION), false, true); */
+        addFragment(context.getString(R.string.title_discussion),
+                CommentSectionFragment.newInstance(area.getKey(), "Discussion"), false, true);
 
         addFragment(context.getString(R.string.title_location),
                 LocationFragment.newInstance(area.getKey()), false, true);
 
-        addFragment(context.getString(R.string.title_images),
+        addFragment(context.getString(R.string.title_images, area.getImages().size()),
                 ImageFragment.newInstance(area.getKey()), false, true);
     }
 

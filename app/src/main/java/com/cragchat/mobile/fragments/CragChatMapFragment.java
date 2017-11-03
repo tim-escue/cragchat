@@ -1,7 +1,6 @@
 package com.cragchat.mobile.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,13 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,13 +26,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class CragChatMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    public static MapFragment newInstance(int id) {
-        MapFragment f = new MapFragment();
-        Bundle b = new Bundle();
-        b.putString("id", String.valueOf(id));
-        f.setArguments(b);
+    public static CragChatMapFragment newInstance() {
+        CragChatMapFragment f = new CragChatMapFragment();
         return f;
     }
 
@@ -50,18 +44,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (view != null) {
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null)
-                parent.removeView(view);
-        }
-        try {
-            view = inflater.inflate(R.layout.fragment_map, container, false);
-        } catch (InflateException e) {
-            /* map is already there, just return view as it is */
-        }
-
-        if (((CragChatActivity) getActivity()).hasConnection()) {
+        view = inflater.inflate(R.layout.fragment_map, container, false);
+        /*
             apiClient = new GoogleApiClient.Builder(getContext())
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
@@ -71,37 +55,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 
-            startLocationUpdates();
+            startLocationUpdates();*/
+        ViewGroup mapLayout = view.findViewById(R.id.map_layout);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        mapLayout.requestTransparentRegion(mapLayout);
 
-            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-
-            /*Button tagLoc = (Button) view.findViewById(R.id.tag_location);
-            tagLoc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Log.d("Click", "clicked TagLocatin button");
-                    if (curLoc != null) {
-                        //Log.d("CLICK", "YAGLOoooo");
-                        new TagLocationTask(LocalDatabase.getInstance(getContext())).execute(getArguments().getString("id"), curLoc.getLatitude() + "", curLoc.getLongitude() + "");
-                    }
-                }
-            });*/
-        }
         return view;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        //  stopLocationUpdates();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        startLocationUpdates();
+        //startLocationUpdates();
     }
 
     private void startLocationUpdates() {
@@ -122,20 +95,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        /*map = googleMap;
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         } else {
             //System.out.println("NO MAPLOC");
-        }
+        }*/
         LatLng ozone = new LatLng(45.567279, -122.211022);
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ozone, 10));
         googleMap.addMarker(new MarkerOptions()
                 .position(ozone)
                 .title("Ozone"));
-        apiClient.connect();
+        ///apiClient.connect();
 
     }
 

@@ -79,7 +79,7 @@ public class DisplayableListFragment extends Fragment {
 
         spinner.setOnItemSelectedListener(listener);
 
-        adap = new DisplayableRecyclerAdapter((CragChatActivity)getActivity(), allRoutes);
+        adap = new DisplayableRecyclerAdapter((CragChatActivity) getActivity(), allRoutes);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
         RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
 
@@ -121,7 +121,7 @@ public class DisplayableListFragment extends Fragment {
             sortAndFilterOptions.setVisibility(GONE);
         }
 
-      //  Collections.sort(allRoutes);
+        //  Collections.sort(allRoutes);
         return view;
     }
 
@@ -143,12 +143,12 @@ public class DisplayableListFragment extends Fragment {
             if (parent.getId() == R.id.route_sort_spinner) {
                 String option = parent.getItemAtPosition(position).toString();
                 if (option.equals("NAME")) {
-                  //  Collections.sort(allRoutes);
+                    //  Collections.sort(allRoutes);
                 } else if (option.equals("YDS")) { //Used to be YDS: Low -> High
                     sorter.setHigh(false);
-                  //  Collections.sort(allRoutes, sorter);
+                    //  Collections.sort(allRoutes, sorter);
                 } else if (option.equals("TYPE")) {
-                  //  Collections.sort(allRoutes, typeSorter);
+                    //  Collections.sort(allRoutes, typeSorter);
                 }
                 adap.notifyDataSetChanged();
             }

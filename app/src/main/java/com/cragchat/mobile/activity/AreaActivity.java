@@ -14,30 +14,31 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.Database;
+import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.search.NavigableActivity;
+import com.cragchat.mobile.view.CragChatGlideModule;
 import com.cragchat.mobile.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
 import io.realm.Realm;
 
-public class AreaActivity extends NavigableActivity {
+public class AreaActivity extends CragChatActivity {
 
-    private Area area;
+    private RealmArea area;
     private FloatingActionButton floatingActionButton;
     private Realm mRealm;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        addContent(R.layout.activity_displayable_new);
+        setContentView(R.layout.activity_displayable_new);
 
         mRealm = Realm.getDefaultInstance();
 
         floatingActionButton = findViewById(R.id.add_button);
 
         String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        area = Database.getInstance().getArea(areaKey);
+        area = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, areaKey).findFirst();
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -47,7 +48,7 @@ public class AreaActivity extends NavigableActivity {
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
 
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this,
-                getSupportFragmentManager(), appBarLayout, area, area.getSubAreas(), area.getRoutes(), floatingActionButton);
+                getSupportFragmentManager(), appBarLayout, area, floatingActionButton);
 
         ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
@@ -72,13 +73,12 @@ public class AreaActivity extends NavigableActivity {
 
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(area.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = area.getParent();
+        Area current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, area.getParent()).findFirst();
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -86,11 +86,12 @@ public class AreaActivity extends NavigableActivity {
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = current.getParent();
+            current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, current.getParent()).findFirst();
         }
-        getSupportActionBar().setSubtitle(subTitle.toString());
-       // getSupportActionBar().setSubtitle(area.getSubTitle(this));
-
+        String subTitleString = subTitle.toString();
+        if (!subTitleString.isEmpty()) {
+            getSupportActionBar().setSubtitle(subTitle.toString());
+        }
     }
 
     public void setAddButtonPagerAndAdapter(final ViewPager pager, final TabPagerAdapter pageAdapter) {
@@ -106,10 +107,6 @@ public class AreaActivity extends NavigableActivity {
         });
     }
 
-    public void onClick(View v) {
-        openDisplayable(v);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_route_activity, menu);
@@ -119,7 +116,7 @@ public class AreaActivity extends NavigableActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Area parent = area.getParent();
+            Area parent = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, area.getParent()).findFirst();
             if (parent != null) {
                 launch(parent);
             } else {

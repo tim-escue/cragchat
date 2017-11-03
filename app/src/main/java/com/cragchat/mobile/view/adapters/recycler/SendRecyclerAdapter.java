@@ -2,6 +2,7 @@ package com.cragchat.mobile.view.adapters.recycler;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,23 +13,29 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
+import com.cragchat.mobile.database.RealmDatabase;
+import com.cragchat.mobile.database.models.RealmSend;
 import com.cragchat.mobile.model.Displayable;
 import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
 
-public class SendRecyclerAdapter extends RecyclerView.Adapter<SendRecyclerAdapter.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
 
-    private CragChatActivity activity;
-    private List<Send> sends;
-    private boolean forProfile;
+public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, SendRecyclerAdapter.ViewHolder> {
 
-    public SendRecyclerAdapter(Activity a, List<Send> sends, boolean forProfile) {
-        activity = (CragChatActivity) a;
-        this.sends = sends;
-        this.forProfile = forProfile;
+    public SendRecyclerAdapter(String entityKey) {
+        this(RealmDatabase.getRealm().where(RealmSend.class).equalTo(RealmSend.FIELD_ENTITY_KEY, entityKey).findAll(), true);
+    }
+
+    public SendRecyclerAdapter(@Nullable OrderedRealmCollection<RealmSend> data, boolean autoUpdate) {
+        super(data, autoUpdate);
     }
 
     @Override
@@ -40,47 +47,29 @@ public class SendRecyclerAdapter extends RecyclerView.Adapter<SendRecyclerAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text1;
-        TextView text2;
-        TextView text3;
-        TextView text4;
-        TextView text5;
-        TextView text6;
+        @BindView(R.id.item_send_username) TextView text1;
+        @BindView(R.id.item_send_date) TextView text2;
+        @BindView(R.id.item_send_pitches) TextView text3;
+        @BindView(R.id.item_send_attempts) TextView text4;
+        @BindView(R.id.item_send_style) TextView text5;
+        @BindView(R.id.item_send_send_type) TextView text6;
 
         private ViewHolder(View itemView) {
             super(itemView);
-            text1 = (TextView) itemView.findViewById(R.id.item_send_username);
-            text2 = (TextView) itemView.findViewById(R.id.item_send_date);
-            text3 = (TextView) itemView.findViewById(R.id.item_send_pitches);
-            text4 = (TextView) itemView.findViewById(R.id.item_send_attempts);
-            text5 = (TextView) itemView.findViewById(R.id.item_send_style);
-            text6 = (TextView) itemView.findViewById(R.id.item_send_send_type);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        final RealmSend send = getItem(position);
+        String title = send.getUsername();
 
-
-        final Send send = sends.get(position);
-        String title;
-        if (forProfile) {
-            title = LocalDatabase.getInstance(activity).findExact(send.getRouteId()).getName();
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Displayable disp = LocalDatabase.getInstance(activity).findExact(send.getRouteId());
-                    activity.launch(disp, 2);
-                }
-            });
-        } else {
-            title = send.getUserName();
-        }
         holder.text1.setText(title);
-        holder.text1.setOnClickListener(new View.OnClickListener() {
+        /*holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activity.hasConnection()) {
+                if (NetworkApi.isConnected(activity)) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", send.getUserName());
                     activity.startActivity(intent);
@@ -88,17 +77,12 @@ public class SendRecyclerAdapter extends RecyclerView.Adapter<SendRecyclerAdapte
                     Toast.makeText(activity, "Must have internet connection to view user profiles.", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
         holder.text2.setText(FormatUtil.getFormattedDate(send.getDate()));
         holder.text3.setText("Pitches: " + send.getPitches());
         holder.text4.setText("Attempts: " + send.getAttempts());
-        holder.text5.setText("Style: " + send.getStyle());
+        holder.text5.setText("Style: " + send.getClimbingStyle());
         holder.text6.setText("Send Type: " + send.getSendType());
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return sends.size();
     }
 }

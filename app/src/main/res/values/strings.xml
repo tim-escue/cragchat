@@ -6,10 +6,10 @@
 
     RealmRouteoute Pager Adapter Titles -->
     <string name="title_beta">Beta</string>
-    <string name="title_ratings">Ratings</string>
-    <string name="title_sends">Sends</string>
+    <string name="title_ratings">Ratings (%1$s)</string>
+    <string name="title_sends">Sends (%1$s)</string>
     <string name="title_location">Location</string>
-    <string name="title_images">Images</string>
+    <string name="title_images">Images (%1$d)</string>
     <string name="title_recent_activity">Recent Activity</string>
     <string name="title_routes">Routes (%1$d)</string>
     <string name="title_areas">Areas (%1$d)</string>
@@ -19,7 +19,7 @@
     <string name="more_options">More options</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
-    <string name="filter">FILTER</string>
+    <string name="filter">Filter</string>
 
     <!-- Generic climbing -->
     <string name="routes">Routes</string>
@@ -82,14 +82,13 @@
     </string-array>
 
     <string-array name="route_sort_array">
-        <item>YDS</item>
-        <item>TYPE</item>
-        <item>NAME</item>
+        <item>Name</item>
+        <item>Yds</item>
+        <item>Type</item>
     </string-array>
 
     <string-array name="area_sort_array">
         <item>Name</item>
-        <item>Num Routes</item>
     </string-array>
 
     <string-array name="star_options">
@@ -136,8 +135,8 @@
     </string-array>
 
     <string-array name="spinner_comment_sort_options">
-        <item>SCORE</item>
-        <item>DATE</item>
+        <item>Score</item>
+        <item>Date</item>
     </string-array>
 
 </resources>

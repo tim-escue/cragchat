@@ -34,7 +34,6 @@ public class LegacyRoute extends Displayable {
     }
 
 
-
     private static Map<Integer, RouteInfo> infos;
 
     private class RouteInfo {

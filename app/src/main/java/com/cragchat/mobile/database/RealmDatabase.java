@@ -1,137 +1,74 @@
 package com.cragchat.mobile.database;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.networkapi.CragChatApi;
-import com.cragchat.networkapi.NetworkApi;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.List;
-import java.util.Scanner;
-
-import io.realm.DynamicRealm;
-import io.realm.DynamicRealmObject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmList;
-import io.realm.RealmMigration;
-import io.realm.RealmObjectSchema;
-import io.realm.RealmSchema;
 
 /**
  * Created by timde on 9/28/2017.
  */
 
-public class RealmDatabase implements CragChatDatasource {
+public class RealmDatabase {
 
-    private JsonFactory jsonFactory;
+    private static Realm mRealm;
 
-    public RealmDatabase(Context context) {
-        Realm.init(context);
+    public static void init() {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(3)
                 .name("cragchat.realm")
-                .migration(new MyMigration())
                 .build());
-        jsonFactory = new JsonFactory();
-       /* List<? extends Area> areas = Realm.getDefaultInstance().where(RealmArea.class).findAll();
-        for (Area i : areas) {
-            System.out.println("Area:" + i.getKey());
-        }*/
-        // create(context);
-        //
-        /*Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+        Realm.deleteRealm(Realm.getDefaultConfiguration());
+        mRealm = Realm.getDefaultInstance();
+        /*Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.deleteAll();
             }
-        });/*
-        create(context);
-        NetworkApi.addArea("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWRlNzMzYTZkYjE4OTI3YmFmYTJhODIifQ.Ib_REb18GU3KXdc5eQYhgppJFald4bs7NK0lXZjpzLg",
-                new RealmArea("Ozone", "", "0", "0", null, new RealmList<RealmArea>(), new RealmList<RealmRoute>()));
-
-        create(context);
-        for (Route i : Realm.getDefaultInstance().where(RealmRoute.class).findAll())
-        NetworkApi.addRoute("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWRlNzMzYTZkYjE4OTI3YmFmYTJhODIifQ.Ib_REb18GU3KXdc5eQYhgppJFald4bs7NK0lXZjpzLg",
-                i);
-
-        for (Area i : Realm.getDefaultInstance().where(RealmArea.class).findAll()) {
-            if (!i.getName().equals("Ozone"))
-            NetworkApi.addArea("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWRlNzMzYTZkYjE4OTI3YmFmYTJhODIifQ.Ib_REb18GU3KXdc5eQYhgppJFald4bs7NK0lXZjpzLg",
-                    i);
-        }*/
+        });
+        realm.close();*/
     }
 
-    @Override
-    public Area getArea(String key) {
-        Realm realm = Realm.getDefaultInstance();
-        Area area = realm.copyFromRealm(realm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, key).findFirst());
-        realm.close();
-        return area;
+    public static Realm getRealm() {
+        return mRealm;
     }
 
-    @Override
-    public List<? extends Area> getAllAreas() {
-        Realm realm = Realm.getDefaultInstance();
-        List<? extends Area> list = realm.copyFromRealm(realm.where(RealmArea.class).findAll());
-        realm.close();
-        return list;
+    public static void close() {
+        mRealm.close();
     }
-
-    @Override
-    public List<? extends Route> getAllRoutes() {
-        Realm realm = Realm.getDefaultInstance();
-        List<? extends Route> list = realm.copyFromRealm(realm.where(RealmRoute.class).findAll());
-        realm.close();
-        return list;
-    }
-
-    @Override
-    public void updateBatch(String json) {
-        Realm realm = Realm.getDefaultInstance();
+    /*
+    public static void updateBatch(String json, Realm realm) {
         try {
-            JsonParser parser = jsonFactory.createParser(json);
-            JsonToken token = parser.nextToken();
+            //TODO: Implement Jackson JSON parsing for improved update times
+            /*JsonParser parser = jsonFactory.createParser(json);
+            while (parser.nextToken() != JsonToken.END_ARRAY) {
+                while (parser.nextToken() != JsonToken.END_OBJECT) {
 
-            /*
+                }
+            }
+            parser.close();
+
             JSONArray array = new JSONArray(json);
             for (int i = 0; i < array.length(); i++) {
                 String collection = array.getString(i);
                 updateOrAddObject(collection, realm);
             }
-            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         realm.close();
     }
 
-    @Override
-    public void updateSingle(String json) {
-        Realm realm = Realm.getDefaultInstance();
+    public static void updateSingle(String json, Realm realm) {
         try {
-                updateOrAddObject(json, realm);
-                System.out.println("UPDATING: " + json);
-
+            updateOrAddObject(json, realm);
         } catch (Exception e) {
             e.printStackTrace();
         }
         realm.close();
     }
 
-    public void updateOrAddObject(String json, Realm realm) {
+    public static void updateOrAddObject(String json, Realm realm) {
         JSONObject object= null;
         String type = null;
         try {
@@ -147,7 +84,7 @@ public class RealmDatabase implements CragChatDatasource {
         }
     }
 
-    public void updateOrAddRoute(JSONObject object, Realm realm) {
+    public static void updateOrAddRoute(JSONObject object, Realm realm) {
         final String key;
         final String name;
         final String latitude;
@@ -186,12 +123,12 @@ public class RealmDatabase implements CragChatDatasource {
                 if (parentObject != null) {
                     addRouteToArea(parentObject, area);
                 }
-                area.setParent(parentObject);
+                area.setParent(parentObject.getFilename());
             }
         });
     }
 
-    public void updateOrAddArea(JSONObject object, Realm realm) {
+    public static void updateOrAddArea(JSONObject object, Realm realm) {
         final String key;
         final String name;
         final String latitude;
@@ -227,21 +164,21 @@ public class RealmDatabase implements CragChatDatasource {
                 if (parentObject != null) {
                     addChildAreaToParent(parentObject, area);
                 }
-                area.setParent(parentObject);
+                area.setParent(parentObject.getFilename());
             }
         });
     }
 
-    private void setAreas(RealmArea area, JSONArray areasArray, Realm realm) {
+    private static void setAreas(RealmArea area, JSONArray areasArray, Realm realm) {
         try {
-            List<RealmArea> areasList = area.getSubAreas();
+            RealmList<Tag> areasList = area.getSubAreas();
             areasList.clear();
             if (areasArray != null) {
                 for (int i = 0; i < areasArray.length(); i++) {
                     RealmArea subArea = realm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, areasArray.getString(i)).findFirst();
                     if (subArea != null) {
-                        areasList.add(subArea);
-                        subArea.setParent(area);
+                        areasList.add(new Tag(subArea.getFilename()));
+                        subArea.setParent(area.getFilename());
                     }
                 }
             }
@@ -250,15 +187,15 @@ public class RealmDatabase implements CragChatDatasource {
         }
     }
 
-    private void setRoutes(RealmArea area, JSONArray jsonArray, Realm realm) {
+    private static void setRoutes(RealmArea area, JSONArray jsonArray, Realm realm) {
         try {
-            List<RealmRoute> routesList = area.getRoutes();
+            List<Tag> routesList = area.getRoutes();
             routesList.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
                 RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, jsonArray.getString(i)).findFirst();
                 if (route != null) {
-                    routesList.add(route);
-                    route.setParent(area);
+                    routesList.add(new Tag(route.getFilename()));
+                    route.setParent(area.getFilename());
                 }
             }
         } catch (Exception e) {
@@ -266,45 +203,30 @@ public class RealmDatabase implements CragChatDatasource {
         }
     }
 
-    private void addChildAreaToParent(@NonNull RealmArea parentArea, RealmArea childArea) {
-        List<RealmArea> parentSubAreas = parentArea.getSubAreas();
+    private static void addChildAreaToParent(@NonNull RealmArea parentArea, RealmArea childArea) {
+        List<Tag> parentSubAreas = parentArea.getSubAreas();
         boolean contains = false;
-        for (RealmArea subArea : parentSubAreas) {
-            if (subArea.getKey().equalsIgnoreCase(childArea.getKey())) {
+        for (Tag subArea : parentSubAreas) {
+            if (subArea.getValue().equalsIgnoreCase(childArea.getFilename())) {
                 contains = true;
             }
         }
         if (!contains) {
-            parentArea.getSubAreas().add(childArea);
+            parentArea.getSubAreas().add(new Tag(childArea.getFilename()));
         }
     }
 
-    private void addRouteToArea(@NonNull RealmArea parentArea, RealmRoute route) {
-        List<RealmRoute> routes = parentArea.getRoutes();
+    private static void addRouteToArea(@NonNull RealmArea parentArea, RealmRoute route) {
+        List<Tag> routes = parentArea.getRoutes();
         boolean contains = false;
-        for (RealmRoute subArea : routes) {
-            if (subArea.getKey().equalsIgnoreCase(route.getKey())) {
+        for (Tag subArea : routes) {
+            if (subArea.getValue().equalsIgnoreCase(route.getFilename())) {
                 contains = true;
             }
         }
         if (!contains) {
-            parentArea.getRoutes().add(route);
+            parentArea.getRoutes().add(new Tag(route.getFilename()));
         }
-    }
-
-    @Override
-    public Route getRoute(String key) {
-        Realm realm = Realm.getDefaultInstance();
-        Route area = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, key).findFirst();
-        realm.close();
-        return area;
-    }
-
-    public List<? extends Area> getAreas() {
-        Realm realm = Realm.getDefaultInstance();
-        List<? extends Area> areas = realm.copyFromRealm(realm.where(RealmArea.class).findAll());
-        realm.close();
-        return areas;
     }
 
     public static void create(final Context context) {
@@ -314,11 +236,11 @@ public class RealmDatabase implements CragChatDatasource {
             @Override
             public void execute(Realm realm) {
                 System.out.println("Creating ozone and other areas");
-                RealmArea ozone = new RealmArea("Ozone", null, "0", "0", null, new RealmList<RealmArea>(), new RealmList<RealmRoute>());
+                RealmArea ozone = new RealmArea("Ozone", null, "0", "0", null, new RealmList<Tag>(), new RealmList<Tag>());
                 ozone = realm.copyToRealm(ozone);
                 //RealmArea ozone = realm.where(RealmArea.class).equalTo("name", "Ozone").findFirst();
 
-                /*Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.walls));
+                Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.walls));
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     String[] params = line.split("#");
@@ -326,7 +248,7 @@ public class RealmDatabase implements CragChatDatasource {
                     newArea = realm.copyToRealm(newArea);
                     ozone.getSubAreas().add(newArea);
                 }
-                scanner.close();*/
+                scanner.close();
 
                 System.out.println("Creating routes");
                 Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.routes));
@@ -340,10 +262,10 @@ public class RealmDatabase implements CragChatDatasource {
                     }
 
                     RealmArea parent = realm.where(RealmArea.class).equalTo("name", params[2]).findFirst();
-                    RealmRoute route = new RealmRoute(params[0] + parent.getName(), params[0], type, "0", "0", parent);
+                    RealmRoute route = new RealmRoute(params[0] + parent.getName(), params[0], type, "0", "0", parent.getFilename(), 0, 0);
                     route = realm.copyToRealm(route);
-                    parent.getRoutes().add(route);
-                    ozone.getRoutes().add(route);
+                    parent.getRoutes().add(new Tag(route.getFilename()));
+                    ozone.getRoutes().add(new Tag(route.getFilename()));
                 }
 
                 System.out.println("Finished copying to realm");
@@ -351,11 +273,11 @@ public class RealmDatabase implements CragChatDatasource {
                 System.out.println("Areas(" + areas.size() + "): ");
                 for (RealmArea area : areas) {
                     System.out.println("\t" + area.getName());
-                    for (RealmArea subArea : area.getSubAreas()) {
-                        System.out.println("\t\t" + subArea.getName());
+                    for (Tag subArea : area.getSubAreas()) {
+                        System.out.println("\t\t" + subArea.getValue());
                     }
-                    for (RealmRoute route : area.getRoutes()) {
-                        System.out.println("\t\t" + route.getName());
+                    for (Tag route : area.getRoutes()) {
+                        System.out.println("\t\t" + route.getValue());
                     }
                 }
                 List<RealmRoute> routes = realm.where(RealmRoute.class).findAll();
@@ -368,7 +290,7 @@ public class RealmDatabase implements CragChatDatasource {
     }
 
     // Example migration adding a new class
-    public class MyMigration implements RealmMigration {
+    public static class MyMigration implements RealmMigration {
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
@@ -405,6 +327,29 @@ public class RealmDatabase implements CragChatDatasource {
                 oldVersion++;
             }
 
+            if(oldVersion == 3) {
+                schema.get("RealmArea")
+                        .addField("parent_temp", String.class)
+                        .transform(new RealmObjectSchema.Function() {
+                            @Override
+                            public void apply(DynamicRealmObject dynamicRealmObject) {
+                                dynamicRealmObject.setString("parent_temp", String.valueOf(dynamicRealmObject.getObject("parent")));
+                            }
+                        })
+                        .removeField("parent")
+                        .renameField("parent_temp", "parent")
+                        .addField("latitude_temp", String.class)
+                        .transform(new RealmObjectSchema.Function() {
+                            @Override
+                            public void apply(DynamicRealmObject dynamicRealmObject) {
+                                dynamicRealmObject.setString("latitude_temp", String.valueOf(dynamicRealmObject.getDouble("latitude")));
+                            }
+                        })
+                        .removeField("latitude")
+                        .renameField("latitude_temp", "latitude");
+                oldVersion++;
+            }
+
             // Migrate to version 2: Add a primary key + object references
             // Example:
             // public Person extends RealmObject {
@@ -416,6 +361,6 @@ public class RealmDatabase implements CragChatDatasource {
             //     // getters and setters left out for brevity
 
         }
-    }
+    }*/
 
 }

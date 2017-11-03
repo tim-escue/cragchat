@@ -6,18 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.sql.LocalDatabase;
-import com.cragchat.mobile.view.adapters.ImageAdapter;
 
 import java.util.List;
 
 
 public class ProfileImagesFragment extends Fragment {
-
 
     public static ProfileImagesFragment newInstance(String username) {
         ProfileImagesFragment f = new ProfileImagesFragment();
@@ -37,8 +34,6 @@ public class ProfileImagesFragment extends Fragment {
 
         load(view);
 
-      //  Button b = (Button) view.findViewById(R.id.button_add_image);
-     //   b.setVisibility(View.GONE);
         return view;
     }
 
@@ -47,8 +42,8 @@ public class ProfileImagesFragment extends Fragment {
         images = LocalDatabase.getInstance(getContext()).getImagesForProfile(getActivity(), getArguments().getString("username"));
 
         if (images != null && v != null) {
-            GridView gridview = (GridView) v.findViewById(R.id.thumbnail_grid);
-            gridview.setAdapter(new ImageAdapter(getContext(), images.toArray(new Image[images.size()])));
+            // GridView gridview = (GridView) v.findViewById(R.id.thumbnail_grid);
+            // gridview.setAdapter(new ImageAdapter(getContext(), images.toArray(new Image[images.size()])));
         }
     }
 

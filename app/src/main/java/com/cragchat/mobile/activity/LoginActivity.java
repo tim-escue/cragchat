@@ -16,6 +16,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.search.NavigableActivity;
 import com.cragchat.mobile.sql.LoginTask;
 import com.cragchat.mobile.sql.SendResetTask;
+import com.cragchat.networkapi.NetworkApi;
 
 public class LoginActivity extends NavigableActivity {
 
@@ -26,7 +27,7 @@ public class LoginActivity extends NavigableActivity {
     }
 
     public void auth(View v) {
-        if (hasConnection()) {
+        if (NetworkApi.isConnected(this)) {
             String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
             String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
             new LoginTask(this, username, password).execute();
@@ -36,7 +37,7 @@ public class LoginActivity extends NavigableActivity {
     }
 
     public void register(View v) {
-        if (hasConnection()) {
+        if (NetworkApi.isConnected(this)) {
             Intent reg = new Intent(this, RegisterActivity.class);
             startActivity(reg);
         } else {
@@ -48,7 +49,7 @@ public class LoginActivity extends NavigableActivity {
 
     public void requestReset(View v) {
 
-        if (hasConnection()) {
+        if (NetworkApi.isConnected(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Account Email:");
 

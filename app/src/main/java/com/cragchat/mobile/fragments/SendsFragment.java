@@ -13,41 +13,63 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.SubmitSendActivity;
-import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.database.RealmDatabase;
+import com.cragchat.mobile.database.models.RealmSend;
 import com.cragchat.mobile.user.User;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.view.adapters.recycler.SendRecyclerAdapter;
+import com.cragchat.networkapi.ErrorHandlingObserverable;
+import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 
 
 public class SendsFragment extends Fragment implements View.OnClickListener {
 
+    private String entityKey;
 
-    public static SendsFragment newInstance(int displayableId) {
+    public static SendsFragment newInstance(String displayableId) {
         SendsFragment f = new SendsFragment();
         Bundle b = new Bundle();
-        b.putString("id", "" + displayableId);
+        b.putString("entityKey", displayableId);
         f.setArguments(b);
         return f;
     }
-
-    private int id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_sends, container, false);
-        id = Integer.parseInt(getArguments().getString("id"));
+        entityKey = getArguments().getString("entityKey");
 
-        List<Send> ratings = LocalDatabase.getInstance(getContext()).getSendsFor(id);
+        if (NetworkApi.isConnected(getContext())) {
+            NetworkApi.getInstance().getSends(entityKey)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new ErrorHandlingObserverable<List<RealmSend>>() {
+                        @Override
+                        public void onSuccess(final List<RealmSend> object) {
+                            RealmDatabase.getRealm().executeTransaction(
+                                    new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+                                            realm.insertOrUpdate(object);
+                                        }
+                                    }
+                            );
+                        }
+                    });
+        }
 
-        final SendRecyclerAdapter adapter = new SendRecyclerAdapter(getActivity(), ratings, false);
+        final SendRecyclerAdapter adapter = new SendRecyclerAdapter(entityKey);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.list_sends);
         RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
-      //  adapter.notifyDataSetChanged();
 
         return view;
     }
@@ -57,9 +79,9 @@ public class SendsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
 
-            if (User.currentToken(getActivity()) != null) {
+            if (Authentication.isLoggedIn(getContext())) {
                 Intent next = new Intent(getContext(), SubmitSendActivity.class);
-                next.putExtra("id", id);
+                next.putExtra("entityKey", entityKey);
                 startActivity(next);
             } else {
                 Toast.makeText(getContext(), "Must be logged in to submit send", Toast.LENGTH_SHORT).show();

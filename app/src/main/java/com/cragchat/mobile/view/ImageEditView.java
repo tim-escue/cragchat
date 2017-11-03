@@ -8,11 +8,18 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -115,13 +122,59 @@ public class ImageEditView extends AppCompatImageView {
 
     public Bitmap scaleDown() {
 
-        Bitmap bitmap = ((BitmapDrawable)getDrawable()).getBitmap();
+        Bitmap bitmap = convertToMutable(((BitmapDrawable) getDrawable()).getBitmap());
         Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, bitmap.getWidth(),
                 bitmap.getHeight(), true);
         mBitmap.recycle();
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(newBitmap, 0, 0, mBitmapPaint);
         return bitmap;
+    }
+
+    public static Bitmap convertToMutable(Bitmap imgIn) {
+        try {
+            //this is the file going to use temporally to save the bytes.
+            // This file will not be a image, it will store the raw image data.
+            File file = new File(Environment.getExternalStorageDirectory() + File.separator + "temp.tmp");
+
+            //Open an RandomAccessFile
+            //Make sure you have added uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+            //into AndroidManifest.xml file
+            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+
+            // get the width and height of the source bitmap.
+            int width = imgIn.getWidth();
+            int height = imgIn.getHeight();
+            Bitmap.Config type = imgIn.getConfig();
+
+            //Copy the byte to the file
+            //Assume source bitmap loaded using options.inPreferredConfig = Config.ARGB_8888;
+            FileChannel channel = randomAccessFile.getChannel();
+            MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, 0, imgIn.getRowBytes() * height);
+            imgIn.copyPixelsToBuffer(map);
+            //recycle the source bitmap, this will be no longer used.
+            imgIn.recycle();
+            System.gc();// try to force the bytes from the imgIn to be released
+
+            //Create a new bitmap to load the bitmap again. Probably the memory will be available.
+            imgIn = Bitmap.createBitmap(width, height, type);
+            map.position(0);
+            //load it back from temporary
+            imgIn.copyPixelsFromBuffer(map);
+            //close the temporary file and channel , then delete that also
+            channel.close();
+            randomAccessFile.close();
+
+            // delete the temp file
+            file.delete();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imgIn;
     }
 
     public void setDrawing(boolean drawing) {
@@ -135,12 +188,12 @@ public class ImageEditView extends AppCompatImageView {
             mBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             int lastColor = mPaint.getColor();
-            int lastStroke = (int)mPaint.getStrokeWidth();
+            int lastStroke = (int) mPaint.getStrokeWidth();
             for (Path path : pointMap) {
                 List<Point> list = path.points;
                 mPaint.setColor(path.color);
                 mPaint.setStrokeWidth(path.stroke);
-                for (int i = 0; i < list.size() -1; i++) {
+                for (int i = 0; i < list.size() - 1; i++) {
                     Point start = list.get(i);
                     Point next = list.get(i + 1);
                     mCanvas.drawLine(start.x, start.y, next.x, next.y, mPaint);
@@ -190,7 +243,7 @@ public class ImageEditView extends AppCompatImageView {
                 }
             } else {
                 stopped = true;
-                pointMap.push(new Path(currentPoitns, mPaint.getColor(),(int) mPaint.getStrokeWidth()));
+                pointMap.push(new Path(currentPoitns, mPaint.getColor(), (int) mPaint.getStrokeWidth()));
             }
         }
         return true;

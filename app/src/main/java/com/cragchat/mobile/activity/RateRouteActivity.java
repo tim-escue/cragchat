@@ -10,18 +10,25 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.database.models.RealmRating;
+import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.SendRatingTask;
-import com.cragchat.mobile.user.User;
+import com.cragchat.networkapi.ErrorHandlingObserverable;
+import com.cragchat.networkapi.NetworkApi;
 
-public class RateRouteActivity extends NavigableActivity {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 
-    private int id;
+public class RateRouteActivity extends CragChatActivity {
+
+    private String entityKey;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_rate_route);
-        id = getIntent().getIntExtra("id", -1);
+        entityKey = getIntent().getStringExtra("entityKey");
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_rate_yds);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -65,33 +72,37 @@ public class RateRouteActivity extends NavigableActivity {
     }
 
     public void rate(View v) {
-        Spinner yds = ((Spinner) findViewById(R.id.spinner_rate_yds));
+        Spinner ydsSpinner = ((Spinner) findViewById(R.id.spinner_rate_yds));
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
-//        String climbStyle = ((Spinner) findViewById(R.id.spinner_select_style)).getSelectedItem().toString();
-        //      String sendStyle = ((Spinner) findViewById(R.id.spinner_select_send_typee)).getSelectedItem().toString();
-        //     int pitches = Integer.parseInt(((EditText)findViewById(R.id.edittext_pitches)).getText().toString());
-        //    int attempts = Integer.parseInt(((EditText)findViewById(R.id.edittext_attempts)).getText().toString());
+        int yds = ydsSpinner.getSelectedItemPosition();
 
-        //String timeString = ((EditText)findViewById(R.id.edittext_time)).getText().toString();
-        // String[] args = timeString.split(":");
-        int timeSeconds = 0;
-        /*if (args.length== 0 || args.length > 3) {
-            Toast.makeText(this, "Time to climb is not formatted correctly", Toast.LENGTH_LONG).show();
-            return;
-            } else {
-                timeSeconds = Integer.parseInt(args[0]) * 3600 + Integer.parseInt(args[1]) * 60 + Integer.parseInt(args[2]);
-            }*/
-
-
-        if (hasConnection()) {
-            new SendRatingTask(this, id, yds.getSelectedItemPosition(), stars, User.currentToken(this), true).execute();
+        if (NetworkApi.isConnected(this)) {
+            NetworkApi.getInstance().postRating(
+                    Authentication.getAuthenticatedUser(this).getToken(),
+                    stars,
+                    yds,
+                    entityKey
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new ErrorHandlingObserverable<RealmRating>() {
+                        @Override
+                        public void onSuccess(final RealmRating object) {
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.insertOrUpdate(object);
+                                }
+                            });
+                            realm.close();
+                        }
+                    });
         } else {
             Toast.makeText(this, "Unable to post rating - will try again later", Toast.LENGTH_LONG).show();
-           /* String store = "RATING###" + id + "###" + yds.getSelectedItemPosition() + "###" + stars + "###" + climbStyle + "###" + pitches + "###" + timeSeconds + "###" + User.currentToken(this)
-                    + "###" +sendStyle + "###" +attempts;
-            LocalDatabase.getInstance(this).store(this, store);*/
         }
-
+        Realm realm = Realm.getDefaultInstance();
+        RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
+        realm.close();
+        launch(route);
     }
 
 

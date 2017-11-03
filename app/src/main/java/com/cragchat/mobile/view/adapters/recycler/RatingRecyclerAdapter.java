@@ -1,7 +1,7 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,44 +12,34 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.model.Displayable;
-import com.cragchat.mobile.model.Rating;
-import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.database.models.RealmRating;
 import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.networkapi.NetworkApi;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
 
-public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAdapter.ViewHolder> {
+public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating, RatingRecyclerAdapter.ViewHolder> {
 
     private CragChatActivity activity;
-    private static LayoutInflater inflater;
-    private List<Rating> ratings;
-    private boolean forProfile;
 
-    public RatingRecyclerAdapter(Activity a, List<Rating> ratings, boolean forProfile) {
-        activity = (CragChatActivity) a;
-        inflater = activity.getLayoutInflater();
-        this.ratings = ratings;
-        this.forProfile = forProfile;
+    public RatingRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRating> data, boolean autoUpdate, CragChatActivity activity) {
+        super(data, autoUpdate);
+        this.activity = activity;
     }
 
-    @Override
-    public int getItemCount() {
-        return ratings.size();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text1;
-        TextView text2;
-        TextView text3;
-        TextView text4;
+        @BindView(R.id.item_rating_username) TextView text1;
+        @BindView(R.id.item_rating_date) TextView text2;
+        @BindView(R.id.item_rating_yds) TextView text3;
+        @BindView(R.id.item_rating_stars) TextView text4;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text1 = (TextView) itemView.findViewById(R.id.item_rating_username);
-            text2 = (TextView) itemView.findViewById(R.id.item_rating_date);
-            text3 = (TextView) itemView.findViewById(R.id.item_rating_yds);
-            text4 = (TextView) itemView.findViewById(R.id.item_rating_stars);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -65,8 +55,8 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
     public void onBindViewHolder(final RatingRecyclerAdapter.ViewHolder holder, int position) {
 
 
-        final Rating rating = ratings.get(position);
-        String title;
+        final RealmRating rating = getItem(position);
+        /*String title;
         if (forProfile) {
             title = LocalDatabase.getInstance(activity).findExact(rating.getRouteId()).getName();
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -78,14 +68,14 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
             });
         } else {
             title = rating.getUserName();
-        }
-        holder.text1.setText(title);
+        }*/
+        holder.text1.setText(rating.getUsername());
         holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activity.hasConnection()) {
+                if (NetworkApi.isConnected(activity)) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
-                    intent.putExtra("username", rating.getUserName());
+                    intent.putExtra("username", rating.getUsername());
                     activity.startActivity(intent);
                 } else {
                     Toast.makeText(activity, "Must have internet connection to view user profiles.", Toast.LENGTH_SHORT).show();

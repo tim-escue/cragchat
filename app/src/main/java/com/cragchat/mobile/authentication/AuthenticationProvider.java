@@ -12,6 +12,5 @@ public interface AuthenticationProvider {
 
     void logout();
 
-    AuthenticatedUser getAuthenticatedUser(String token);
 
 }

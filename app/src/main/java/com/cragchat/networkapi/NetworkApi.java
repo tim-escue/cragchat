@@ -1,24 +1,22 @@
 package com.cragchat.networkapi;
 
-import com.cragchat.mobile.database.Database;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.util.FormatUtil;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.cragchat.mobile.database.models.Tag;
+import com.cragchat.mobile.database.models.TagRealmListConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONObject;
+import java.io.IOException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.realm.RealmList;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -32,66 +30,43 @@ public class NetworkApi {
     private static CragChatApi api;
 
     static {
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<RealmList<Tag>>() {
+                        }.getType(),
+                        new TagRealmListConverter())
+                .create();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(
+                        new Interceptor() {
+                            @Override
+                            public Response intercept(Chain chain) throws IOException {
+                                Response response = chain.proceed(chain.request());
+                                Log.w("Retrofit@Response", response.peekBody(Long.MAX_VALUE).string());
+                                return response;
+                            }
+                        }
+                )
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         api = retrofit.create(CragChatApi.class);
     }
 
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
     public static CragChatApi getInstance() {
         return api;
     }
-
-    /*public static void addRoute(String userToken, Route route) {
-        String json = new JSONObject(route.getMap()).toString();
-        api.addObject(userToken, CragChatApi.TYPE_ROUTE, json).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String body = response.body().string();
-                    System.out.println("Responsecode:" + response.code() + " response:" + body);
-                    if (response.code() == 200) {
-                        JSONObject object = new JSONObject(body);
-                        //Database.getInstance().updateOrAddRoute(object);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
-            }
-        });
-    }
-
-    public static void addArea(String userToken, Area area) {
-        String json = new JSONObject(area.getMap()).toString();
-        System.out.println("Sending json:" + json);
-        api.addObject(userToken, CragChatApi.TYPE_AREA, json).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String body = response.body().string();
-                    System.out.println("Responsecode:" + response.code() + " response:" + body);
-                    if (response.code() == 200) {
-                        JSONObject object = new JSONObject(body);
-                      //  Database.getInstance().updateOrAddArea(object);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
-            }
-        });
-    }*/
 
 }

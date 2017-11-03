@@ -14,7 +14,8 @@ import java.util.Map;
 public abstract class Displayable implements Comparable<Displayable> {
 
     //Empty constructor for FireBase
-    public Displayable() {}
+    public Displayable() {
+    }
 
     public abstract String getName();
 

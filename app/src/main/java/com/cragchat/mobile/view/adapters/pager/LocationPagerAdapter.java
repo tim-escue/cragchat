@@ -1,47 +1,17 @@
 package com.cragchat.mobile.view.adapters.pager;
 
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 
 import com.cragchat.mobile.fragments.CommentSectionFragment;
-import com.cragchat.mobile.fragments.MapFragment;
+import com.cragchat.mobile.fragments.CragChatMapFragment;
 
-public class LocationPagerAdapter extends FragmentPagerAdapter {
+public class LocationPagerAdapter extends TabPagerAdapter {
 
-    private int parentId;
-
-    public LocationPagerAdapter(FragmentManager fm, int parentId) {
-        super(fm);
-        this.parentId = parentId;
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return MapFragment.newInstance(parentId);
-            case 1:
-                return CommentSectionFragment.newInstance(3, "LOCATION");
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public int getCount() {
-        return 2;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "Map";
-            case 1:
-                return "Text";
-            default:
-                return "NULL";
-        }
+    public LocationPagerAdapter(FragmentManager fm, String entityId, FloatingActionButton button) {
+        super(fm, null, button);
+        System.out.println("FAB IS:" + (button != null));
+        addFragment("Map", CragChatMapFragment.newInstance(), false, false);
+        addFragment("Text Description", CommentSectionFragment.newInstance(entityId, "Location"), false, true);
     }
 }

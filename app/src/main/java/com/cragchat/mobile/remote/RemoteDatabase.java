@@ -298,7 +298,7 @@ public class RemoteDatabase {
 
     public static List<String> editComment(Activity act, Comment comment) {
         comment.setText(comment.getText().replaceAll("\n", "<!!!>"));
-        return httpPost("http://" + URL_ROOT + "/routedb/editComment.php", comment.getJSONString(act, true));
+        return httpPost("http://" + URL_ROOT + "/routedb/postCommentEdit.php", comment.getJSONString(act, true));
     }
 
     public static List<String> sendPrivacyChange(Activity act, boolean bool) {
@@ -523,7 +523,7 @@ public class RemoteDatabase {
         }
         try {
             // open a connection to the site
-            URL url = new URL("http://" + URL_ROOT + "/routedb/vote.php");
+            URL url = new URL("http://" + URL_ROOT + "/routedb/postCommentVote.php");
             URLConnection con = url.openConnection();
             // activate the output
             con.setDoOutput(true);

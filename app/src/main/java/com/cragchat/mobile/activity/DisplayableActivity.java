@@ -74,6 +74,7 @@ public abstract class DisplayableActivity extends NavigableActivity {
         getMenuInflater().inflate(R.menu.menu_route_activity, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

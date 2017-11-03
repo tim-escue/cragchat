@@ -3,8 +3,6 @@ package com.cragchat.mobile.database;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 /**
@@ -14,11 +12,15 @@ import java.util.List;
 public interface CragChatDatasource {
 
     Area getArea(String key);
+
     Route getRoute(String key);
+
     void updateBatch(String json);
+
     void updateSingle(String json);
 
     List<? extends Area> getAllAreas();
+
     List<? extends Route> getAllRoutes();
 
-    }
+}

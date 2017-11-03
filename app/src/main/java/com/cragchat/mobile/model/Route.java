@@ -9,12 +9,20 @@ import java.util.HashMap;
 public interface Route {
 
     String getKey();
+
     String getName();
-    Area getParent();
+
+    String getParent();
+
     String getLongitude();
+
     String getLatitude();
+
     int getYds();
+
     double getStars();
+
     String getType();
+
     HashMap<String, Object> getMap();
 }

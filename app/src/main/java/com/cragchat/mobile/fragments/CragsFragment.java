@@ -1,7 +1,6 @@
 package com.cragchat.mobile.fragments;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +10,13 @@ import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.Database;
-import com.cragchat.mobile.database.RealmDatabase;
 import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.LegacyArea;
-import com.cragchat.mobile.sql.LocalDatabase;
 import com.cragchat.mobile.view.adapters.recycler.CragsFragmentRecyclerAdapter;
+import com.cragchat.networkapi.NetworkApi;
+
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 
 /**
  * Created by timde on 9/9/2017.
@@ -29,7 +28,7 @@ public class CragsFragment extends Fragment {
         return new CragsFragment();
     }
 
-    private int id;
+    private Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,15 +42,39 @@ public class CragsFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter((CragChatActivity)getActivity());
+        realm = Realm.getDefaultInstance();
 
-//        Area ozone = Database.getInstance().getArea("Ozone");
-   //     if (ozone != null) {
-     //       adapter.addItem(ozone);
-      //  }
-
+        CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter(
+                realm.where(RealmArea.class).equalTo(RealmArea.FIELD_NAME, "Ozone").findAll(),
+                true,
+                (CragChatActivity) getActivity());
         recList.setAdapter(adapter);
 
+
+        if (NetworkApi.isConnected(getContext())) {
+            NetworkApi.getInstance().getArea(null, "Ozone").subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<RealmArea>() {
+                        @Override
+                        public void accept(final RealmArea area) throws Exception {
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.insertOrUpdate(area);
+                                }
+                            });
+                            realm.close();
+                        }
+                    });
+        }
+
+
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }

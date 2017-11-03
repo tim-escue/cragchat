@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.database.models.Tag;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Displayable;
 import com.cragchat.mobile.model.Route;
@@ -87,9 +88,6 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
             holder.rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // if (activity.hasConnection()) {
-                    //     new CheckForRouteUpdateTask(displayable, activity).execute();
-                    // }
                     activity.launch((Area) displayable);
                 }
 
@@ -112,11 +110,11 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
         } else {
             Area a = (Area) displayable;
             holder.text1.setText(a.getName());
-            List<? extends Route> routes = a.getRoutes();
+            List<Tag> routes = a.getRoutes();
             StringBuilder info = new StringBuilder();
             info.append(routes.size());
             info.append(" routes");
-            List<? extends Area> subAreas = a.getSubAreas();
+            List<Tag> subAreas = a.getSubAreas();
             if (subAreas.size() > 0) {
                 info.append(" ");
                 info.append(subAreas.size());
