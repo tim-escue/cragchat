@@ -8,8 +8,6 @@ import android.widget.EditText;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.fragments.NotificationDialog;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.RegisterTask;
 
 public class RegisterActivity extends NavigableActivity {
 
@@ -30,7 +28,7 @@ public class RegisterActivity extends NavigableActivity {
         String email = edit_emai.getText().toString().trim();
         String emailCheck = edit_email_verifyy.getText().toString().trim();
         if (password.equals(edit_verify.getText().toString().trim()) && email.equals(emailCheck)) {
-            new RegisterTask(this, username, password, email).execute();
+            //new RegisterTask(this, username, password, email).execute();
         } else {
             if (!password.equals(edit_verify.getText().toString())) {
                 DialogFragment fragment = NotificationDialog.newInstance("Passwords did not match. Please try again.");

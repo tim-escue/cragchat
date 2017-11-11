@@ -15,18 +15,12 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.util.JsonUtil;
+import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.AreaListRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
-import java.util.List;
-
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 import static android.view.View.GONE;
@@ -34,8 +28,8 @@ import static android.view.View.GONE;
 
 public class AreaListFragment extends Fragment {
 
-    private static final String IDS_TAG = "routeIds";
-    private static final String AREA_TAG = "areaKey";
+    private static final String IDS_String = "routeIds";
+    private static final String AREA_String = "areaKey";
 
     private String[] areaIds;
     private String areaKey;
@@ -46,8 +40,8 @@ public class AreaListFragment extends Fragment {
     public static AreaListFragment newInstance(String areaKey, String[] areaIds) {
         AreaListFragment f = new AreaListFragment();
         Bundle b = new Bundle();
-        b.putStringArray(IDS_TAG, areaIds);
-        b.putString(AREA_TAG, areaKey);
+        b.putStringArray(IDS_String, areaIds);
+        b.putString(AREA_String, areaKey);
         f.setArguments(b);
         return f;
     }
@@ -58,11 +52,9 @@ public class AreaListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
-        areaIds = getArguments().getStringArray(IDS_TAG);
+        areaIds = getArguments().getStringArray(IDS_String);
 
-        if (NetworkApi.isConnected(getContext())) {
-            updateAreas(areaIds);
-        }
+        Repository.getAreas(areaIds, getContext());
 
         mRealm = Realm.getDefaultInstance();
 
@@ -98,26 +90,6 @@ public class AreaListFragment extends Fragment {
         RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
 
         return view;
-    }
-
-    private void updateAreas(String[] routeIds) {
-        String json = JsonUtil.stringArrayToJSon(routeIds);
-        NetworkApi.getInstance().getAreas(json)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new ErrorHandlingObserverable<List<RealmArea>>() {
-                    @Override
-                    public void onSuccess(final List<RealmArea> realmAreas) {
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.insertOrUpdate(realmAreas);
-                            }
-                        });
-                        realm.close();
-                    }
-                });
-
     }
 
     @Override

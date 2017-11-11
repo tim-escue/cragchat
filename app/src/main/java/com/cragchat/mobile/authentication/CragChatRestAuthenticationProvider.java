@@ -2,7 +2,9 @@ package com.cragchat.mobile.authentication;
 
 import android.content.Context;
 
-import com.cragchat.networkapi.NetworkApi;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -21,8 +23,8 @@ public class CragChatRestAuthenticationProvider implements AuthenticationProvide
 
     @Override
     public void logIn(String name, String password, final AuthenticationCallback callback) {
-        if (NetworkApi.isConnected(context)) {
-            NetworkApi.getInstance().login(name, password)
+        if (Network.isConnected(context)) {
+            Repository.login(name, password)
                     .subscribeOn(Schedulers.io())
                     .subscribe(new Consumer<AuthenticatedUser>() {
                         @Override

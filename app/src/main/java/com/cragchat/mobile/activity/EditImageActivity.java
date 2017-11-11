@@ -14,7 +14,6 @@ import android.support.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,14 +22,14 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmImage;
-import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.fragments.ColorPickerDialog;
-import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.model.realm.RealmImage;
+import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.util.FileUtil;
 import com.cragchat.mobile.view.ImageEditView;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -44,8 +43,6 @@ import java.io.InputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmModel;
@@ -227,7 +224,7 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
 
     @OnClick(R.id.button_submit_image)
     public void onSubmit() {
-        File directory = Image.getAlbumStorageDir("routedb");
+        File directory = FileUtil.getAlbumStorageDir("routedb");
         Bitmap bitmap = imageEditView.scaleDown();
         final File newFile = new File(directory, bitmap.hashCode() + ".png");
         FileOutputStream out = null;
@@ -258,14 +255,14 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                 RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), captionString);
                 String entityKey;
                 if (entity instanceof RealmRoute) {
-                    entityKey = ((RealmRoute)entity).getKey();
+                    entityKey = ((RealmRoute) entity).getKey();
                 } else {
-                    entityKey = ((RealmArea)entity).getKey();
+                    entityKey = ((RealmArea) entity).getKey();
                 }
                 RequestBody entityTypeRequest = RequestBody.create(MediaType.parse("text/plain"), entityType);
                 RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
 
-                NetworkApi.getInstance().postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest)
+                Repository.addImage(body, userToken, caption, entityKeyRequest, entityTypeRequest)
                         .subscribeOn(Schedulers.io())
                         .subscribe(new ErrorHandlingObserverable<RealmImage>() {
                                        @Override

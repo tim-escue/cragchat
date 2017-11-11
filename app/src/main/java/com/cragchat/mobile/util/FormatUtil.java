@@ -3,7 +3,6 @@ package com.cragchat.mobile.util;
 import android.content.Context;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.Tag;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 
@@ -74,10 +73,10 @@ public class FormatUtil {
         return format.format(stars);
     }
 
-    public static String[] getStringArrayFromTags(List<Tag> tags) {
-        String[] areaIds = new String[tags.size()];
+    public static String[] getStringArrayFromStrings(List<String> strings) {
+        String[] areaIds = new String[strings.size()];
         for (int i = 0; i < areaIds.length; i++) {
-            areaIds[i] = tags.get(i).getValue();
+            areaIds[i] = strings.get(i);
         }
         return areaIds;
     }

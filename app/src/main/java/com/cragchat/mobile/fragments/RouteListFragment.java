@@ -19,24 +19,19 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.util.JsonUtil;
+import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.view.adapters.recycler.RouteListRecyclerAdapter;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
-import java.util.List;
-
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 
 
 public class RouteListFragment extends Fragment {
 
-    private static final String IDS_TAG = "routeIds";
-    private static final String AREA_TAG = "areaKey";
+    private static final String IDS_String = "routeIds";
+    private static final String AREA_String = "areaKey";
 
     private String[] routeIds;
     private String areaKey;
@@ -56,8 +51,8 @@ public class RouteListFragment extends Fragment {
     public static RouteListFragment newInstance(String areaKey, String[] routeIds) {
         RouteListFragment f = new RouteListFragment();
         Bundle b = new Bundle();
-        b.putStringArray(IDS_TAG, routeIds);
-        b.putString(AREA_TAG, areaKey);
+        b.putStringArray(IDS_String, routeIds);
+        b.putString(AREA_String, areaKey);
         f.setArguments(b);
         return f;
     }
@@ -68,11 +63,15 @@ public class RouteListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
-        routeIds = getArguments().getStringArray(IDS_TAG);
+        routeIds = getArguments().getStringArray(IDS_String);
 
-        if (NetworkApi.isConnected(getContext())) {
-            updateRoutes(routeIds);
-        }
+        /*
+            RecyclerView uses a RealmAdapter which depends on realm-specific api so Repository
+            which uses abstract interfaces will not provide right type. We still call repository
+            so that local database is updated from network. RealmAdapter will auto-update
+            when the local database (Realm) is updated.
+         */
+        Repository.getRoutes(routeIds, getContext());
 
         mRealm = Realm.getDefaultInstance();
 
@@ -144,25 +143,6 @@ public class RouteListFragment extends Fragment {
 
 
         return view;
-    }
-
-    private void updateRoutes(String[] routeIds) {
-        String json = JsonUtil.stringArrayToJSon(routeIds);
-        NetworkApi.getInstance().getRoutes(json)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new ErrorHandlingObserverable<List<RealmRoute>>() {
-                    @Override
-                    public void onSuccess(final List<RealmRoute> realmRoutes) {
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.insertOrUpdate(realmRoutes);
-                            }
-                        });
-                        realm.close();
-                    }
-                });
     }
 
     @Override

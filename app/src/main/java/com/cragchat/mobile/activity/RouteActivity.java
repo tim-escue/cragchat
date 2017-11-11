@@ -15,18 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.search.NavigableActivity;
+import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.util.FormatUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
 import io.realm.Realm;
 
-public class RouteActivity extends CragChatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class RouteActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private FloatingActionButton floatingActionButton;
     private RealmRoute route;
@@ -78,6 +76,13 @@ public class RouteActivity extends CragChatActivity implements AppBarLayout.OnOf
 
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_route_activity, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -89,8 +94,8 @@ public class RouteActivity extends CragChatActivity implements AppBarLayout.OnOf
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-        float alpha = 1f - percentage;
+        float percenStringe = (float) Math.abs(offset) / (float) maxScroll;
+        float alpha = 1f - percenStringe;
         header.setAlpha(alpha);
     }
 
@@ -130,12 +135,6 @@ public class RouteActivity extends CragChatActivity implements AppBarLayout.OnOf
 
     public int getInitialTabIndex() {
         return getIntent().getIntExtra("TAB", 0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_route_activity, menu);
-        return true;
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.sql.UpdateRecentActivityTask;
 
 public class RecentActivityFragment extends Fragment {
 
@@ -45,8 +44,6 @@ public class RecentActivityFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         // recList.addItemDecoration(new RecyclerViewMargin(48));
-
-        new UpdateRecentActivityTask(getActivity(), id, recList, layout).execute();
 
 
         return view;

@@ -1,27 +1,16 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.database.RealmDatabase;
-import com.cragchat.mobile.database.models.RealmSend;
-import com.cragchat.mobile.model.Displayable;
-import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.sql.LocalDatabase;
+import com.cragchat.mobile.model.realm.RealmSend;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.FormatUtil;
-import com.cragchat.networkapi.NetworkApi;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +20,7 @@ import io.realm.RealmRecyclerViewAdapter;
 public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, SendRecyclerAdapter.ViewHolder> {
 
     public SendRecyclerAdapter(String entityKey) {
-        this(RealmDatabase.getRealm().where(RealmSend.class).equalTo(RealmSend.FIELD_ENTITY_KEY, entityKey).findAll(), true);
+        this(Repository.getRealm().where(RealmSend.class).equalTo(RealmSend.FIELD_ENTITY_KEY, entityKey).findAll(), true);
     }
 
     public SendRecyclerAdapter(@Nullable OrderedRealmCollection<RealmSend> data, boolean autoUpdate) {
@@ -47,12 +36,18 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_send_username) TextView text1;
-        @BindView(R.id.item_send_date) TextView text2;
-        @BindView(R.id.item_send_pitches) TextView text3;
-        @BindView(R.id.item_send_attempts) TextView text4;
-        @BindView(R.id.item_send_style) TextView text5;
-        @BindView(R.id.item_send_send_type) TextView text6;
+        @BindView(R.id.item_send_username)
+        TextView text1;
+        @BindView(R.id.item_send_date)
+        TextView text2;
+        @BindView(R.id.item_send_pitches)
+        TextView text3;
+        @BindView(R.id.item_send_attempts)
+        TextView text4;
+        @BindView(R.id.item_send_style)
+        TextView text5;
+        @BindView(R.id.item_send_send_type)
+        TextView text6;
 
         private ViewHolder(View itemView) {
             super(itemView);
@@ -69,7 +64,7 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
         /*holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkApi.isConnected(activity)) {
+                if (RetroFitRestApi.isConnected(activity)) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", send.getUserName());
                     activity.startActivity(intent);

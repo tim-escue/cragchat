@@ -10,9 +10,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.Tag;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Displayable;
 import com.cragchat.mobile.model.Route;
 
 import java.util.ArrayList;
@@ -100,7 +98,7 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
             if (r.getYds() == -1) {
                 info.append("Not rated");
             } else {
-                info.append(Displayable.getYdsString(activity, r.getYds()));
+                info.append(r.getYds());
                 info.append(" ");
                 info.append(r.getStars());
                 info.append(" stars");
@@ -110,11 +108,11 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
         } else {
             Area a = (Area) displayable;
             holder.text1.setText(a.getName());
-            List<Tag> routes = a.getRoutes();
+            List<String> routes = a.getRoutes();
             StringBuilder info = new StringBuilder();
             info.append(routes.size());
             info.append(" routes");
-            List<Tag> subAreas = a.getSubAreas();
+            List<String> subAreas = a.getSubAreas();
             if (subAreas.size() > 0) {
                 info.append(" ");
                 info.append(subAreas.size());

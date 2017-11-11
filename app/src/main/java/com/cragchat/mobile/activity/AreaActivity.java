@@ -14,31 +14,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.view.CragChatGlideModule;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
-import io.realm.Realm;
+public class AreaActivity extends SearchableActivity {
 
-public class AreaActivity extends CragChatActivity {
-
-    private RealmArea area;
+    private Area area;
     private FloatingActionButton floatingActionButton;
-    private Realm mRealm;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_displayable_new);
 
-        mRealm = Realm.getDefaultInstance();
-
         floatingActionButton = findViewById(R.id.add_button);
 
         String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        area = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, areaKey).findFirst();
+        area = Repository.getArea(areaKey, this);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -64,7 +57,6 @@ public class AreaActivity extends CragChatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRealm.close();
     }
 
     public int getInitialTabIndex() {
@@ -78,7 +70,7 @@ public class AreaActivity extends CragChatActivity {
         getSupportActionBar().setTitle(area.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, area.getParent()).findFirst();
+        Area current = Repository.getArea(area.getParent(), null);
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -86,7 +78,7 @@ public class AreaActivity extends CragChatActivity {
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, current.getParent()).findFirst();
+            current = Repository.getArea(current.getParent(), null);
         }
         String subTitleString = subTitle.toString();
         if (!subTitleString.isEmpty()) {
@@ -110,13 +102,13 @@ public class AreaActivity extends CragChatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_route_activity, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Area parent = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, area.getParent()).findFirst();
+            Area parent = Repository.getArea(area.getParent(), null);
             if (parent != null) {
                 launch(parent);
             } else {

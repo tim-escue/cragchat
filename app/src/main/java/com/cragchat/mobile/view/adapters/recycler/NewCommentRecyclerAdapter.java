@@ -13,11 +13,14 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmComment;
 import com.cragchat.mobile.fragments.CommentSectionFragment;
+import com.cragchat.mobile.fragments.CragsFragment;
+import com.cragchat.mobile.model.Comment;
+import com.cragchat.mobile.model.realm.RealmComment;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.util.FormatUtil;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +32,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -43,19 +45,19 @@ import static android.view.View.GONE;
 public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRecyclerAdapter.ViewHolder> {
 
     private ViewHolder lastOpened;
-    private List<RealmComment> data;
+    private List<Comment> data;
     private String entityId;
     private String table;
     private Context context;
 
-    public NewCommentRecyclerAdapter(Context context, List<RealmComment> comments, String table, String entityId) {
+    public NewCommentRecyclerAdapter(Context context, List<Comment> comments, String table, String entityId) {
         this.table = table;
         this.entityId = entityId;
         this.context = context;
         data = arrangeComments(comments);
     }
 
-    public void update(List<RealmComment> comments) {
+    public void update(List<Comment> comments) {
         data = arrangeComments(comments);
         notifyDataSetChanged();
     }
@@ -73,7 +75,7 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
         final int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
         holder.layout.setBackgroundColor(color);
         holder.expandable.setBackgroundColor(color);
-        final RealmComment comment = data.get(position);
+        final Comment comment = data.get(position);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +174,10 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
                 } else {
                     Toast.makeText(context, "Must be logged in to reply", Toast.LENGTH_LONG).show();
                 }
+                if (lastOpened != null) {
+                    lastOpened.expandable.setVisibility(GONE);
+                    lastOpened = null;
+                }
             }
         });
         holder.text6.setOnClickListener(new View.OnClickListener() {
@@ -188,14 +194,18 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
                 } else {
                     Toast.makeText(context, "Must be logged in to edit comment", Toast.LENGTH_LONG).show();
                 }
+                if (lastOpened != null) {
+                    lastOpened.expandable.setVisibility(GONE);
+                    lastOpened = null;
+                }
             }
         });
     }
 
     private void vote(String commentKey, boolean up) {
         if (Authentication.isLoggedIn(context)) {
-            if (NetworkApi.isConnected(context)) {
-                NetworkApi.getInstance().postCommentVote(
+            if (Network.isConnected(context)) {
+                etroFitRestApi.getInstance().postCommentVote(
                         Authentication.getAuthenticatedUser(context).getToken(),
                         up ? "up" : "down",
                         commentKey
@@ -222,6 +232,10 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
             } else {
                 Toast.makeText(context, "Must be online to postCommentVote", Toast.LENGTH_LONG).show();
             }
+            if (lastOpened != null) {
+                lastOpened.expandable.setVisibility(GONE);
+                lastOpened = null;
+            }
         }
     }
 
@@ -230,21 +244,21 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
         return data.size();
     }
 
-    public static List<RealmComment> arrangeComments(List<RealmComment> data) {
+    public static List<Comment> arrangeComments(List<Comment> data) {
         if (data != null && data.size() > 0) {
             long begin = System.currentTimeMillis();
             //Map children to parentId
-            Map<String, List<RealmComment>> hMap = new HashMap<>();
-            for (RealmComment i : data) {
+            Map<String, List<Comment>> hMap = new HashMap<>();
+            for (Comment i : data) {
                 if (hMap.containsKey(i.getParentId())) {
                     hMap.get(i.getParentId()).add(i);
                 } else {
-                    List<RealmComment> list = new ArrayList<>();
+                    List<Comment> list = new ArrayList<>();
                     list.add(i);
                     hMap.put(i.getParentId(), list);
                 }
             }
-            RealmList<RealmComment> comments = new RealmList<>();
+            RealmList<Comment> comments = new RealmList<>();
             addChildrenFor(hMap, "", comments);
             System.out.println("FINISHED IN:" + (System.currentTimeMillis() - begin));
             return comments;
@@ -253,10 +267,10 @@ public class NewCommentRecyclerAdapter extends RecyclerView.Adapter<NewCommentRe
     }
 
 
-    public static void addChildrenFor(Map<String, List<RealmComment>> hMap, String key, RealmList<RealmComment> newList) {
-        List<RealmComment> list = hMap.get(key);
+    public static void addChildrenFor(Map<String, List<Comment>> hMap, String key, List<Comment> newList) {
+        List<Comment> list = hMap.get(key);
         if (list != null) {
-            for (RealmComment i : list) {
+            for (Comment i : list) {
                 newList.add(i);
                 addChildrenFor(hMap, i.getKey(), newList);
             }

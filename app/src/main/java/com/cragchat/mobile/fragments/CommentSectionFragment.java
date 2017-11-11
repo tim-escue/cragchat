@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,14 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.RealmComment;
+import com.cragchat.mobile.model.Comment;
+import com.cragchat.mobile.model.realm.RealmComment;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.view.adapters.recycler.NewCommentRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
 
@@ -80,8 +81,8 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
         RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
 
-        if (NetworkApi.isConnected(getContext())) {
-            NetworkApi.getInstance().getComments(mEntityId)
+        if (Network.isConnected(getContext())) {
+            Repository.getComments(mEntityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorHandlingObserverable<List<RealmComment>>() {
@@ -124,7 +125,7 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
     public static AlertDialog getAddCommentDialog(final NewCommentRecyclerAdapter adapter,
                                                   String currentText, final Context context,
                                                   final String entityId, final String table,
-                                                  final RealmComment commentToEdit) {
+                                                  final Comment commentToEdit) {
         final EditText editText = new EditText(context);
         if (currentText != null && !currentText.isEmpty()) {
             editText.setText(currentText);
@@ -136,22 +137,24 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            if (NetworkApi.isConnected(context)) {
+                            if (Network.isConnected(context)) {
                                 String token = Authentication.getAuthenticatedUser(context).getToken();
                                 Observable<RealmComment> call;
                                 if (commentToEdit != null) {
-                                    call = NetworkApi.getInstance().postCommentEdit(
+                                    call = RetroFitRestApi.getInstance().postCommentEdit(
                                             token,
                                             comment,
                                             commentToEdit.getKey()
                                     );
                                 } else {
-                                    call = NetworkApi.getInstance().postComment(
+                                    call = RetroFitRestApi.getInstance().postComment(
                                             token,
                                             comment,
                                             entityId,
                                             table
                                     );
+                                    Repository.addComment(token, comment, entityId, table);
+                                    //todo: register this fragment as obserer to addcomment
                                 }
                                 call.subscribeOn(Schedulers.io()).
                                         observeOn(AndroidSchedulers.mainThread()).
@@ -224,9 +227,9 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            if (NetworkApi.isConnected(context)) {
+                            if (Network.isConnected(context)) {
                                 String token = Authentication.getAuthenticatedUser(context).getToken();
-                                NetworkApi.getInstance().postCommentReply(
+                                RetroFitRestApi.getInstance().postCommentReply(
                                         token,
                                         comment,
                                         entityId,

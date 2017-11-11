@@ -6,12 +6,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmRoute;
 import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.fragments.ImageFragment;
 import com.cragchat.mobile.fragments.LocationFragment;
 import com.cragchat.mobile.fragments.RatingFragment;
 import com.cragchat.mobile.fragments.SendsFragment;
+import com.cragchat.mobile.model.realm.RealmRoute;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 

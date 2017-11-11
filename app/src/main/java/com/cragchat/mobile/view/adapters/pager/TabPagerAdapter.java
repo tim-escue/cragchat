@@ -45,7 +45,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-       // toggleOptionalViews(position);
+        // toggleOptionalViews(position);
     }
 
     @Override
@@ -63,14 +63,14 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
             if (fragment.getShowFloatingActionButton()) {
                 System.out.println("togglefabhere yes");
                 if (fab.getVisibility() != View.VISIBLE) {
-                   // fab.setVisibility(View.VISIBLE);
+                    // fab.setVisibility(View.VISIBLE);
                 }
                 fab.show();
             } else {
                 System.out.println("togglefabhere nod");
 
                 if (fab.getVisibility() != View.GONE) {
-                   // fab.setVisibility(View.GONE);
+                    // fab.setVisibility(View.GONE);
 
                 }
                 fab.hide();

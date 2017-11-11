@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
@@ -13,10 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.LoginTask;
-import com.cragchat.mobile.sql.SendResetTask;
-import com.cragchat.networkapi.NetworkApi;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 
 public class LoginActivity extends NavigableActivity {
 
@@ -27,17 +24,17 @@ public class LoginActivity extends NavigableActivity {
     }
 
     public void auth(View v) {
-        if (NetworkApi.isConnected(this)) {
-            String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
-            String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
-            new LoginTask(this, username, password).execute();
-        } else {
-            Toast.makeText(this, "Must have data connection to log in", Toast.LENGTH_LONG).show();
-        }
+        //if (RetroFitRestApi.isConnected(this)) {
+        //    String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
+        //    String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
+        //    new LoginTask(this, username, password).execute();
+        //} else {
+        //    Toast.makeText(this, "Must have data connection to log in", Toast.LENGTH_LONG).show();
+        //}
     }
 
     public void register(View v) {
-        if (NetworkApi.isConnected(this)) {
+        if (Network.isConnected(this)) {
             Intent reg = new Intent(this, RegisterActivity.class);
             startActivity(reg);
         } else {
@@ -49,7 +46,7 @@ public class LoginActivity extends NavigableActivity {
 
     public void requestReset(View v) {
 
-        if (NetworkApi.isConnected(this)) {
+        if (Network.isConnected(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Account Email:");
 
@@ -64,7 +61,7 @@ public class LoginActivity extends NavigableActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     email = input.getText().toString().trim();
-                    new SendResetTask(act, email).execute();
+                    ///new SendResetTask(act, email).execute();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

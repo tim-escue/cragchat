@@ -6,19 +6,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.fragments.AreaListFragment;
 import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.fragments.ImageFragment;
 import com.cragchat.mobile.fragments.LocationFragment;
 import com.cragchat.mobile.fragments.RouteListFragment;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.util.FormatUtil;
 
 public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
     public AreaActivityPagerAdapter(Context context, FragmentManager fragmentManager,
-                                    AppBarLayout appBarLayout, RealmArea area,
+                                    AppBarLayout appBarLayout, Area area,
                                     FloatingActionButton floatingActionButton) {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
@@ -26,7 +24,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
                 RecentActivityFragment.newInstance(-343), false, false);*/
 
         RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
-                FormatUtil.getStringArrayFromTags(area.getRoutes()));
+                area.getRoutes().toArray(new String[area.getRoutes().size()]));
         addFragment(context.getString(R.string.title_routes, area.getRoutes().size()),
                 routeList,
                 false,
@@ -35,7 +33,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
         if (area.getSubAreas().size() > 0) {
             AreaListFragment areaFragment = AreaListFragment.newInstance(area.getKey(),
-                    FormatUtil.getStringArrayFromTags(area.getSubAreas()));
+                    area.getSubAreas().toArray(new String[area.getSubAreas().size()]));
             addFragment(context.getString(R.string.title_areas, area.getSubAreas().size()),
                     areaFragment,
                     false,

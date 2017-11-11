@@ -15,23 +15,16 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.RateRouteActivity;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmRating;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
-import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 
 
 public class RatingFragment extends Fragment implements View.OnClickListener {
 
     private String entityKey;
-    private Realm mRealm;
+    private RatingRecyclerAdapter adapter;
 
     public static RatingFragment newInstance(String displayableId) {
         RatingFragment f = new RatingFragment();
@@ -48,42 +41,21 @@ public class RatingFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
         entityKey = getArguments().getString("entityKey");
 
-        NetworkApi.getInstance().getRatings(entityKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ErrorHandlingObserverable<List<RealmRating>>() {
-                    @Override
-                    public void onSuccess(final List<RealmRating> object) {
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.insertOrUpdate(object);
-                            }
-                        });
-                        realm.close();
-                    }
-                });
+        /*
+            Called only to update ratings. The return value is not used because RatingRecyclerAdapter
+            relies upon an instance of Realm and Reposity can not expose Realm API
+            in order to preserve CLEAN architecture.
+         */
+        Repository.getRatings(entityKey);
+        adapter = RatingRecyclerAdapter.create(entityKey, (CragChatActivity) getActivity());
 
-        mRealm = Realm.getDefaultInstance();
-
-        RatingRecyclerAdapter adapter = new RatingRecyclerAdapter(
-                mRealm.where(RealmRating.class).equalTo(RealmRating.FIELD_ENTITY_KEY, entityKey).findAll(),
-                true,
-                (CragChatActivity) getActivity()
-        );
         RecyclerView recyclerView = view.findViewById(R.id.list_ratings);
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
-
+        this.getLifecycle().addObserver(adapter);
 
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
 
     @Override
     public void onClick(View view) {

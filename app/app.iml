@@ -93,6 +93,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/reload-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/restart-dex" />
@@ -106,7 +107,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="realm-android-library-object-server-3.7.2" level="project" />
     <orderEntry type="library" name="cardview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" name="support-media-compat-26.1.0" level="project" />
@@ -121,6 +121,7 @@
     <orderEntry type="library" name="adapters-1.3.1" level="project" />
     <orderEntry type="library" name="annotations-4.1.1" level="project" />
     <orderEntry type="library" name="rxandroid-2.0.1" level="project" />
+    <orderEntry type="library" name="realm-annotations-4.1.1" level="project" />
     <orderEntry type="library" name="jsr250-api-1.0" level="project" />
     <orderEntry type="library" name="play-services-basement-11.4.0" level="project" />
     <orderEntry type="library" name="library-1.3.1" level="project" />
@@ -131,7 +132,6 @@
     <orderEntry type="library" name="baseLibrary-2.3.3" level="project" />
     <orderEntry type="library" name="rxjava-2.0.1" level="project" />
     <orderEntry type="library" name="butterknife-annotations-8.8.1" level="project" />
-    <orderEntry type="library" name="realm-annotations-3.7.2" level="project" />
     <orderEntry type="library" name="play-services-location-11.4.0" level="project" />
     <orderEntry type="library" name="reactive-streams-1.0.0" level="project" />
     <orderEntry type="library" name="play-services-maps-11.4.0" level="project" />
@@ -147,10 +147,11 @@
     <orderEntry type="library" name="animated-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" name="support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="runtime-1.0.0" level="project" />
-    <orderEntry type="library" name="okhttp-3.8.0" level="project" />
+    <orderEntry type="library" name="okhttp-3.9.0" level="project" />
     <orderEntry type="library" name="common-1.0.0" level="project" />
     <orderEntry type="library" name="1_common-1.0.0" level="project" />
     <orderEntry type="library" name="appcompat-v7-26.1.0" level="project" />
+    <orderEntry type="library" name="realm-android-library-object-server-4.1.1" level="project" />
     <orderEntry type="library" name="disklrucache-4.1.1" level="project" />
     <orderEntry type="library" name="design-26.1.0" level="project" />
     <orderEntry type="library" name="play-services-tasks-11.4.0" level="project" />

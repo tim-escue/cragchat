@@ -7,8 +7,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.view.adapters.pager.ProfilePagerAdapter;
 
 public class ProfileActivity extends NavigableActivity {
 
@@ -22,12 +20,6 @@ public class ProfileActivity extends NavigableActivity {
         getSupportActionBar().setTitle(username);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        ProfilePagerAdapter pageAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), username);
-        pager.setAdapter(pageAdapter);
-
-        TabLayout slab = (TabLayout) findViewById(R.id.sliding_tabs);
-        slab.setupWithViewPager(pager);
     }
 
 

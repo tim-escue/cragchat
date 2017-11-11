@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            app:contentScrim="@color/primary"
             app:expandedTitleGravity="center_vertical|center_horizontal"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"

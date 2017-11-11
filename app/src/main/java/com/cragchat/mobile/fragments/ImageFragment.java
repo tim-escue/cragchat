@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,11 @@ import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
 import com.cragchat.mobile.activity.RouteActivity;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmImage;
-import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.realm.RealmImage;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.view.adapters.recycler.ImageRecyclerAdapter;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
 
@@ -72,8 +71,8 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
         load();
 
-        if (NetworkApi.isConnected(getContext())) {
-            NetworkApi.getInstance().getImages(key)
+        if (Network.isConnected(getContext())) {
+            RetroFitRestApi.getInstance().getImages(key)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorHandlingObserverable<List<RealmImage>>() {

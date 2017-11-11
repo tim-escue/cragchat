@@ -16,10 +16,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ViewImageActivity;
-import com.cragchat.mobile.database.models.RealmImage;
-import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.realm.RealmImage;
 import com.cragchat.mobile.task.GetImageTask;
 import com.cragchat.mobile.task.TaskCallback;
+import com.cragchat.mobile.util.FileUtil;
 import com.cragchat.mobile.view.GlideApp;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
     public ImageRecyclerAdapter(@Nullable OrderedRealmCollection<RealmImage> data, boolean autoUpdate, CragChatActivity activity) {
         super(data, autoUpdate);
         this.activity = activity;
-        album = Image.getAlbumStorageDir("routedb");
+        album = FileUtil.getAlbumStorageDir("routedb");
     }
 
     @Override

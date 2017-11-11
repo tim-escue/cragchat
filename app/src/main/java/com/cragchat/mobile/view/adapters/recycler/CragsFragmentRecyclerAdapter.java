@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmArea;
 import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.realm.RealmArea;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;

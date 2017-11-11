@@ -1,5 +1,8 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -12,30 +15,54 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
-import com.cragchat.mobile.database.models.RealmRating;
+import com.cragchat.mobile.model.realm.RealmRating;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.util.FormatUtil;
-import com.cragchat.networkapi.NetworkApi;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
-public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating, RatingRecyclerAdapter.ViewHolder> {
+public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating, RatingRecyclerAdapter.ViewHolder> implements LifecycleObserver {
 
     private CragChatActivity activity;
+    private Realm mRealm;
 
-    public RatingRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRating> data, boolean autoUpdate, CragChatActivity activity) {
-        super(data, autoUpdate);
-        this.activity = activity;
+    public static RatingRecyclerAdapter create(String entityKey, CragChatActivity activity) {
+        Realm realm = Realm.getDefaultInstance();
+        return new RatingRecyclerAdapter(
+                realm.where(RealmRating.class).equalTo(RealmRating.FIELD_ENTITY_KEY, entityKey).findAll(),
+                true,
+                activity,
+                realm
+        );
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void disconnectListener() {
+        System.out.println("Actually destroyed");
+        mRealm.close();
+    }
+
+    private RatingRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRating> data, boolean autoUpdate,
+                                  CragChatActivity activity, Realm realm) {
+        super(data, autoUpdate);
+        this.activity = activity;
+        this.mRealm = realm;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_rating_username) TextView text1;
-        @BindView(R.id.item_rating_date) TextView text2;
-        @BindView(R.id.item_rating_yds) TextView text3;
-        @BindView(R.id.item_rating_stars) TextView text4;
+        @BindView(R.id.item_rating_username)
+        TextView text1;
+        @BindView(R.id.item_rating_date)
+        TextView text2;
+        @BindView(R.id.item_rating_yds)
+        TextView text3;
+        @BindView(R.id.item_rating_stars)
+        TextView text4;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -58,11 +85,11 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
         final RealmRating rating = getItem(position);
         /*String title;
         if (forProfile) {
-            title = LocalDatabase.getInstance(activity).findExact(rating.getRouteId()).getName();
+            title = Repository.getInstance(activity).findExact(rating.getRouteId()).getName();
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Displayable disp = LocalDatabase.getInstance(activity).findExact(rating.getRouteId());
+                    final Displayable disp = Repository.getInstance(activity).findExact(rating.getRouteId());
                     activity.launch(disp, 2);
                 }
             });
@@ -73,7 +100,7 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
         holder.text1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkApi.isConnected(activity)) {
+                if (Network.isConnected(activity)) {
                     Intent intent = new Intent(activity, ProfileActivity.class);
                     intent.putExtra("username", rating.getUsername());
                     activity.startActivity(intent);

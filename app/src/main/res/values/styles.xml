@@ -22,6 +22,11 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="SearchViewStyle" parent="Base.Widget.AppCompat.SearchView">
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+    </style>
+
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/primary_dark</item>
         <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>

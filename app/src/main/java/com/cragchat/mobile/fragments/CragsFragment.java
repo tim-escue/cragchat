@@ -10,12 +10,10 @@ import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmArea;
+import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.CragsFragmentRecyclerAdapter;
-import com.cragchat.networkapi.NetworkApi;
 
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 /**
@@ -50,23 +48,13 @@ public class CragsFragment extends Fragment {
                 (CragChatActivity) getActivity());
         recList.setAdapter(adapter);
 
-
-        if (NetworkApi.isConnected(getContext())) {
-            NetworkApi.getInstance().getArea(null, "Ozone").subscribeOn(Schedulers.io())
-                    .subscribe(new Consumer<RealmArea>() {
-                        @Override
-                        public void accept(final RealmArea area) throws Exception {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.insertOrUpdate(area);
-                                }
-                            });
-                            realm.close();
-                        }
-                    });
-        }
+        /*
+            RecyclerView uses a RealmAdapter which depends on realm-specific api so Repository
+            which uses abstract interfaces will not provide right type. We still call repository
+            so that local database is updated from network. RealmAdapter will auto-update
+            when the local database (Realm) is updated.
+         */
+        Repository.getAreaByName("Ozone", getContext());
 
 
         return view;

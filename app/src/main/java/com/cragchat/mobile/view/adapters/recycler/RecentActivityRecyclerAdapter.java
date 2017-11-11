@@ -1,10 +1,6 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +8,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.comments.Comment;
-import com.cragchat.mobile.model.Displayable;
-import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.model.LegacyArea;
-import com.cragchat.mobile.model.LegacyRoute;
-import com.cragchat.mobile.model.Rating;
-import com.cragchat.mobile.sql.GrabImageTask;
-import com.cragchat.mobile.sql.LocalDatabase;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -53,7 +38,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
 
     @Override
     public void onBindViewHolder(final DisplayableHolder holder, int position) {
-        final Object obj = activities.get(position);
+       /* final Object obj = activities.get(position);
         String content = "null";
         holder.divider.setVisibility(View.VISIBLE);
         if (obj instanceof Rating) {
@@ -170,7 +155,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
                 holder.text2.setVisibility(View.GONE);
             }
         }
-        holder.text1.setText(Html.fromHtml(content));
+        holder.text1.setText(Html.fromHtml(content));*/
 
     }
 

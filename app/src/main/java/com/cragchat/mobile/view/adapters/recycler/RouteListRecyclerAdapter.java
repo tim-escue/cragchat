@@ -11,8 +11,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.model.Displayable;
+import com.cragchat.mobile.model.realm.RealmRoute;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,33 +30,19 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.displayable_recycler_row, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(getItemView(parent));
+    }
+
+    public static View getItemView(ViewGroup root) {
+        return LayoutInflater.
+                from(root.getContext()).
+                inflate(R.layout.displayable_recycler_row, root, false);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final RealmRoute r = getItem(position);
-        holder.text1.setText(r.getName());
-        StringBuilder info = new StringBuilder();
-        if (r.getRatings().equals("0")) {
-            info.append("Not rated");
-        } else {
-            info.append(Displayable.getYdsString(activity, r.getYds()));
-            info.append(" ");
-            info.append(r.getStars());
-            info.append(" stars");
-        }
-        holder.text2.setText(info.toString());
-        holder.icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
-        holder.rect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.launch(r);
-            }
-        });
+        holder.bind(r, activity);
     }
 
     public void sort(String field) {
@@ -67,7 +52,7 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.list_row_one)
         TextView text1;
@@ -84,6 +69,27 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bind(final RealmRoute r, final CragChatActivity activity) {
+            text1.setText(r.getName());
+            StringBuilder info = new StringBuilder();
+            if (r.getRatings().equals("0")) {
+                info.append("Not rated");
+            } else {
+                info.append(r.getYds());
+                info.append(" ");
+                info.append(r.getStars());
+                info.append(" stars");
+            }
+            text2.setText(info.toString());
+            icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
+            rect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.launch(r);
+                }
+            });
         }
     }
 }

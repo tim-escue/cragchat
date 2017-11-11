@@ -8,17 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.AuthenticatedUser;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.authentication.AuthenticationCallback;
 import com.cragchat.mobile.fragments.NotificationDialog;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.mobile.sql.LocalDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +48,7 @@ public class MainActivity extends NavigableActivity {
     }
 
     private void setupToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("CragChat");
-        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("CragChat");
     }
 
     private void handlePermission() {
@@ -91,9 +84,9 @@ public class MainActivity extends NavigableActivity {
             if (permissions[i].equals("android.permission.WRITE_EXTERNAL_STORAGE")) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     //Log.d("Permission", "Granted permission for permission[" + i + "] " + permissions[i]);
-                    LocalDatabase.getInstance(this).updateAll(this);
+                  //  LocalDatabase.getInstance(this).updateAll(this);
                     Fragment frg = null;
-                    frg = getSupportFragmentManager().findFragmentByTag("someTag1");
+                    frg = getSupportFragmentManager().findFragmentByTag("someString1");
                     if (frg != null) {
                         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.detach(frg);

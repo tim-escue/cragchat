@@ -11,11 +11,12 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.models.RealmRating;
-import com.cragchat.mobile.database.models.RealmRoute;
-import com.cragchat.mobile.search.NavigableActivity;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
+import com.cragchat.mobile.model.realm.RealmRating;
+import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -76,26 +77,13 @@ public class RateRouteActivity extends CragChatActivity {
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
         int yds = ydsSpinner.getSelectedItemPosition();
 
-        if (NetworkApi.isConnected(this)) {
-            NetworkApi.getInstance().postRating(
+        if (Network.isConnected(this)) {
+            Repository.addRating(
                     Authentication.getAuthenticatedUser(this).getToken(),
                     stars,
                     yds,
                     entityKey
-            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorHandlingObserverable<RealmRating>() {
-                        @Override
-                        public void onSuccess(final RealmRating object) {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.insertOrUpdate(object);
-                                }
-                            });
-                            realm.close();
-                        }
-                    });
+            );
         } else {
             Toast.makeText(this, "Unable to post rating - will try again later", Toast.LENGTH_LONG).show();
         }

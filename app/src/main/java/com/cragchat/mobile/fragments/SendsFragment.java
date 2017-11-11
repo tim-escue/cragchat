@@ -14,13 +14,13 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.SubmitSendActivity;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.database.RealmDatabase;
-import com.cragchat.mobile.database.models.RealmSend;
-import com.cragchat.mobile.user.User;
+import com.cragchat.mobile.model.realm.RealmSend;
+import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
+import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.view.adapters.recycler.SendRecyclerAdapter;
-import com.cragchat.networkapi.ErrorHandlingObserverable;
-import com.cragchat.networkapi.NetworkApi;
 
 import java.util.List;
 
@@ -48,14 +48,14 @@ public class SendsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_sends, container, false);
         entityKey = getArguments().getString("entityKey");
 
-        if (NetworkApi.isConnected(getContext())) {
-            NetworkApi.getInstance().getSends(entityKey)
+        if (Network.isConnected(getContext())) {
+            Repository.getSends(entityKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new ErrorHandlingObserverable<List<RealmSend>>() {
                         @Override
                         public void onSuccess(final List<RealmSend> object) {
-                            RealmDatabase.getRealm().executeTransaction(
+                            Repository.getRealm().executeTransaction(
                                     new Realm.Transaction() {
                                         @Override
                                         public void execute(Realm realm) {

@@ -11,8 +11,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.database.models.RealmArea;
-import com.cragchat.mobile.database.models.Tag;
+import com.cragchat.mobile.model.realm.RealmArea;
 
 import java.util.List;
 
@@ -33,10 +32,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.displayable_recycler_row, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(getItemView(parent));
     }
 
     public void sort(String field) {
@@ -49,29 +45,16 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final RealmArea area = getItem(position);
-        holder.text1.setText(area.getName());
-        List<Tag> routes = area.getRoutes();
-        StringBuilder info = new StringBuilder();
-        info.append(routes.size());
-        info.append(" routes");
-        List<Tag> subAreas = area.getSubAreas();
-        if (subAreas.size() > 0) {
-            info.append(" ");
-            info.append(subAreas.size());
-            info.append(" areas");
-        }
-        holder.text2.setText(info.toString());
-        holder.icon.setImageResource(R.drawable.area_mountain);
-        holder.rect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.launch(area);
-            }
-        });
+        holder.bind(area, activity);
     }
 
+    public static View getItemView(ViewGroup root) {
+        return LayoutInflater.
+                from(root.getContext()).
+                inflate(R.layout.displayable_recycler_row, root, false);
+    }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.list_row_one)
         TextView text1;
@@ -85,9 +68,31 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
         @BindView(R.id.icon)
         ImageView icon;
 
-        ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bind(final RealmArea area, final CragChatActivity activity) {
+            text1.setText(area.getName());
+            List<String> routes = area.getRoutes();
+            StringBuilder info = new StringBuilder();
+            info.append(routes.size());
+            info.append(" routes");
+            List<String> subAreas = area.getSubAreas();
+            if (subAreas.size() > 0) {
+                info.append(" ");
+                info.append(subAreas.size());
+                info.append(" areas");
+            }
+            text2.setText(info.toString());
+            icon.setImageResource(R.drawable.area_mountain);
+            rect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.launch(area);
+                }
+            });
         }
     }
 }

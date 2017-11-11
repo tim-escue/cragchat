@@ -705,11 +705,11 @@ public class TouchImageView extends ImageView {
         } else {
             //
             // Find the area of the image which was previously centered in the view. Determine its distance
-            // from the left/top side of the view as a fraction of the entire image's width/height. Use that percentage
+            // from the left/top side of the view as a fraction of the entire image's width/height. Use that percenStringe
             // to calculate the trans in the new view width/height.
             //
-            float percentage = (Math.abs(trans) + (0.5f * prevViewSize)) / prevImageSize;
-            m[axis] = -((percentage * imageSize) - (viewSize * 0.5f));
+            float percenStringe = (Math.abs(trans) + (0.5f * prevViewSize)) / prevImageSize;
+            m[axis] = -((percenStringe * imageSize) - (viewSize * 0.5f));
         }
     }
 
