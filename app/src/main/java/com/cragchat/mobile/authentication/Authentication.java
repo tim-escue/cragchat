@@ -56,11 +56,14 @@ public class Authentication {
         setTokenAndUsername(context, user.getToken(), user.getName());
     }
 
-    public static void register(final Context context, String username, String password, final AuthenticationCallback callback) {
-        mProvider.register(username, password, new AuthenticationCallback() {
+    public static void register(final Context context, String username, String password, String email,
+                                final boolean autoLogin, final AuthenticationCallback callback) {
+        mProvider.register(username, password, email, new AuthenticationCallback() {
             @Override
             public void onAuthenticateSuccess(AuthenticatedUser justLoggedIn) {
-                setUser(context, justLoggedIn);
+                if (autoLogin) {
+                    setUser(context, justLoggedIn);
+                }
                 if (callback != null) {
                     callback.onAuthenticateSuccess(justLoggedIn);
                 }

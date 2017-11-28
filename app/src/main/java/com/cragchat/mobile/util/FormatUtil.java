@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by tim on 8/12/17.
@@ -27,7 +28,9 @@ public class FormatUtil {
 
     static {
         RAW_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        RAW_FORMAT.setTimeZone(TimeZone.getTimeZone("PST"));
         MONTH_DAY_YEAR = new SimpleDateFormat("MMMM d, yyyy");
+        MONTH_DAY_YEAR.setTimeZone(TimeZone.getTimeZone("PST"));
     }
 
     public static String getFormattedDate(String rawDateString) {

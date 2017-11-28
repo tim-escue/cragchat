@@ -1,58 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ozone">
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <include
+        android:id="@+id/tb"
+        layout="@layout/simple_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tb"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:text="Sign up"
+        android:textColor="@color/black"
+        android:textSize="48sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:layout_marginBottom="4dp">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/register_username"
-            android:hint="Username"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/register_email"
-            android:hint="Email"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/register_email_confirm"
-            android:hint="Register Email"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/register_password"
-            android:inputType="textPassword"
-            android:layout_width="200dp"
-            android:hint="Password"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/register_password_verify"
-            android:inputType="textPassword"
-            android:layout_width="200dp"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Verify password" />
+            android:textColorHint="@color/secondary_text">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/register_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/register_password_verify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Verify Password"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"
+            android:layout_gravity="center_horizontal"
             android:clickable="true"
-            android:onClick="register" />
+            android:onClick="register"
+            android:text="Register" />
 
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,18 +1,16 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ViewImageActivity;
@@ -20,77 +18,75 @@ import com.cragchat.mobile.model.realm.RealmImage;
 import com.cragchat.mobile.task.GetImageTask;
 import com.cragchat.mobile.task.TaskCallback;
 import com.cragchat.mobile.util.FileUtil;
-import com.cragchat.mobile.view.GlideApp;
+import com.cragchat.mobile.view.adapters.recycler.viewholder.ImageRecyclerViewHolder;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
-public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, ImageRecyclerAdapter.ViewHolder> {
+public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, ImageRecyclerViewHolder> implements LifecycleObserver {
 
     private CragChatActivity activity;
     private File album;
+    private Realm mRealm;
+    private String entityKey;
 
-    public ImageRecyclerAdapter(@Nullable OrderedRealmCollection<RealmImage> data, boolean autoUpdate, CragChatActivity activity) {
+    public static ImageRecyclerAdapter create(String entityKey, CragChatActivity activity) {
+        Realm realm = Realm.getDefaultInstance();
+        return new ImageRecyclerAdapter(
+                realm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, entityKey).findAll(),
+                true, activity, entityKey, realm);
+    }
+
+    private ImageRecyclerAdapter(@Nullable OrderedRealmCollection<RealmImage> data
+            , boolean autoUpdate, CragChatActivity activity, String entityKey, Realm realm) {
         super(data, autoUpdate);
         this.activity = activity;
         album = FileUtil.getAlbumStorageDir("routedb");
+        this.mRealm = realm;
+        this.entityKey = entityKey;
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void disconnectListener() {
+        System.out.println("Lifecycle: Actually destroyed images");
+        mRealm.close();
+    }
+
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
+    public ImageRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ImageRecyclerViewHolder(getItemView(parent));
+    }
+
+    public static View getItemView(ViewGroup parent) {
+        return LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.image_item, parent, false);
-        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ImageRecyclerViewHolder holder, int position) {
         final RealmImage image = getItem(position);
         if (image != null) {
-            holder.authorName.setText(image.getAuthorName());
-            if (image.getCaption().isEmpty()) {
-                holder.caption.setVisibility(View.GONE);
-            } else {
-                holder.caption.setVisibility(View.VISIBLE);
-                holder.caption.setText(image.getCaption());
-            }
-
-            final String localPath = album.getPath() + "/" + image.getFilename();
-            final String remotePath = "http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com/static/" + image.getFilename();
-
-            File localImage = new File(localPath);
-
-            if (localImage.exists()) {
-                GlideApp.with(activity)
-                        .load(localImage)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(holder.image);
-                holder.imageCard.setOnClickListener(new OpenImageListener(image.getFilename(), localPath, image.getEntityKey()));
-            } else {
-                GlideApp.with(activity)
-                        .load(R.drawable.tap_to_load)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(holder.image);
-                holder.imageCard.setOnClickListener(new LoadImageListener(holder, image.getFilename(), localPath, remotePath, image.getEntityKey()));
-            }
+            holder.bind(image, album, activity);
         }
     }
 
-    class OpenImageListener implements View.OnClickListener {
+    public static class OpenImageListener implements View.OnClickListener {
         private String localPath;
         private String imageFileName;
         private String entityKey;
+        private Context activity;
 
-        OpenImageListener(String imageFileName, String localPath, String entityKey) {
+        public OpenImageListener(String imageFileName, String localPath, String entityKey, Context activity) {
             this.localPath = localPath;
             this.imageFileName = imageFileName;
             this.entityKey = entityKey;
+            this.activity = activity;
         }
 
         @Override
@@ -104,19 +100,21 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
 
     }
 
-    class LoadImageListener implements View.OnClickListener {
+    public static class LoadImageListener implements View.OnClickListener {
 
-        private ViewHolder holder;
+        private ImageRecyclerViewHolder holder;
         private String localPath;
         private String remotePath;
         private String imageKey;
         private String entityKey;
+        private Context activity;
 
-        public LoadImageListener(ViewHolder holder, String imageKey, String localPath, String remotePath, String entityKey) {
+        public LoadImageListener(ImageRecyclerViewHolder holder, String imageKey, String localPath, String remotePath, String entityKey, Context activity) {
             this.holder = holder;
             this.localPath = localPath;
             this.remotePath = remotePath;
             this.imageKey = imageKey;
+            this.activity = activity;
             this.entityKey = entityKey;
         }
 
@@ -148,7 +146,7 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
                     }
 
                     holder.image.setImageBitmap(result);
-                    holder.imageCard.setOnClickListener(new OpenImageListener(imageKey, localPath, entityKey));
+                    holder.imageCard.setOnClickListener(new OpenImageListener(imageKey, localPath, entityKey, activity));
                     holder.image.setVisibility(View.VISIBLE);
                     holder.progressBar.setVisibility(View.GONE);
                     if (!holder.caption.getText().toString().isEmpty()) {
@@ -161,23 +159,4 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
 
     }
 
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.caption)
-        TextView caption;
-        @BindView(R.id.image)
-        ImageView image;
-        @BindView(R.id.author_name)
-        TextView authorName;
-        @BindView(R.id.image_card)
-        CardView imageCard;
-        @BindView(R.id.image_progress)
-        ProgressBar progressBar;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 }

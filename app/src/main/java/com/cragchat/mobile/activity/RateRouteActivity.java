@@ -7,19 +7,12 @@ import android.text.Spanned;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.realm.RealmRating;
 import com.cragchat.mobile.model.realm.RealmRoute;
-import com.cragchat.mobile.network.Network;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 public class RateRouteActivity extends CragChatActivity {
@@ -77,16 +70,13 @@ public class RateRouteActivity extends CragChatActivity {
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
         int yds = ydsSpinner.getSelectedItemPosition();
 
-        if (Network.isConnected(this)) {
             Repository.addRating(
                     Authentication.getAuthenticatedUser(this).getToken(),
                     stars,
                     yds,
-                    entityKey
+                    entityKey,
+                    null
             );
-        } else {
-            Toast.makeText(this, "Unable to post rating - will try again later", Toast.LENGTH_LONG).show();
-        }
         Realm realm = Realm.getDefaultInstance();
         RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
         realm.close();

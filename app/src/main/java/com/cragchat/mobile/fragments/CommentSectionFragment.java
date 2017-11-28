@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -19,21 +20,12 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.model.Comment;
-import com.cragchat.mobile.model.realm.RealmComment;
-import com.cragchat.mobile.network.Network;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
-import com.cragchat.mobile.view.adapters.recycler.NewCommentRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.CommentRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 
 /**
  * Created by timde on 10/20/2017.
@@ -41,10 +33,31 @@ import io.realm.Realm;
 
 public class CommentSectionFragment extends Fragment implements View.OnClickListener {
 
-    private NewCommentRecyclerAdapter adapter;
-    private Realm mRealm;
+    private CommentRecyclerAdapter adapter;
     private String mEntityId;
     private String table;
+    private Callback<List<Comment>> commentsCallback = new Callback<List<Comment>>() {
+        @Override
+        public void onSuccess(List<Comment> objects) {
+            adapter.update(objects);
+        }
+
+        @Override
+        public void onFailure() {
+
+        }
+    };
+    private Callback<Comment> newCommentCallback = new Callback<Comment>() {
+        @Override
+        public void onSuccess(Comment objects) {
+            adapter.updateSingle(objects);
+        }
+
+        @Override
+        public void onFailure() {
+
+        }
+    };
 
     public static CommentSectionFragment newInstance(String entityId, String table) {
         CommentSectionFragment f = new CommentSectionFragment();
@@ -64,46 +77,28 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
         mEntityId = getArguments().getString("entityId");
         table = getArguments().getString("table");
 
-        mRealm = Realm.getDefaultInstance();
+
+        adapter = new CommentRecyclerAdapter(getContext(),
+                Repository.getComments(mEntityId, table, commentsCallback), table, mEntityId);
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner_comment_sort);
         final ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
                 R.array.spinner_comment_sort_options, R.layout.spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterSpinner);
-        //spinner.setOnItemSelectedListener(listener);
+        spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapter.sort(i);
+            }
 
-        final List<RealmComment> comments = mRealm.copyFromRealm(mRealm.where(RealmComment.class)
-                .equalTo(RealmComment.FIELD_ENTITY_ID, mEntityId)
-                .equalTo(RealmComment.FIELD_TABLE, table)
-                .findAll());
-        adapter = new NewCommentRecyclerAdapter(getContext(), comments, table, mEntityId);
-        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
-        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-        if (Network.isConnected(getContext())) {
-            Repository.getComments(mEntityId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorHandlingObserverable<List<RealmComment>>() {
-                        @Override
-                        public void onSuccess(final List<RealmComment> realmComments) {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.insertOrUpdate(realmComments);
-                                }
-                            });
-                            final List<RealmComment> copied = realm.copyFromRealm(realm.where(RealmComment.class)
-                                    .equalTo(RealmComment.FIELD_ENTITY_ID, mEntityId)
-                                    .equalTo(RealmComment.FIELD_TABLE, table)
-                                    .findAll());
-                            realm.close();
-                            adapter.update(copied);
-                        }
-                    });
-        }
+            }
+        });
 
         return view;
     }
@@ -112,20 +107,21 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
             if (Authentication.isLoggedIn(getContext())) {
-                final EditText txtUrl = new EditText(getContext());
-                AlertDialog dialog = getAddCommentDialog(adapter, null, getContext(), mEntityId, table, null);
-                dialog.show();
+                getAddCommentDialog(adapter, null, getContext(),
+                        mEntityId, table, null, newCommentCallback).show();
             } else {
-                Toast.makeText(getContext(), "Must be logged in to add a comment", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),
+                        "Must be logged in to add a comment", Toast.LENGTH_LONG).show();
             }
         }
 
     }
 
-    public static AlertDialog getAddCommentDialog(final NewCommentRecyclerAdapter adapter,
-                                                  String currentText, final Context context,
+    public static AlertDialog getAddCommentDialog(final CommentRecyclerAdapter adapter,
+                                                  final String currentText, final Context context,
                                                   final String entityId, final String table,
-                                                  final Comment commentToEdit) {
+                                                  final Comment commentToEdit,
+                                                  final Callback<Comment> callback) {
         final EditText editText = new EditText(context);
         if (currentText != null && !currentText.isEmpty()) {
             editText.setText(currentText);
@@ -137,50 +133,15 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            if (Network.isConnected(context)) {
                                 String token = Authentication.getAuthenticatedUser(context).getToken();
-                                Observable<RealmComment> call;
                                 if (commentToEdit != null) {
-                                    call = RetroFitRestApi.getInstance().postCommentEdit(
-                                            token,
-                                            comment,
-                                            commentToEdit.getKey()
-                                    );
+                                    Repository.editComment(token, comment,
+                                            commentToEdit.getKey(), callback);
                                 } else {
-                                    call = RetroFitRestApi.getInstance().postComment(
-                                            token,
-                                            comment,
-                                            entityId,
-                                            table
-                                    );
-                                    Repository.addComment(token, comment, entityId, table);
-                                    //todo: register this fragment as obserer to addcomment
+                                    Repository.addComment(token, comment,
+                                            entityId, table, callback);
                                 }
-                                call.subscribeOn(Schedulers.io()).
-                                        observeOn(AndroidSchedulers.mainThread()).
-                                        subscribe(new ErrorHandlingObserverable<RealmComment>() {
-                                            @Override
-                                            public void onSuccess(final RealmComment realmComment) {
-                                                Realm realm = Realm.getDefaultInstance();
-                                                realm.executeTransaction(new Realm.Transaction() {
-                                                    @Override
-                                                    public void execute(Realm realm) {
-                                                        realm.insertOrUpdate(realmComment);
-                                                    }
-                                                });
-                                                final List<RealmComment> copied = realm.copyFromRealm(realm.where(RealmComment.class)
-                                                        .equalTo(RealmComment.FIELD_ENTITY_ID, entityId)
-                                                        .equalTo(RealmComment.FIELD_TABLE, table)
-                                                        .findAll());
-                                                realm.close();
-                                                adapter.update(copied);
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(context,
-                                        "Cannot post comment while offline - queuing to add when connection is re-established",
-                                        Toast.LENGTH_LONG).show();
-                            }
+
                         } else {
                             Toast.makeText(context, "Can't add empty comment", Toast.LENGTH_SHORT).show();
                         }
@@ -192,7 +153,9 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                                 .setMessage("Are you sure you want to cancel this comment?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        getAddCommentDialog(adapter, editText.getText().toString(), context, entityId, table, commentToEdit).show();
+                                        getAddCommentDialog(adapter, editText.getText().toString(),
+                                                context, entityId, table, commentToEdit, callback)
+                                                .show();
                                     }
                                 })
                                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
@@ -211,10 +174,11 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
         return dialog;
     }
 
-    public static AlertDialog getReplyCommentDialog(final NewCommentRecyclerAdapter adapter,
+    public static AlertDialog getReplyCommentDialog(final CommentRecyclerAdapter adapter,
                                                     String currentText, final Context context,
                                                     final String entityId, final String table,
-                                                    final String parentId, final int depth) {
+                                                    final String parentId, final int depth,
+                                                    final Callback<Comment> callback) {
         final EditText editText = new EditText(context);
         editText.setHint("Enter comment here");
         if (currentText != null && !currentText.isEmpty()) {
@@ -227,42 +191,16 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            if (Network.isConnected(context)) {
                                 String token = Authentication.getAuthenticatedUser(context).getToken();
-                                RetroFitRestApi.getInstance().postCommentReply(
+                            Repository.replyToComment(
                                         token,
                                         comment,
                                         entityId,
                                         table,
                                         parentId,
-                                        depth
-                                )
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new Consumer<RealmComment>() {
-                                            @Override
-                                            public void accept(final RealmComment realmComment) throws Exception {
-                                                Realm realm = Realm.getDefaultInstance();
-                                                realm.executeTransaction(new Realm.Transaction() {
-                                                    @Override
-                                                    public void execute(Realm realm) {
-                                                        realm.insertOrUpdate(realmComment);
-                                                    }
-                                                });
-                                                final List<RealmComment> copied = realm.copyFromRealm(realm.where(RealmComment.class)
-                                                        .equalTo(RealmComment.FIELD_ENTITY_ID, entityId)
-                                                        .equalTo(RealmComment.FIELD_TABLE, table)
-                                                        .findAll());
-                                                realm.close();
-                                                adapter.update(copied);
-                                            }
-                                        });
-
-                            } else {
-                                Toast.makeText(context,
-                                        "Cannot post comment while offline - queuing to add when connection is re-established",
-                                        Toast.LENGTH_LONG).show();
-                            }
+                                    depth,
+                                    callback
+                            );
                         } else {
                             Toast.makeText(context, "Can't add empty comment", Toast.LENGTH_SHORT).show();
                         }
@@ -276,7 +214,8 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                                 .setMessage("Are you sure you want to cancel this comment?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        getReplyCommentDialog(adapter, editText.getText().toString(), context, entityId, table, parentId, depth).show();
+                                        getReplyCommentDialog(adapter, editText.getText().toString(),
+                                                context, entityId, table, parentId, depth, callback).show();
                                     }
                                 })
                                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
@@ -293,11 +232,5 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                 }).create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
     }
 }

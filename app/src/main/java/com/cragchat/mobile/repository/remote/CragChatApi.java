@@ -1,14 +1,13 @@
 package com.cragchat.mobile.repository.remote;
 
 import com.cragchat.mobile.authentication.AuthenticatedUser;
+import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.pojo.PojoArea;
 import com.cragchat.mobile.model.pojo.PojoComment;
+import com.cragchat.mobile.model.pojo.PojoImage;
 import com.cragchat.mobile.model.pojo.PojoRating;
 import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.realm.RealmComment;
-import com.cragchat.mobile.model.realm.RealmImage;
-import com.cragchat.mobile.model.realm.RealmRating;
-import com.cragchat.mobile.model.realm.RealmSend;
+import com.cragchat.mobile.model.pojo.PojoSend;
 
 import java.util.List;
 
@@ -31,17 +30,21 @@ import retrofit2.http.Query;
 
 public interface CragChatApi {
 
-    public static final String TYPE_AREA = "area";
-    public static final String TYPE_ROUTE = "route";
-
     @GET("/api/sends")
-    Observable<List<RealmSend>> getSends(
+    Observable<List<PojoSend>> getSends(
             @Query("entity_key") String entityKey
+    );
+
+    @GET("/api/recentactivity")
+    Observable<List<Datable>> getRecentActivity(
+            @Query("entity_key") String entityKey,
+            @Query("area_ids") List<String> areaIds,
+            @Query("route_ids") List<String> routeIds
     );
 
     @FormUrlEncoded
     @POST("/api/sends")
-    Observable<RealmSend> postSend(
+    Observable<PojoSend> postSend(
             @Field("user_token") String user_token,
             @Field("entity_key") String entityKey,
             @Field("pitches") int pitches,
@@ -66,7 +69,7 @@ public interface CragChatApi {
 
     @Multipart
     @POST("/api/image")
-    Observable<RealmImage> postImage(
+    Observable<PojoImage> postImage(
             @Part MultipartBody.Part image,
             @Part("user_token") RequestBody userToken,
             @Part("caption") RequestBody caption,
@@ -75,7 +78,7 @@ public interface CragChatApi {
     );
 
     @GET("/api/image")
-    Observable<List<RealmImage>> getImages(
+    Observable<List<PojoImage>> getImages(
             @Query("entity_key") String entity_key
     );
 
@@ -134,9 +137,21 @@ public interface CragChatApi {
             @Query("password") String password
     );
 
+    @GET("/register")
+    Observable<ResponseBody> register(
+            @Query("username") String userName,
+            @Query("password") String password,
+            @Query("email") String email
+    );
+
     @GET("/route")
     Observable<List<PojoRoute>> getRoutes(
             @Query("multiple") String stringJsonArray
+    );
+
+    @GET("/route")
+    Observable<PojoRoute> getRoute(
+            @Query("key") String key
     );
 
     @GET("/area")

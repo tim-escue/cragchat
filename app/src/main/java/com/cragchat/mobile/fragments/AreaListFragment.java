@@ -54,7 +54,7 @@ public class AreaListFragment extends Fragment {
 
         areaIds = getArguments().getStringArray(IDS_String);
 
-        Repository.getAreas(areaIds, getContext());
+        Repository.getAreas(areaIds, null);
 
         mRealm = Realm.getDefaultInstance();
 

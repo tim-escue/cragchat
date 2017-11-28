@@ -1,13 +1,13 @@
 package com.cragchat.mobile.model.pojo;
 
-import io.realm.annotations.Index;
-import io.realm.annotations.PrimaryKey;
+import com.cragchat.mobile.model.Datable;
+import com.cragchat.mobile.model.Rating;
 
 /**
  * Created by timde on 11/10/2017.
  */
 
-public class PojoRating {
+public class PojoRating implements Datable, Rating {
 
     private String entityKey;
     private String key;

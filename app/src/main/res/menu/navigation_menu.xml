@@ -4,10 +4,16 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/inbox"
+            android:id="@+id/login"
             android:checked="false"
             android:icon="@drawable/user"
-            android:title="Profile" />
+            android:title="Login" />
+
+        <item
+            android:id="@+id/signout"
+            android:checked="false"
+            android:icon="@drawable/user"
+            android:title="Sign Out" />
 
     </group>
 </menu>

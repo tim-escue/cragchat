@@ -46,7 +46,7 @@ public class RatingFragment extends Fragment implements View.OnClickListener {
             relies upon an instance of Realm and Reposity can not expose Realm API
             in order to preserve CLEAN architecture.
          */
-        Repository.getRatings(entityKey);
+        Repository.getRatings(entityKey, null);
         adapter = RatingRecyclerAdapter.create(entityKey, (CragChatActivity) getActivity());
 
         RecyclerView recyclerView = view.findViewById(R.id.list_ratings);

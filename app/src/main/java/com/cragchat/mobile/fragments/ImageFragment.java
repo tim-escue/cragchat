@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,20 +19,16 @@ import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
 import com.cragchat.mobile.activity.RouteActivity;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.realm.RealmImage;
-import com.cragchat.mobile.network.Network;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
+import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.repository.Callback;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.ImageRecyclerAdapter;
+import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class ImageFragment extends Fragment implements View.OnClickListener {
@@ -40,7 +36,6 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
     public static final int PICK_IMAGE = 873;
     private String key;
     private ImageRecyclerAdapter adap;
-    private Realm mRealm;
 
     @BindView(R.id.list_empty)
     TextView empty;
@@ -63,57 +58,46 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
         ButterKnife.bind(this, view);
 
-        mRealm = Realm.getDefaultInstance();
-
         key = getArguments().getString("id");
-
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         load();
 
-        if (Network.isConnected(getContext())) {
-            RetroFitRestApi.getInstance().getImages(key)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorHandlingObserverable<List<RealmImage>>() {
-                        @Override
-                        public void onSuccess(final List<RealmImage> object) {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.insertOrUpdate(object);
-                                }
-                            });
-                            realm.close();
-                            adap.updateData(mRealm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, key).findAll());
-                            if (object.size() > 0) {
-                                empty.setVisibility(View.GONE);
-                            }
+        /*
+            Called with a null callback because the adapter consumes Realm API and handles
+            updating data internally. Method is called simply to update local data from remote.
+         */
+        if (Repository.getImages(key, new Callback<List<Image>>() {
+            @Override
+            public void onSuccess(List<Image> object) {
+                hideEmptyIfShowing();
+            }
 
-                        }
-                    });
+            @Override
+            public void onFailure() {
+
+            }
+        }) != null) {
+            hideEmptyIfShowing();
         }
-
 
         return view;
     }
 
-    public void load() {
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        RealmResults<RealmImage> images = mRealm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, key).findAll();
-        adap = new ImageRecyclerAdapter(images, true, (CragChatActivity) getActivity());
-        recyclerView.setAdapter(adap);
-        if (images.size() > 0) {
+    private void hideEmptyIfShowing() {
+        if (empty.getVisibility() == View.VISIBLE) {
             empty.setVisibility(View.GONE);
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
+    public void load() {
+        //recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adap = ImageRecyclerAdapter.create(key, (CragChatActivity) getActivity());
+        RecyclerUtils.setAdapterAndManager(recyclerView, adap, LinearLayoutManager.VERTICAL);
+        //recyclerView.setAdapter(adap);
+        this.getLifecycle().addObserver(adap);
     }
+
 
     @Override
     public void onClick(View view) {

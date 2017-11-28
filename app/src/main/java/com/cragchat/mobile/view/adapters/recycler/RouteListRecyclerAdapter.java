@@ -1,5 +1,8 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,16 +19,40 @@ import com.cragchat.mobile.model.realm.RealmRoute;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmRecyclerViewAdapter;
 import io.realm.Sort;
 
-public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRoute, RouteListRecyclerAdapter.ViewHolder> {
+public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRoute, RouteListRecyclerAdapter.ViewHolder> implements LifecycleObserver {
 
     private CragChatActivity activity;
+    private Realm mRealm;
+    private String[] routeIds;
 
-    public RouteListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRoute> data, boolean autoUpdate, CragChatActivity activity) {
+    public static RouteListRecyclerAdapter create(String[] routeIds, CragChatActivity activity) {
+        Realm realm = Realm.getDefaultInstance();
+        return new RouteListRecyclerAdapter(
+                realm.where(RealmRoute.class).in(RealmRoute.FIELD_KEY, routeIds).findAll(),
+                true,
+                routeIds,
+                activity,
+                realm
+        );
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void disconnectListener() {
+        System.out.println("Lifecycle: Actually destroyed");
+        mRealm.close();
+    }
+
+    private RouteListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRoute> data, boolean autoUpdate,
+                                     String[] routeIds, CragChatActivity activity, Realm realm) {
         super(data, autoUpdate);
         this.activity = activity;
+        this.mRealm = realm;
+        this.routeIds = routeIds;
     }
 
     @Override
@@ -43,6 +70,21 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final RealmRoute r = getItem(position);
         holder.bind(r, activity);
+    }
+
+    public void filter(boolean showSport, boolean showTrad, boolean showMixed) {
+        RealmQuery<RealmRoute> routeQuery = mRealm.where(RealmRoute.class)
+                .in(RealmRoute.FIELD_KEY, routeIds);
+        if (!showSport) {
+            routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Sport");
+        }
+        if (!showTrad) {
+            routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Trad");
+        }
+        if (!showMixed) {
+            routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Sport,Trad");
+        }
+        updateData(routeQuery.findAll());
     }
 
     public void sort(String field) {

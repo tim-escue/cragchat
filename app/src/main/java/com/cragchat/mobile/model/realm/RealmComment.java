@@ -1,10 +1,9 @@
 package com.cragchat.mobile.model.realm;
 
+import com.cragchat.mobile.model.Comment;
 import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.pojo.PojoComment;
 import com.cragchat.mobile.util.RealmUtil;
-
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -15,7 +14,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by timde on 10/20/2017.
  */
 
-public class RealmComment extends RealmObject implements Datable {
+public class RealmComment extends RealmObject implements Comment, Datable {
 
     public static final String FIELD_COMMENT = "comment";
     public static final String FIELD_SCORE = "score";
@@ -27,6 +26,7 @@ public class RealmComment extends RealmObject implements Datable {
     public static final String FIELD_AUTHOR = "authorName";
     public static final String FIELD_CHILDREN_IDS = "childrenIds";
     public static final String FIELD_TABLE = "table";
+    public static final String FIELD_ENTITY_NAME = "entityName";
 
     private String comment;
     private int score;
@@ -40,6 +40,7 @@ public class RealmComment extends RealmObject implements Datable {
     private String authorName;
     private RealmList<String> childrenIds;
     private String table;
+    private String entityName;
 
     public static RealmComment from(PojoComment comment) {
         RealmComment realmComment = new RealmComment();
@@ -53,7 +54,16 @@ public class RealmComment extends RealmObject implements Datable {
         realmComment.setAuthorName(comment.getAuthorName());
         realmComment.setTable(comment.getTable());
         realmComment.setChildrenIds(RealmUtil.convertListToRealmList(comment.getChildrenIds()));
+        realmComment.setEntityName(comment.getEntityName());
         return realmComment;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     public String getComment() {

@@ -11,11 +11,11 @@ import com.cragchat.mobile.fragments.ImageFragment;
 import com.cragchat.mobile.fragments.LocationFragment;
 import com.cragchat.mobile.fragments.RatingFragment;
 import com.cragchat.mobile.fragments.SendsFragment;
-import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.model.Route;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
-    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, RealmRoute route) {
+    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, Route route) {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
         addFragment(context.getString(R.string.title_beta),

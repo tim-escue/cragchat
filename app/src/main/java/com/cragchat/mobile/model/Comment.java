@@ -2,32 +2,32 @@ package com.cragchat.mobile.model;
 
 import java.util.List;
 
-import io.realm.RealmList;
-
 /**
  * Created by timde on 11/10/2017.
  */
 
 public interface Comment {
 
-     String getComment();
+    String getComment();
 
-     int getScore();
+    int getScore();
 
-     String getDate();
+    String getDate();
 
-     String getKey();
+    String getKey();
 
-     String getEntityId();
+    String getEntityId();
 
-     String getParentId();
+    String getEntityName();
 
-     int getDepth();
+    String getParentId();
 
-     String getAuthorName();
+    int getDepth();
 
-     List<String> getChildrenIds();
+    String getAuthorName();
 
-     String getTable();
+    List<String> getChildrenIds();
+
+    String getTable();
 
 }

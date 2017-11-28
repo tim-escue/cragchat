@@ -19,7 +19,6 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
 
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -57,15 +56,23 @@
                 android:value="com.cragchat.mobile.activity.SearchActivity" />
         </activity>
 
-        <activity android:name="com.cragchat.mobile.activity.LoginActivity" />
+        <activity
+            android:name="com.cragchat.mobile.activity.LoginActivity"
+            android:label="Login" />
 
-        <activity android:name="com.cragchat.mobile.activity.RegisterActivity" />
+        <activity
+            android:name="com.cragchat.mobile.activity.RegisterActivity"
+            android:label="Register" />
 
         <activity android:name="com.cragchat.mobile.activity.EditImageActivity" />
 
-        <activity android:name="com.cragchat.mobile.activity.RateRouteActivity" />
+        <activity
+            android:name="com.cragchat.mobile.activity.RateRouteActivity"
+            android:label="Add Rating" />
 
-        <activity android:name="com.cragchat.mobile.activity.SubmitSendActivity" />
+        <activity
+            android:name="com.cragchat.mobile.activity.SubmitSendActivity"
+            android:label="Add Send" />
 
         <activity android:name="com.cragchat.mobile.activity.SearchActivity">
             <intent-filter>

@@ -10,6 +10,7 @@ import com.cragchat.mobile.fragments.AreaListFragment;
 import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.fragments.ImageFragment;
 import com.cragchat.mobile.fragments.LocationFragment;
+import com.cragchat.mobile.fragments.RecentActivityFragment;
 import com.cragchat.mobile.fragments.RouteListFragment;
 import com.cragchat.mobile.model.Area;
 
@@ -20,8 +21,8 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
                                     FloatingActionButton floatingActionButton) {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
-        /*addFragment(context.getString(R.string.title_recent_activity),
-                RecentActivityFragment.newInstance(-343), false, false);*/
+        addFragment(context.getString(R.string.title_recent_activity),
+                RecentActivityFragment.newInstance(area.getKey()), false, false);
 
         RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
                 area.getRoutes().toArray(new String[area.getRoutes().size()]));
@@ -29,7 +30,6 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
                 routeList,
                 false,
                 false);
-
 
         if (area.getSubAreas().size() > 0) {
             AreaListFragment areaFragment = AreaListFragment.newInstance(area.getKey(),

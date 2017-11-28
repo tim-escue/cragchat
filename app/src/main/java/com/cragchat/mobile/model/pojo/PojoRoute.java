@@ -1,12 +1,14 @@
 package com.cragchat.mobile.model.pojo;
 
+import com.cragchat.mobile.model.Route;
+
 import java.util.List;
 
 /**
  * Created by timde on 11/9/2017.
  */
 
-public class PojoRoute {
+public class PojoRoute implements Route {
 
     private String key;
     private String name;

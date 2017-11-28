@@ -29,12 +29,12 @@ public class MainActivity extends NavigableActivity {
         setupToolBar();
 
         handlePermission();
-        Authentication.logout(this);
         if (!Authentication.isLoggedIn(this)) {
             Authentication.login(this, "testaccount3", "testaccount3", new AuthenticationCallback() {
                 @Override
                 public void onAuthenticateSuccess(AuthenticatedUser user) {
                     System.out.println("Successfull login" + user.getName());
+                    setupNavMenu();
                 }
 
                 @Override

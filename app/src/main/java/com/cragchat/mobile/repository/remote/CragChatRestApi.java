@@ -1,24 +1,51 @@
 package com.cragchat.mobile.repository.remote;
 
-import android.content.Context;
-
+import com.cragchat.mobile.authentication.AuthenticatedUser;
+import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.pojo.PojoArea;
 import com.cragchat.mobile.model.pojo.PojoComment;
+import com.cragchat.mobile.model.pojo.PojoImage;
 import com.cragchat.mobile.model.pojo.PojoRating;
 import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.realm.RealmComment;
+import com.cragchat.mobile.model.pojo.PojoSend;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.http.Field;
 
 /**
  * Created by timde on 11/9/2017.
  */
 
 public interface CragChatRestApi {
+
+    Observable<List<Datable>> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds);
+
+    Observable<List<PojoSend>> getSends(String entityKey);
+
+    Observable<PojoSend> postSend(String user_token, String entityKey, int pitches,
+                                  int attempts, String sendType, String climbingStyle);
+
+    Observable<PojoComment> postCommentVote(String userToken, String vote, String commentKey);
+
+    Observable<AuthenticatedUser> login(String userName, String password);
+
+    Observable<ResponseBody> register(String userName, String password, String email);
+
+    Observable<PojoComment> postCommentReply(String userToken, String comment, String entityKey,
+                                             String table, String parentId, int depth);
+
+    Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken,
+                                    RequestBody caption, RequestBody entityKey, RequestBody entityType);
+
+    Observable<List<PojoImage>> getImages(String entityKey);
+
+    Observable<PojoComment> postCommentEdit(String userToken, String comment, String entityKey);
+
+    Observable<List<PojoComment>> getComments(String entityId);
 
     Observable<List<PojoRating>> getRatings(String entityKey);
 

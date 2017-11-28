@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -21,13 +20,12 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.fragments.ColorPickerDialog;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmImage;
 import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
 import com.cragchat.mobile.util.FileUtil;
 import com.cragchat.mobile.view.ImageEditView;
 import com.flask.colorpicker.ColorPickerView;
@@ -43,13 +41,9 @@ import java.io.InputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 import static android.view.View.GONE;
 
@@ -244,41 +238,27 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                 if (out != null) {
                     out.close();
                 }
-                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), newFile);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
-                        newFile.getName(), reqFile);
-                RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"),
-                        Authentication.getAuthenticatedUser(this).getToken());
                 if (captionString == null) {
                     captionString = "";
                 }
-                RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), captionString);
                 String entityKey;
                 if (entity instanceof RealmRoute) {
                     entityKey = ((RealmRoute) entity).getKey();
                 } else {
                     entityKey = ((RealmArea) entity).getKey();
                 }
-                RequestBody entityTypeRequest = RequestBody.create(MediaType.parse("text/plain"), entityType);
-                RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
+                Repository.addImage(captionString, entityKey, entityType, newFile,
+                        new Callback<Image>() {
+                            @Override
+                            public void onSuccess(Image object) {
+                                newFile.delete();
+                            }
 
-                Repository.addImage(body, userToken, caption, entityKeyRequest, entityTypeRequest)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new ErrorHandlingObserverable<RealmImage>() {
-                                       @Override
-                                       public void onSuccess(final RealmImage object) {
-                                           Realm realm = Realm.getDefaultInstance();
-                                           realm.executeTransaction(new Realm.Transaction() {
-                                               @Override
-                                               public void execute(@NonNull Realm realm) {
-                                                   realm.copyToRealmOrUpdate(object);
-                                               }
-                                           });
-                                           realm.close();
-                                           newFile.delete();
-                                       }
-                                   }
-                        );
+                            @Override
+                            public void onFailure() {
+
+                            }
+                        });
                 if (entity instanceof RealmRoute) {
                     launch((RealmRoute) entity);
                 } else {

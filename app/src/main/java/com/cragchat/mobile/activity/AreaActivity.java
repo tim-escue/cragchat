@@ -31,7 +31,7 @@ public class AreaActivity extends SearchableActivity {
         floatingActionButton = findViewById(R.id.add_button);
 
         String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        area = Repository.getArea(areaKey, this);
+        area = Repository.getArea(areaKey, null);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);

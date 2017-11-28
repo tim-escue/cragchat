@@ -4,25 +4,26 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 
 public class NavigableActivity extends CragChatActivity {
 
-    public static final String USE_HOME_ICON = "USE_HOME_ICON";
-
     private DrawerLayout mDrawerLayout;
     private LinearLayout mRootView;
     private ActionBarDrawerToggle mDrawerToggle;
+    NavigationView navigationView;
+    TextView navigationTitle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +40,7 @@ public class NavigableActivity extends CragChatActivity {
     }
 
     protected void setupActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 
     protected void setupNavigationDrawer() {
@@ -63,6 +63,41 @@ public class NavigableActivity extends CragChatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        navigationView = findViewById(R.id.navigation);
+        setupNavMenu();
+        navigationView.getMenu().getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                startActivity(new Intent(NavigableActivity.this, LoginActivity.class));
+                return true;
+            }
+        });
+
+        navigationView.getMenu().getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Authentication.logout(NavigableActivity.this);
+                setupNavMenu();
+                mDrawerLayout.closeDrawer(Gravity.START);
+                navigationTitle.setText(("CragChat"));
+                return true;
+            }
+        });
+
+        navigationTitle = navigationView.getHeaderView(0).findViewById(R.id.navigation_view_title);
+        if (Authentication.isLoggedIn(this)) {
+            navigationTitle.setText(Authentication.getAuthenticatedUser(this).getName());
+        }
+    }
+
+    public void setupNavMenu() {
+        if (Authentication.isLoggedIn(this)) {
+            navigationView.getMenu().getItem(0).setVisible(false);
+            navigationView.getMenu().getItem(1).setVisible(true);
+        } else {
+            navigationView.getMenu().getItem(1).setVisible(false);
+            navigationView.getMenu().getItem(0).setVisible(true);
+        }
     }
 
     @Override
@@ -74,7 +109,6 @@ public class NavigableActivity extends CragChatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
@@ -88,39 +122,6 @@ public class NavigableActivity extends CragChatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean openPopupMenu(MenuItem menuItem) {
-        int layout = Authentication.isLoggedIn(this) ? R.menu.menu_profile : R.menu.menu_not_logged_in;
-        PopupMenu popup = new PopupMenu(this, findViewById(R.id.more));
-        popup.getMenuInflater().inflate(layout, popup.getMenu());
-        popup.setOnMenuItemClickListener(menuListener);
-        popup.show();
-        return true;
-    }
-
-    PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = null;
-            String selection = item.getTitle().toString();
-            switch (selection) {
-                case "My Profile":
-                    intent = new Intent(NavigableActivity.this, ProfileActivity.class);
-                  //  intent.putExtra("username", User.userName(NavigableActivity.this));
-                    break;
-                case "Log out":
-                   // User.logout(NavigableActivity.this);
-                    intent = new Intent(NavigableActivity.this, MainActivity.class);
-                    break;
-                case "Login":
-                    intent = new Intent(NavigableActivity.this, LoginActivity.class);
-
-                    break;
-            }
-            if (intent != null) {
-                startActivity(intent);
-            }
-            return true;
-        }
-    };
 
     @Override
     public void onBackPressed() {

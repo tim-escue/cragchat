@@ -16,20 +16,17 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.model.Route;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.FormatUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
-import io.realm.Realm;
-
 public class RouteActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private FloatingActionButton floatingActionButton;
-    private RealmRoute route;
+    private Route route;
     private LinearLayout header;
-    private Realm mRealm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,10 +34,9 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
         setContentView(R.layout.activity_route);
 
         floatingActionButton = findViewById(R.id.add_button);
-        mRealm = Realm.getDefaultInstance();
 
         String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        route = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, displayableString).findFirst();
+        route = Repository.getRoute(displayableString, null);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -86,12 +82,6 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
-
-    @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percenStringe = (float) Math.abs(offset) / (float) maxScroll;
@@ -119,7 +109,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
         getSupportActionBar().setTitle(route.getName());
         StringBuilder subTitle = new StringBuilder();
 
-        Area current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, route.getParent()).findFirst();
+        Area current = Repository.getArea(route.getParent(), null);
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -127,7 +117,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, current.getParent()).findFirst();
+            current = Repository.getArea(current.getParent(), null);
         }
         getSupportActionBar().setSubtitle(subTitle.toString());
 
@@ -140,7 +130,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            launch(mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, route.getParent()).findFirst());
+            launch(Repository.getArea(route.getParent(), null));
         }
         return super.onOptionsItemSelected(item);
     }

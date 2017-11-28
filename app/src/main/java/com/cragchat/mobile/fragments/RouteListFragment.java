@@ -24,9 +24,6 @@ import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.view.adapters.recycler.RouteListRecyclerAdapter;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
-
 
 public class RouteListFragment extends Fragment {
 
@@ -39,7 +36,6 @@ public class RouteListFragment extends Fragment {
     private View filterView;
     private RouteListRecyclerAdapter adap;
     private PopupWindow popupWindow;
-    private Realm mRealm;
     boolean filterSport;
     boolean filterTrad;
     boolean filterMixed;
@@ -66,14 +62,11 @@ public class RouteListFragment extends Fragment {
         routeIds = getArguments().getStringArray(IDS_String);
 
         /*
-            RecyclerView uses a RealmAdapter which depends on realm-specific api so Repository
-            which uses abstract interfaces will not provide right type. We still call repository
-            so that local database is updated from network. RealmAdapter will auto-update
-            when the local database (Realm) is updated.
+            This call is made so that the local database is updated from the network. A callback is
+            not  necessary because the RouteListRecycleAdapter automagically handles displaying
+            changesnin data when it detects a change in Realm database.
          */
-        Repository.getRoutes(routeIds, getContext());
-
-        mRealm = Realm.getDefaultInstance();
+        Repository.getRoutes(routeIds, null);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -101,10 +94,10 @@ public class RouteListFragment extends Fragment {
             }
         });
 
-        adap = new RouteListRecyclerAdapter(
-                mRealm.where(RealmRoute.class).in(RealmRoute.FIELD_KEY, routeIds).findAll(),
-                true,
+        adap = RouteListRecyclerAdapter.create(
+                routeIds,
                 (CragChatActivity) getActivity());
+        getLifecycle().addObserver(adap);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
         RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
 
@@ -145,27 +138,10 @@ public class RouteListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
-
     private CompoundButton.OnCheckedChangeListener filterListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            RealmQuery<RealmRoute> routeQuery = mRealm.where(RealmRoute.class)
-                    .in(RealmRoute.FIELD_KEY, routeIds);
-            if (!sportSwitch.isChecked()) {
-                routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Sport");
-            }
-            if (!tradSwitch.isChecked()) {
-                routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Trad");
-            }
-            if (!mixedSwitch.isChecked()) {
-                routeQuery.notEqualTo(RealmRoute.FIELD_TYPE, "Sport,Trad");
-            }
-            adap.updateData(routeQuery.findAll());
+            adap.filter(sportSwitch.isChecked(), tradSwitch.isChecked(), mixedSwitch.isChecked());
         }
     };
 

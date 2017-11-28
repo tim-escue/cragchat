@@ -4,8 +4,6 @@ import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.pojo.PojoArea;
 import com.cragchat.mobile.util.RealmUtil;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
@@ -38,10 +36,7 @@ public class RealmArea extends RealmObject implements Area {
     private RealmList<String> routes;
     private RealmList<String> images;
 
-
-    /*
-        Empty constructor for RealmObject
-     */
+    //Required by Realm
     public RealmArea() {
     }
 

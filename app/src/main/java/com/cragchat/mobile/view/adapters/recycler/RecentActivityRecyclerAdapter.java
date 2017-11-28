@@ -1,43 +1,96 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.model.Comment;
+import com.cragchat.mobile.model.Datable;
+import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.model.Rating;
+import com.cragchat.mobile.model.Send;
+import com.cragchat.mobile.util.FileUtil;
+import com.cragchat.mobile.view.adapters.recycler.viewholder.ImageRecyclerViewHolder;
+import com.cragchat.mobile.view.adapters.recycler.viewholder.RecentActivityCommentViewHolder;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by tim on 7/25/17.
  */
 
-public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentActivityRecyclerAdapter.DisplayableHolder> {
+public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private CragChatActivity activity;
-    private List<Object> activities;
+    private List<Datable> data;
 
-    public RecentActivityRecyclerAdapter(CragChatActivity a, List<Object> activities) {
+
+    private static final int TYPE_COMMENT = 0;
+    private static final int TYPE_SEND = 1;
+    private static final int TYPE_RATING = 2;
+    private static final int TYPE_IMAGE = 3;
+
+    public RecentActivityRecyclerAdapter(CragChatActivity a, List<Datable> data) {
         activity = a;
-        this.activities = activities;
+        if (data != null) {
+            this.data = data;
+        } else {
+            this.data = new ArrayList<>();
+        }
     }
 
     @Override
-    public DisplayableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.item_list_recent_activity, parent, false);
-        return new DisplayableHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case TYPE_COMMENT:
+                return new RecentActivityCommentViewHolder(RecentActivityCommentViewHolder.getItemView(parent));
+            case TYPE_SEND:
+                return new SendRecyclerAdapter.ViewHolder(SendRecyclerAdapter.getItemView(parent));
+            case TYPE_RATING:
+                return new RatingRecyclerAdapter.ViewHolder(RatingRecyclerAdapter.getItemView(parent));
+            case TYPE_IMAGE:
+                return new ImageRecyclerViewHolder(ImageRecyclerViewHolder.getItemViewRecentActivity(parent));
+        }
+        return null;
+    }
+
+    public void update(List<Datable> newData) {
+        data = newData;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(final DisplayableHolder holder, int position) {
+    public int getItemViewType(int position) {
+        Object obj = data.get(position);
+        if (obj instanceof Comment) {
+            return TYPE_COMMENT;
+        } else if (obj instanceof Image) {
+            return TYPE_IMAGE;
+        } else if (obj instanceof Rating) {
+            return TYPE_RATING;
+        } else {
+            return TYPE_SEND;
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof SendRecyclerAdapter.ViewHolder) {
+            SendRecyclerAdapter.ViewHolder vh = (SendRecyclerAdapter.ViewHolder) holder;
+            vh.bind((Send) data.get(position));
+        } else if (holder instanceof RatingRecyclerAdapter.ViewHolder) {
+            RatingRecyclerAdapter.ViewHolder vh = (RatingRecyclerAdapter.ViewHolder) holder;
+            vh.bind((Rating) data.get(position), activity);
+        } else if (holder instanceof ImageRecyclerViewHolder) {
+            ImageRecyclerViewHolder vh = (ImageRecyclerViewHolder) holder;
+            File album = FileUtil.getAlbumStorageDir("routedb");
+            vh.bind((Image) data.get(position), album, activity);
+        } else if (holder instanceof RecentActivityCommentViewHolder) {
+            RecentActivityCommentViewHolder vh = (RecentActivityCommentViewHolder) holder;
+            vh.bind((Comment) data.get(position));
+        }
        /* final Object obj = activities.get(position);
         String content = "null";
         holder.divider.setVisibility(View.VISIBLE);
@@ -130,7 +183,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
                             if (permissionWriteExternal == PackageManager.PERMISSION_GRANTED) {
                                 holder.imageView.setVisibility(View.GONE);
                                 holder.progress.setVisibility(View.VISIBLE);
-                                new GrabImageTask(activity, LocalDatabase.getInstance(activity), img, holder.imageView, false).execute();
+                                new GrabImageTask(activity, LocalDatabase.getInstance(activity), img, holder.imageView, false).onSuccess();
                             } else {
                                 Toast.makeText(activity, "App needs permission to Write To External Storage to load images.", Toast.LENGTH_SHORT).show();
                             }
@@ -161,26 +214,6 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecentAc
 
     @Override
     public int getItemCount() {
-        return activities.size();
-    }
-
-    public class DisplayableHolder extends RecyclerView.ViewHolder {
-
-        LinearLayout layout;
-        TextView text1;
-        TextView text2;
-        ImageView imageView;
-        ProgressBar progress;
-        View divider;
-
-        public DisplayableHolder(View itemView) {
-            super(itemView);
-            text1 = (TextView) itemView.findViewById(R.id.text_recent_activity);
-            text2 = (TextView) itemView.findViewById(R.id.text_recent_activity_text);
-            layout = (LinearLayout) itemView.findViewById(R.id.layout_recent_activity);
-            imageView = (ImageView) itemView.findViewById(R.id.image_recent_activity);
-            progress = (ProgressBar) itemView.findViewById(R.id.progress_image_load);
-            divider = itemView.findViewById(R.id.divider);
-        }
+        return data.size();
     }
 }

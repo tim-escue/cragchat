@@ -19,10 +19,6 @@ public class PojoArea implements Area {
     private List<String> routes;
     private List<String> images;
 
-    public PojoArea() {
-    }
-
-
     public String getKey() {
         return key;
     }

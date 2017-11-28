@@ -45,7 +45,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // toggleOptionalViews(position);
+        toggleOptionalViews(position);
     }
 
     @Override

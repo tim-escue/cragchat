@@ -12,16 +12,7 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.realm.RealmRoute;
-import com.cragchat.mobile.model.realm.RealmSend;
-import com.cragchat.mobile.network.Network;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 
 public class SubmitSendActivity extends CragChatActivity {
 
@@ -94,38 +85,16 @@ public class SubmitSendActivity extends CragChatActivity {
             return;
         }
 
-        if (Network.isConnected(this)) {
-            Repository.postSend(
-                    Authentication.getAuthenticatedUser(this).getToken(),
+        Repository.addSend(Authentication.getAuthenticatedUser(this).getToken(),
                     entityKey,
                     pitches,
                     attempts,
                     sendStyle,
-                    climbStyle
-            ).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorHandlingObserverable<RealmSend>() {
-                        @Override
-                        public void onSuccess(final RealmSend object) {
-                            Repository.getRealm().executeTransaction(
-                                    new Realm.Transaction() {
-                                        @Override
-                                        public void execute(Realm realm) {
-                                            realm.insertOrUpdate(object);
-                                        }
-                                    }
-                            );
-                        }
-                    });
+                climbStyle,
+                null);
 
-        } else {
-           /* Toast.makeText(this, "Unable to post rating - will try again later", Toast.LENGTH_LONG).show();
-            String store = "RATING###" + entityKey + "###" + yds.getSelectedItemPosition() + "###" + stars + "###" + climbStyle + "###" + pitches + "###" + timeSeconds + "###" + User.currentToken(this)
-                    + "###" +sendStyle + "###" +attempts;
-            Repository.getInstance(this).store(this, store);*/
-        }
-        RealmRoute route = Repository.getRealm().where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
-        launch(route);
+
+        launch(Repository.getRoute(entityKey, null));
     }
 
 

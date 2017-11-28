@@ -54,7 +54,7 @@ public class CragsFragment extends Fragment {
             so that local database is updated from network. RealmAdapter will auto-update
             when the local database (Realm) is updated.
          */
-        Repository.getAreaByName("Ozone", getContext());
+        Repository.getAreaByName("Ozone", null);
 
 
         return view;

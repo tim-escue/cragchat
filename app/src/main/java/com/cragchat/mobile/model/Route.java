@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model;
 
+import java.util.List;
+
 /**
  * Created by timde on 9/27/2017.
  */
@@ -21,5 +23,11 @@ public interface Route {
     double getStars();
 
     String getType();
+
+    List<String> getImages();
+
+    String getRatings();
+
+    String getSends();
 
 }

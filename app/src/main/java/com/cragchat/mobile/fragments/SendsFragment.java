@@ -14,19 +14,10 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.SubmitSendActivity;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.realm.RealmSend;
 import com.cragchat.mobile.network.Network;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.remote.ErrorHandlingObserverable;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.view.adapters.recycler.SendRecyclerAdapter;
-
-import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 
 
 public class SendsFragment extends Fragment implements View.OnClickListener {
@@ -49,27 +40,14 @@ public class SendsFragment extends Fragment implements View.OnClickListener {
         entityKey = getArguments().getString("entityKey");
 
         if (Network.isConnected(getContext())) {
-            Repository.getSends(entityKey)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new ErrorHandlingObserverable<List<RealmSend>>() {
-                        @Override
-                        public void onSuccess(final List<RealmSend> object) {
-                            Repository.getRealm().executeTransaction(
-                                    new Realm.Transaction() {
-                                        @Override
-                                        public void execute(Realm realm) {
-                                            realm.insertOrUpdate(object);
-                                        }
-                                    }
-                            );
-                        }
-                    });
+            Repository.getSends(entityKey, null);
         }
 
-        final SendRecyclerAdapter adapter = new SendRecyclerAdapter(entityKey);
+        final SendRecyclerAdapter adapter = SendRecyclerAdapter.create(entityKey);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.list_sends);
         RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
+
+        getLifecycle().addObserver(adapter);
 
         return view;
     }

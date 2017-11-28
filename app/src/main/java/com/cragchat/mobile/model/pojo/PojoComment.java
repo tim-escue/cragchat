@@ -1,16 +1,15 @@
 package com.cragchat.mobile.model.pojo;
 
-import java.util.List;
+import com.cragchat.mobile.model.Comment;
+import com.cragchat.mobile.model.Datable;
 
-import io.realm.RealmList;
-import io.realm.annotations.Index;
-import io.realm.annotations.PrimaryKey;
+import java.util.List;
 
 /**
  * Created by timde on 11/10/2017.
  */
 
-public class PojoComment {
+public class PojoComment implements Datable, Comment {
 
     private String comment;
     private int score;
@@ -22,6 +21,15 @@ public class PojoComment {
     private String authorName;
     private List<String> childrenIds;
     private String table;
+    private String entityName;
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
 
     public String getComment() {
         return comment;

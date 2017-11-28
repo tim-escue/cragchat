@@ -3,6 +3,7 @@ package com.cragchat.mobile.view.adapters.recycler;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +16,13 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ProfileActivity;
+import com.cragchat.mobile.model.Rating;
 import com.cragchat.mobile.model.realm.RealmRating;
 import com.cragchat.mobile.network.Network;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.util.FormatUtil;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +47,7 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void disconnectListener() {
-        System.out.println("Actually destroyed");
+        System.out.println("Lifecycle: Actually destroyed");
         mRealm.close();
     }
 
@@ -54,7 +58,7 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
         this.mRealm = realm;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_rating_username)
         TextView text1;
         @BindView(R.id.item_rating_date)
@@ -68,21 +72,50 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+        public void bind(final Rating rating, final Context activity) {
+            text1.setText(rating.getUsername());
+            text1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Network.isConnected(activity)) {
+                        Intent intent = new Intent(activity, ProfileActivity.class);
+                        intent.putExtra("username", rating.getUsername());
+                        activity.startActivity(intent);
+                    } else {
+                        Toast.makeText(activity, "Must have internet connection to view user profiles.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            String date = rating.getDate();
+            Date dateObject = null;
+            try {
+                dateObject = FormatUtil.RAW_FORMAT.parse(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            text2.setText(dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : date);
+            text3.setText(activity.getResources().getStringArray(R.array.yds_options)[rating.getYds()]);
+            text4.setText("Stars: " + String.valueOf(rating.getStars()));
+        }
     }
 
     @Override
     public RatingRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
+        return new RatingRecyclerAdapter.ViewHolder(getItemView(parent));
+    }
+
+    public static View getItemView(ViewGroup parent) {
+        return LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.item_list_rating, parent, false);
-        return new RatingRecyclerAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final RatingRecyclerAdapter.ViewHolder holder, int position) {
-
-
         final RealmRating rating = getItem(position);
+        holder.bind(rating, activity);
         /*String title;
         if (forProfile) {
             title = Repository.getInstance(activity).findExact(rating.getRouteId()).getName();
@@ -96,22 +129,7 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
         } else {
             title = rating.getUserName();
         }*/
-        holder.text1.setText(rating.getUsername());
-        holder.text1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Network.isConnected(activity)) {
-                    Intent intent = new Intent(activity, ProfileActivity.class);
-                    intent.putExtra("username", rating.getUsername());
-                    activity.startActivity(intent);
-                } else {
-                    Toast.makeText(activity, "Must have internet connection to view user profiles.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        holder.text2.setText(FormatUtil.getFormattedDate(rating.getDate()));
-        holder.text3.setText("Yds: " + activity.getResources().getStringArray(R.array.yds_options)[rating.getYds()]);
-        holder.text4.setText("Stars: " + String.valueOf(rating.getStars()));
+
 
     }
 }

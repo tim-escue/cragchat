@@ -1,8 +1,10 @@
 package com.cragchat.mobile;
 
 import android.app.Application;
+import android.content.IntentFilter;
 
 import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.receiver.ConnectionReceiver;
 import com.cragchat.mobile.repository.Repository;
 
 /**
@@ -11,17 +13,13 @@ import com.cragchat.mobile.repository.Repository;
 
 public class CragChatApplication extends Application {
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         Repository.init(this);
         Authentication.init(getApplicationContext());
-        //  DaggerCragChatApplicationComponent.create().inject(this);
+        registerReceiver(new ConnectionReceiver(),
+                new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
 }

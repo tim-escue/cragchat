@@ -1,6 +1,8 @@
 package com.cragchat.mobile.model.realm;
 
 import com.cragchat.mobile.model.Datable;
+import com.cragchat.mobile.model.Send;
+import com.cragchat.mobile.model.pojo.PojoSend;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
@@ -10,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by timde on 11/3/2017.
  */
 
-public class RealmSend extends RealmObject implements Datable {
+public class RealmSend extends RealmObject implements Send, Datable {
 
     public static final String FIELD_ENTITY_KEY = "entityKey";
     public static final String FIELD_PITCHES = "pitches";
@@ -31,6 +33,19 @@ public class RealmSend extends RealmObject implements Datable {
     private String date;
     @Index
     private String username;
+
+    public static RealmSend from(PojoSend send) {
+        RealmSend s = new RealmSend();
+        s.setAttempts(send.getAttempts());
+        s.setKey(send.getKey());
+        s.setPitches(send.getPitches());
+        s.setSendType(send.getSendType());
+        s.setClimbingStyle(send.getClimbingStyle());
+        s.setUsername(send.getUsername());
+        s.setDate(send.getDate());
+        s.setEntityKey(send.getEntityKey());
+        return s;
+    }
 
     public String getEntityKey() {
         return entityKey;
