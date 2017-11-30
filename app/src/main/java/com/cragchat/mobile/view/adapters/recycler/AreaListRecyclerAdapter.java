@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.realm.RealmArea;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.list_row_one)
+        @BindView(R.id.author)
         TextView text1;
 
         @BindView(R.id.list_row_two)
@@ -73,7 +74,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(final RealmArea area, final CragChatActivity activity) {
+        public void bind(final Area area, final CragChatActivity activity) {
             text1.setText(area.getName());
             List<String> routes = area.getRoutes();
             StringBuilder info = new StringBuilder();

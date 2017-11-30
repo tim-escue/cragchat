@@ -96,7 +96,8 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     @Override
     public void onBindViewHolder(final CommentRecyclerViewHolder holder, int position) {
         final Comment comment = data.get(position);
-        holder.bind(comment, position, lastOpened,
+        Comment after = position < getItemCount() - 1 ? data.get(position + 1) : null;
+        holder.bind(comment, after, position, lastOpened,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

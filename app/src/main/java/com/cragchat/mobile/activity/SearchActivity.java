@@ -47,7 +47,7 @@ public class SearchActivity extends SearchableActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             getSupportActionBar().setTitle("Results");
             getSupportActionBar().setSubtitle("\"" + query + "\"");
-            List queryResults = Repository.getQueryMatches(query, this);
+            List queryResults = Repository.getQueryMatches(query, null);
             RecyclerUtils.setAdapterAndManager(resultsRecycler,
                     new SearchResultsRecyclerAdapter(this, queryResults),
                     LinearLayoutManager.VERTICAL);

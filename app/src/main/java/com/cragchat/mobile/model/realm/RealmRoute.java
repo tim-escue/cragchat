@@ -41,6 +41,11 @@ public class RealmRoute extends RealmObject implements Route {
     public RealmRoute() {
     }
 
+    public Route.Type getRouteType() {
+        return type.equalsIgnoreCase("Trad") ? Type.Trad :
+                type.equalsIgnoreCase("Sport") ? Type.Sport : Type.Mixed;
+    }
+
     public RealmRoute(String key, String name,
                       String type, String latitude,
                       String longitude, int yds,

@@ -11,51 +11,59 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.binding.RouteHeaderBinding;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.util.FormatUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RouteActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private FloatingActionButton floatingActionButton;
     private Route route;
-    private LinearLayout header;
+    @BindView(R.id.header)
+    View header;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route);
+        String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
+
+        setContentView(R.layout.activity_route_new);
+        ButterKnife.bind(this);
+
+        final RouteHeaderBinding headerBinding = new RouteHeaderBinding(header);
+
+        route = Repository.getRoute(displayableString, new Callback<Route>() {
+            @Override
+            public void onSuccess(Route object) {
+                headerBinding.bind(object);
+                route = object;
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+
+        headerBinding.bind(route);
 
         floatingActionButton = findViewById(R.id.add_button);
 
-        String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        route = Repository.getRoute(displayableString, null);
+        header = findViewById(R.id.header);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
         setupToolbar();
-
-        header = findViewById(R.id.header);
-
-        TextView textView = (TextView) findViewById(R.id.type);
-        textView.setText(route.getType());
-
-        textView = (TextView) findViewById(R.id.yds_scale);
-        String yds = FormatUtil.getYdsString(this, route.getYds());
-        textView.setText(yds);
-
-        textView = (TextView) findViewById(R.id.stars);
-        String sters = FormatUtil.getStarsString(route.getStars());
-        textView.setText(sters);
-
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(this);
@@ -84,9 +92,16 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
-        float percenStringe = (float) Math.abs(offset) / (float) maxScroll;
-        float alpha = 1f - percenStringe;
-        header.setAlpha(alpha);
+        float percentScrolled = (float) Math.abs(offset) / (float) maxScroll;
+        if (percentScrolled > .4) {
+            header.setVisibility(View.GONE);
+        } else {
+            if (header.getVisibility() == View.GONE) {
+                header.setVisibility(View.VISIBLE);
+            }
+            float alpha = 1f - percentScrolled;
+            header.setAlpha(alpha);
+        }
     }
 
     public void setAddButtonPagerAndAdapter(final ViewPager pager, final TabPagerAdapter pageAdapter) {

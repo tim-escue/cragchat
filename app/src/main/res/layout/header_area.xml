@@ -1,52 +1,83 @@
-<RelativeLayout android:id="@+id/area_information_layout"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_scrollFlags="scroll|snap"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/route_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="@dimen/sixteen_dp"
+    <LinearLayout
+        android:id="@+id/areas_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:contentDescription="Route image"
-        android:src="@drawable/area_mountain" />
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/sixteen_dp">
 
-    <TextView
-        android:id="@+id/num_routes_label"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sub Areas"
+            android:textColor="@color/white"
+
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/areas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sixteen_dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/routes_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/route_image"
-        android:layout_alignTop="@id/route_image"
-        android:layout_marginEnd="@dimen/sixteen_dp"
-        android:text="@string/routes"
-        style="@style/TextLabel"/>
+        android:layout_alignTop="@id/areas_layout"
+        android:layout_toEndOf="@id/areas_layout"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/sixteen_dp">
 
-    <TextView
-        android:id="@+id/num_route_value"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Routes"
+
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/routes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/images_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/route_image"
-        android:layout_below="@id/num_routes_label"
-        style="@style/TextValue" />
+        android:layout_alignTop="@id/areas_layout"
+        android:layout_toEndOf="@id/routes_layout"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/sixteen_dp">
 
-    <TextView
-        android:id="@+id/num_areas_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/num_routes_label"
-        android:layout_alignTop="@id/route_image"
-        android:text="Areas"
-        style="@style/TextLabel"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/num_area_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/num_areas_label"
-        android:layout_below="@id/num_routes_label"
-        style="@style/TextValue" />
-
+        <TextView
+            android:id="@+id/images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
 </RelativeLayout>

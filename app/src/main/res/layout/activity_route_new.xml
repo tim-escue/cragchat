@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,19 +14,19 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:stateListAnimator="@drawable/app_bar_elevated">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/primary"
             app:expandedTitleGravity="center_vertical|center_horizontal"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/image"
@@ -49,14 +48,6 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:subtitleTextColor="@color/white" />
 
-            <include
-                android:id="@+id/header"
-                layout="@layout/header_route"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp" />
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
@@ -69,6 +60,12 @@
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="#bdbdbd" />
+
+            <include
+                layout="@layout/header_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -84,5 +81,7 @@
         android:backgroundTint="@color/primary_light"
         android:src="@drawable/ic_add_white_24dp"
         app:borderWidth="0dp" />
+
+    <include layout="@layout/search_suggestions_layout" />
 
 </android.support.design.widget.CoordinatorLayout>

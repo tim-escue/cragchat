@@ -6,13 +6,13 @@
 
     RealmRouteoute Pager Adapter Titles -->
     <string name="title_beta">Beta</string>
-    <string name="title_ratings">Ratings (%1$s)</string>
-    <string name="title_sends">Sends (%1$s)</string>
+    <string name="title_ratings">Ratings</string>
+    <string name="title_sends">Sends</string>
     <string name="title_location">Location</string>
-    <string name="title_images">Images (%1$d)</string>
+    <string name="title_images">Images</string>
     <string name="title_recent_activity">Recent Activity</string>
-    <string name="title_routes">Routes (%1$d)</string>
-    <string name="title_areas">Areas (%1$d)</string>
+    <string name="title_routes">Routes</string>
+    <string name="title_areas">Areas</string>
     <string name="title_discussion">Discussion</string>
 
     <!-- Menu Items -->

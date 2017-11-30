@@ -22,6 +22,11 @@ public class PojoRoute implements Route {
     private String ratings;
     private List<String> images;
 
+    public Route.Type getRouteType() {
+        return type.equalsIgnoreCase("Trad") ? Type.Trad :
+                type.equalsIgnoreCase("Sport") ? Type.Sport : Type.Mixed;
+    }
+
     public String getKey() {
         return key;
     }

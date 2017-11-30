@@ -26,7 +26,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
         RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
                 area.getRoutes().toArray(new String[area.getRoutes().size()]));
-        addFragment(context.getString(R.string.title_routes, area.getRoutes().size()),
+        addFragment(context.getString(R.string.title_routes),
                 routeList,
                 false,
                 false);
@@ -34,7 +34,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
         if (area.getSubAreas().size() > 0) {
             AreaListFragment areaFragment = AreaListFragment.newInstance(area.getKey(),
                     area.getSubAreas().toArray(new String[area.getSubAreas().size()]));
-            addFragment(context.getString(R.string.title_areas, area.getSubAreas().size()),
+            addFragment(context.getString(R.string.title_areas),
                     areaFragment,
                     false,
                     false);
@@ -46,7 +46,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
         addFragment(context.getString(R.string.title_location),
                 LocationFragment.newInstance(area.getKey()), false, true);
 
-        addFragment(context.getString(R.string.title_images, area.getImages().size()),
+        addFragment(context.getString(R.string.title_images),
                 ImageFragment.newInstance(area.getKey()), false, true);
     }
 

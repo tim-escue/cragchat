@@ -142,7 +142,7 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.list_row_one)
+        @BindView(R.id.author)
         TextView text1;
 
         @BindView(R.id.list_row_two)

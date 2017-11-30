@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rectangle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cardview_light_background"
+    android:paddingBottom="@dimen/eight_dp"
+    android:paddingEnd="@dimen/sixteen_dp"
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingTop="@dimen/eight_dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/sixteen_dp" />
+
+    <TextView
+        android:id="@+id/author"
+        style="@style/TextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/sixteen_dp"
+        android:layout_toEndOf="@id/icon" />
+
+    <TextView
+        android:id="@+id/yds"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        android:layout_alignStart="@+id/author"
+        android:layout_below="@id/author" />
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        android:layout_toEndOf="@id/yds"
+        android:layout_alignBottom="@id/yds" />
+
+    <RatingBar
+        android:id="@+id/stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:isIndicator="true"
+        android:layout_toEndOf="@+id/type"
+        android:layout_alignBottom="@id/type"
+        android:layout_marginEnd="@dimen/sixteen_dp"
+        style="?android:attr/ratingBarStyleSmall" />
+
+</RelativeLayout>

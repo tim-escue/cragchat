@@ -14,24 +14,47 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.binding.AreaHeaderBinding;
 import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
-public class AreaActivity extends SearchableActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class AreaActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private Area area;
     private FloatingActionButton floatingActionButton;
+    @BindView(R.id.header)
+    View header;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_displayable_new);
+        ButterKnife.bind(this);
 
         floatingActionButton = findViewById(R.id.add_button);
 
+        final AreaHeaderBinding headerBinding = new AreaHeaderBinding(header);
+
         String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        area = Repository.getArea(areaKey, null);
+        area = Repository.getArea(areaKey, new Callback<Area>() {
+            @Override
+            public void onSuccess(Area object) {
+                headerBinding.bind(object);
+                area = object;
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+
+        headerBinding.bind(area);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -39,6 +62,7 @@ public class AreaActivity extends SearchableActivity {
         setupToolbar();
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(this);
 
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this,
                 getSupportFragmentManager(), appBarLayout, area, floatingActionButton);
@@ -53,6 +77,22 @@ public class AreaActivity extends SearchableActivity {
         slab.setupWithViewPager(pager);
 
     }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentScrolled = (float) Math.abs(offset) / (float) maxScroll;
+        if (percentScrolled > .4) {
+            header.setVisibility(View.GONE);
+        } else {
+            if (header.getVisibility() == View.GONE) {
+                header.setVisibility(View.VISIBLE);
+            }
+            float alpha = 1f - percentScrolled;
+            header.setAlpha(alpha);
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

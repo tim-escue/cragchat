@@ -37,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class Repository {
     private static void showQueueMessage(String queuedObjectType) {
         StringBuilder message = new StringBuilder();
         message.append(queuedObjectType);
-        if (Network.isConnected(applicationContext)) {
+        if (!Network.isConnected(applicationContext)) {
             message.append(" cannot be added while offline.");
         } else {
             message.append(" could not be added, there was a network error.");
@@ -198,6 +199,9 @@ public class Repository {
                         });
             } catch (Exception e) {
                 e.printStackTrace();
+                /*
+                    The image to be uploaded no longer exists. NewImageRequest is not queued to resend.
+                 */
                 Toast.makeText(applicationContext, "Queued image could not be uploaded",
                         Toast.LENGTH_LONG).show();
             }
@@ -205,9 +209,8 @@ public class Repository {
 
     }
 
-    public static List getQueryMatches(final String query, final Context context) {
-        if (context != null) {
-            if (Network.isConnected(context)) {
+    public static List getQueryMatches(final String query, final Callback<List> updateCallback) {
+        if (Network.isConnected(applicationContext)) {
                 networkApi.getAreasContaining(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -219,6 +222,7 @@ public class Repository {
                                 }.getType();
                                 Type routeType = new TypeToken<PojoRoute>() {
                                 }.getType();
+                                List<Object> objs = new ArrayList<>();
                                 try {
                                     JSONArray array = new JSONArray(object.string());
                                     for (int i = 0; i < array.length(); i++) {
@@ -226,24 +230,38 @@ public class Repository {
                                         if (result.contains("routes")) {
                                             PojoArea area = gson.fromJson(result, areaType);
                                             localDatabase.update(area);
+                                            objs.add(area);
                                         } else {
                                             PojoRoute route = gson.fromJson(result, routeType);
                                             localDatabase.update(route);
+                                            objs.add(route);
                                         }
 
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                if (objs.size() > 0) {
+                                    if (updateCallback != null) {
+                                        updateCallback.onSuccess(objs);
+                                    }
+                                }
                             }
 
                             @Override
                             public void onError(Throwable throwable) {
                                 showGetFailure("query matches for: " + query);
+                                if (updateCallback != null) {
+                                    updateCallback.onFailure();
+                                }
                             }
                         });
+        } else {
+            if (updateCallback != null) {
+                updateCallback.onFailure();
             }
         }
+
         return localDatabase.getQueryMatches(query);
     }
 
@@ -267,6 +285,9 @@ public class Repository {
                                 public void onError(Throwable throwable) {
                                     showQueueMessage("Comment vote");
                                     localDatabase.addNewCommentVoteRequest(vote, commentKey);
+                                    if (callback != null) {
+                                        callback.onFailure();
+                                    }
                                 }
                             }
                     );
@@ -405,8 +426,14 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).toString());
-                            showQueueMessage("image");
+                            throwable.printStackTrace();
+                            if (throwable instanceof FileNotFoundException) {
+                                Toast.makeText(applicationContext, "Image could no longer be found" +
+                                        " to be uploaded", Toast.LENGTH_LONG).show();
+                            } else {
+                                localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath());
+                                showQueueMessage("image");
+                            }
                             if (callback != null) {
                                 callback.onFailure();
                             }
@@ -415,7 +442,7 @@ public class Repository {
 
         } else {
             showQueueMessage("image");
-            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).toString());
+            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath());
             if (callback != null) {
                 callback.onFailure();
             }

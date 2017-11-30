@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.activity.CragChatActivity;
-import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.model.Area;
+import com.cragchat.mobile.model.Route;
 
 import java.util.List;
 
@@ -26,19 +26,24 @@ public class SearchResultsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 : new RouteListRecyclerAdapter.ViewHolder(RouteListRecyclerAdapter.getItemView(parent));
     }
 
+    public void update(List data) {
+        this.results = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
-        return results.get(position) instanceof RealmArea ? 0 : 1;
+        return results.get(position) instanceof Area ? 0 : 1;
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == 1) {
             RouteListRecyclerAdapter.ViewHolder rHolder = (RouteListRecyclerAdapter.ViewHolder) holder;
-            rHolder.bind((RealmRoute) results.get(position), activity);
+            rHolder.bind((Route) results.get(position), activity);
         } else {
             AreaListRecyclerAdapter.ViewHolder aHolder = (AreaListRecyclerAdapter.ViewHolder) holder;
-            aHolder.bind((RealmArea) results.get(position), activity);
+            aHolder.bind((Area) results.get(position), activity);
         }
     }
 

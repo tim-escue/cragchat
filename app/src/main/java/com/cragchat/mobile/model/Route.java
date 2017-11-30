@@ -30,4 +30,12 @@ public interface Route {
 
     String getSends();
 
+    Type getRouteType();
+
+    enum Type {
+        Sport,
+        Trad,
+        Mixed
+    }
+
 }

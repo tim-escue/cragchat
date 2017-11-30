@@ -65,7 +65,7 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
     public static View getItemView(ViewGroup parent) {
         return LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.image_item, parent, false);
+                inflate(R.layout.recent_activity_image, parent, false);
     }
 
     @Override

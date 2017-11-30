@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.model.realm.RealmRoute;
+import com.cragchat.mobile.util.FormatUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +66,7 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
     public static View getItemView(ViewGroup root) {
         return LayoutInflater.
                 from(root.getContext()).
-                inflate(R.layout.displayable_recycler_row, root, false);
+                inflate(R.layout.route_list_item, root, false);
     }
 
     @Override
@@ -96,26 +99,34 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.list_row_one)
+        @BindView(R.id.author)
         TextView text1;
 
-        @BindView(R.id.list_row_two)
-        TextView text2;
+        @BindView(R.id.type)
+        TextView type;
 
         @BindView(R.id.rectangle)
-        LinearLayout rect;
+        RelativeLayout rect;
 
         @BindView(R.id.icon)
         ImageView icon;
 
-        ViewHolder(View itemView) {
+        @BindView(R.id.yds)
+        TextView yds;
+
+        @BindView(R.id.stars)
+        RatingBar rating;
+
+        public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(final RealmRoute r, final CragChatActivity activity) {
+        public void bind(final Route r, final CragChatActivity activity) {
             text1.setText(r.getName());
             StringBuilder info = new StringBuilder();
+            yds.setText(FormatUtil.getYdsString(yds.getContext(), r.getYds()));
+            rating.setRating((float) r.getStars());
             if (r.getRatings().equals("0")) {
                 info.append("Not rated");
             } else {
@@ -124,7 +135,7 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
                 info.append(r.getStars());
                 info.append(" stars");
             }
-            text2.setText(info.toString());
+            type.setText(r.getRouteType().toString());
             icon.setImageResource(r.getType().equalsIgnoreCase("sport") ? R.drawable.bolt_img : R.drawable.nuts);
             rect.setOnClickListener(new View.OnClickListener() {
                 @Override

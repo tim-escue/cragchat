@@ -163,4 +163,11 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/child_container"
+        android:layout_marginStart="@dimen/sixteen_dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

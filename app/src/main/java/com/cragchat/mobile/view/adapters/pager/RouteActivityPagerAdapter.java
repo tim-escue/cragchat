@@ -20,13 +20,13 @@ public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
         addFragment(context.getString(R.string.title_beta),
                 CommentSectionFragment.newInstance(route.getKey(), "beta"), false, true);
-        addFragment(context.getString(R.string.title_ratings, route.getRatings()),
+        addFragment(context.getString(R.string.title_ratings),
                 RatingFragment.newInstance(route.getKey()), false, true);
-        addFragment(context.getString(R.string.title_sends, route.getSends()),
+        addFragment(context.getString(R.string.title_sends),
                 SendsFragment.newInstance(route.getKey()), false, true);
         addFragment(context.getString(R.string.title_location),
                 LocationFragment.newInstance(route.getKey()), false, true);
-        addFragment(context.getString(R.string.title_images, route.getImages().size()),
+        addFragment(context.getString(R.string.title_images),
                 ImageFragment.newInstance(route.getKey()), false, true);
     }
 

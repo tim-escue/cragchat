@@ -42,19 +42,23 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
     LinearLayout layout;
     @BindView(R.id.expanding_layout)
     public LinearLayout expandable;
+    @BindView(R.id.line_if_more)
+    View lineIfMore;
+    @BindView(R.id.subcomment_with_more)
+    View subcommentWithMore;
 
     public CommentRecyclerViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(final Comment comment, final int position, final RecyclerView.ViewHolder lastOpened,
+    public void bind(final Comment comment, final Comment afterComment, final int position, final RecyclerView.ViewHolder lastOpened,
                      View.OnClickListener expandingClickListener, View.OnClickListener voteUpClickListener,
                      View.OnClickListener voteDownClickListener, View.OnClickListener replyClickListener,
                      View.OnClickListener addCommentListener) {
-        final int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
-        layout.setBackgroundColor(color);
-        expandable.setBackgroundColor(color);
+        //final int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
+        //layout.setBackgroundColor(color);
+        //expandable.setBackgroundColor(color);
 
         layout.setOnClickListener(expandingClickListener);
 
@@ -62,6 +66,17 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
             expandable.setVisibility(View.VISIBLE);
         } else {
             expandable.setVisibility(GONE);
+        }
+
+        if (comment.getDepth() != 0) {
+            subcommentWithMore.setVisibility(View.VISIBLE);
+            if (afterComment != null && afterComment.getDepth() == comment.getDepth()) {
+                lineIfMore.setBackgroundColor(Color.BLACK);
+            } else {
+                lineIfMore.setBackgroundColor(Color.TRANSPARENT);
+            }
+        } else {
+            subcommentWithMore.setVisibility(GONE);
         }
 
         image1.setOnClickListener(voteUpClickListener);
