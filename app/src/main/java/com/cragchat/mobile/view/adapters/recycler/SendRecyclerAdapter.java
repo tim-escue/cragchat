@@ -5,18 +5,15 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.model.realm.RealmSend;
 import com.cragchat.mobile.util.FormatUtil;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +25,11 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
 
     private Realm mRealm;
 
+    private SendRecyclerAdapter(@Nullable OrderedRealmCollection<RealmSend> data, boolean autoUpdate, Realm realm) {
+        super(data, autoUpdate);
+        this.mRealm = realm;
+    }
+
     public static SendRecyclerAdapter create(String entityKey) {
         Realm realm = Realm.getDefaultInstance();
         return new SendRecyclerAdapter(
@@ -35,12 +37,11 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
                 true, realm);
     }
 
-    private SendRecyclerAdapter(@Nullable OrderedRealmCollection<RealmSend> data, boolean autoUpdate, Realm realm) {
-        super(data, autoUpdate);
-        this.mRealm = realm;
+    public static View getItemView(ViewGroup parent) {
+        return RecyclerUtils.getItemView(parent, R.layout.item_list_send);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void disconnectListener() {
         System.out.println("Lifecycle: Actually destroyed");
         mRealm.close();
@@ -51,10 +52,10 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
         return new ViewHolder(getItemView(parent));
     }
 
-    public static View getItemView(ViewGroup parent) {
-        return LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.item_list_send, parent, false);
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final RealmSend send = getItem(position);
+        holder.bind(send);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -70,6 +71,10 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
         TextView text5;
         @BindView(R.id.item_send_send_type)
         TextView text6;
+        @BindView(R.id.label)
+        TextView label;
+        @BindView(R.id.layout)
+        RelativeLayout layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -79,7 +84,7 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
         public void bind(Send send) {
             String title = send.getUsername();
             text1.setText(title);
-        /*holder.text1.setOnClickListener(new View.OnClickListener() {
+        /*holder.username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (RetroFitRestApi.isConnected(activity)) {
@@ -91,26 +96,14 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
                 }
             }
         });*/
-            String date = send.getDate();
-            Date dateObject = null;
-            try {
-                dateObject = FormatUtil.RAW_FORMAT.parse(date);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            text2.setText(dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : date);
-            text2.setText(FormatUtil.getFormattedDate(send.getDate()));
-            text3.setText("Pitches: " + send.getPitches());
-            text4.setText("Attempts: " + send.getAttempts());
-            text5.setText("Style: " + send.getClimbingStyle());
-            text6.setText("Send Type: " + send.getSendType());
+
+            text2.setText(FormatUtil.getDateAsElapsed(send.getDate()));
+            text3.setText("" + send.getPitches());
+            text4.setText("" + send.getAttempts());
+            text5.setText(send.getClimbingStyle());
+            text6.setText(send.getSendType());
+            label.setText("Sent " + send.getEntityName());
         }
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final RealmSend send = getItem(position);
-        holder.bind(send);
     }
 }

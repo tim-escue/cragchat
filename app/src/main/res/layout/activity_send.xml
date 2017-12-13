@@ -11,9 +11,9 @@
         android:text="How many stars would you give this route?" />
 
     <Spinner
+        android:id="@+id/spinner_rate_stars"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_rate_stars"></Spinner>
+        android:layout_height="wrap_content"></Spinner>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,16 +21,16 @@
         android:text="How difficult was this route?" />
 
     <Spinner
+        android:id="@+id/spinner_rate_yds"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_rate_yds"></Spinner>
+        android:layout_height="wrap_content"></Spinner>
 
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
-        android:onClick="submitSend" />
+        android:onClick="submitSend"
+        android:text="Submit" />
 
     <requestFocus />
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
@@ -40,7 +39,8 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
         holder.name.setText(crag.getName());
         holder.routeNumber.setText(String.valueOf(crag.getRoutes().size()));
         holder.areaNumber.setText(String.valueOf(crag.getSubAreas().size()));
-        holder.itemLayout.setOnClickListener(new View.OnClickListener() {
+        holder.imagesNumber.setText(String.valueOf(crag.getImages().size()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 activity.launch(crag);
@@ -53,8 +53,8 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
         TextView name;
         TextView routeNumber;
         TextView areaNumber;
+        TextView imagesNumber;
         ImageView icon;
-        RelativeLayout itemLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +62,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
             icon = itemView.findViewById(R.id.crag_icon);
             areaNumber = itemView.findViewById(R.id.number_areas);
             routeNumber = itemView.findViewById(R.id.number_routes);
-            itemLayout = itemView.findViewById(R.id.item_layout);
+            imagesNumber = itemView.findViewById(R.id.number_comments);
         }
     }
 }

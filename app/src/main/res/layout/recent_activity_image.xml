@@ -2,58 +2,75 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/eight_dp"
+    android:layout_marginBottom="@dimen/four_dp"
+    android:layout_marginEnd="@dimen/eight_dp"
+    android:layout_marginStart="@dimen/eight_dp"
+    android:layout_marginTop="@dimen/four_dp"
     android:elevation="4dp">
 
     <RelativeLayout
         android:id="@+id/image_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
-        android:paddingTop="@dimen/eight_dp">
+        android:layout_marginBottom="@dimen/sixteen_dp"
+        android:background="@color/cardview_light_background">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/author_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/eight_dp"
-            android:layout_marginEnd="@dimen/eight_dp"
-            android:layout_marginStart="@dimen/eight_dp" />
+            android:layout_below="@id/image"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/entity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/author_name"
+            android:layout_below="@id/author_name"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignBottom="@id/author_name"
-            android:layout_marginEnd="@dimen/eight_dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:textColor="@color/secondary_text"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@id/author_name"
-            android:layout_below="@id/author_name"
-            android:layout_marginEnd="@dimen/eight_dp"
-            android:layout_marginBottom="@dimen/eight_dp"
+            android:layout_below="@id/entity"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
             android:ellipsize="end"
-            android:maxLines="2" />
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_below="@id/caption"
-            android:scaleType="centerCrop" />
+            android:maxLines="2"
+            android:textColor="@color/secondary_text"
+            android:textSize="12sp" />
 
         <ProgressBar
             android:id="@+id/image_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/author_name"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:indeterminate="true"
             android:visibility="gone" />
 

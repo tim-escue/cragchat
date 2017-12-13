@@ -18,12 +18,12 @@ public class AuthenticatedUser {
         return name;
     }
 
-    public String getToken() {
-        return token;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setToken(String token) {

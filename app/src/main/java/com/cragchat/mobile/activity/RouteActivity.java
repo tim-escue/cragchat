@@ -1,5 +1,6 @@
 package com.cragchat.mobile.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,10 +27,10 @@ import butterknife.ButterKnife;
 
 public class RouteActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
 
-    private FloatingActionButton floatingActionButton;
-    private Route route;
     @BindView(R.id.header)
     View header;
+    private FloatingActionButton floatingActionButton;
+    private Route route;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,11 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
 
+    }
+
+    @Override
+    int getToolbarColor() {
+        return Color.TRANSPARENT;
     }
 
     @Override

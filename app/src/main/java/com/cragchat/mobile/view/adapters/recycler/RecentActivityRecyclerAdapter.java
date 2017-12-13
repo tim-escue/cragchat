@@ -1,19 +1,22 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Comment;
 import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.model.Rating;
+import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.util.FileUtil;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.viewholder.ImageRecyclerViewHolder;
 import com.cragchat.mobile.view.adapters.recycler.viewholder.RecentActivityCommentViewHolder;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +26,12 @@ import java.util.List;
 
 public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private CragChatActivity activity;
-    private List<Datable> data;
-
-
     private static final int TYPE_COMMENT = 0;
     private static final int TYPE_SEND = 1;
     private static final int TYPE_RATING = 2;
     private static final int TYPE_IMAGE = 3;
+    private CragChatActivity activity;
+    private List<Datable> data;
 
     public RecentActivityRecyclerAdapter(CragChatActivity a, List<Datable> data) {
         activity = a;
@@ -45,13 +46,15 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_COMMENT:
-                return new RecentActivityCommentViewHolder(RecentActivityCommentViewHolder.getItemView(parent));
+                return new RecentActivityCommentViewHolder(
+                        RecentActivityCommentViewHolder.getItemView(parent, R.layout.recent_activity_comment_item));
             case TYPE_SEND:
                 return new SendRecyclerAdapter.ViewHolder(SendRecyclerAdapter.getItemView(parent));
             case TYPE_RATING:
-                return new RatingRecyclerAdapter.ViewHolder(RatingRecyclerAdapter.getItemView(parent));
+                return new RatingRecyclerAdapter.ViewHolder(
+                        RecyclerUtils.getItemView(parent, R.layout.item_list_rating_recent_activity));
             case TYPE_IMAGE:
-                return new ImageRecyclerViewHolder(ImageRecyclerViewHolder.getItemViewRecentActivity(parent));
+                return new ImageRecyclerViewHolder(RecyclerUtils.getItemView(parent, R.layout.recent_activity_image));
         }
         return null;
     }
@@ -79,136 +82,57 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SendRecyclerAdapter.ViewHolder) {
             SendRecyclerAdapter.ViewHolder vh = (SendRecyclerAdapter.ViewHolder) holder;
-            vh.bind((Send) data.get(position));
+            final Send send = (Send) data.get(position);
+            vh.bind(send);
+            vh.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.launch(Repository.getRoute(send.getEntityKey(), null),
+                            RouteActivityPagerAdapter.TAB_SENDS);
+                }
+            });
         } else if (holder instanceof RatingRecyclerAdapter.ViewHolder) {
             RatingRecyclerAdapter.ViewHolder vh = (RatingRecyclerAdapter.ViewHolder) holder;
-            vh.bind((Rating) data.get(position), activity);
+            final Rating rating = (Rating) data.get(position);
+            vh.bind(rating, activity, true);
+            vh.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.launch(Repository.getRoute(rating.getEntityKey(), null),
+                            RouteActivityPagerAdapter.TAB_RATINGS);
+                }
+            });
         } else if (holder instanceof ImageRecyclerViewHolder) {
             ImageRecyclerViewHolder vh = (ImageRecyclerViewHolder) holder;
-            File album = FileUtil.getAlbumStorageDir("routedb");
-            vh.bind((Image) data.get(position), album, activity);
+            final Image image = (Image) data.get(position);
+            vh.bind(image, activity);
+            vh.imageCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Route r = Repository.getRoute(image.getEntityKey(), null);
+                    if (r != null) {
+                        activity.launch(r, RouteActivityPagerAdapter.TAB_IMAGES);
+                    } else {
+                        activity.launch(Repository.getArea(image.getEntityKey(), null));
+                    }
+                }
+            });
         } else if (holder instanceof RecentActivityCommentViewHolder) {
             RecentActivityCommentViewHolder vh = (RecentActivityCommentViewHolder) holder;
-            vh.bind((Comment) data.get(position));
-        }
-       /* final Object obj = activities.get(position);
-        String content = "null";
-        holder.divider.setVisibility(View.VISIBLE);
-        if (obj instanceof Rating) {
-            holder.imageView.setVisibility(View.GONE);
-
-            Rating rating = (Rating) obj;
-            final Displayable disp = LocalDatabase.getInstance(activity).findExact(rating.getRouteId());
-            if (disp == null) {
-                holder.text1.setVisibility(View.GONE);
-                holder.layout.setVisibility(View.GONE);
-            } else {
-                holder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.launch(disp, 2);
-
+            final Comment comment = (Comment) data.get(position);
+            vh.bind(comment);
+            vh.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Route r = Repository.getRoute(comment.getEntityId(), null);
+                    if (r != null) {
+                        activity.launch(r, RouteActivityPagerAdapter.TAB_BETA);
+                    } else {
+                        activity.launch(Repository.getArea(comment.getEntityId(), null));
                     }
-                });
-                content = "<font color='#33A5FF'>" + rating.getUserName() + "</font>" + " rated " + "<font color='#77AA00'>" + disp.getName() + "</font>";
-
-                String ratingStrin = "YDS: \t" + disp.getYdsString(activity, rating.getYds()) + "\nStars: \t" + rating.getStars();
-                holder.text2.setVisibility(View.VISIBLE);
-
-                holder.text2.setText(ratingStrin);
-            }
-
-
-        } else if (obj instanceof Comment) {
-            holder.imageView.setVisibility(View.GONE);
-
-            Comment comment = (Comment) obj;
-            final Displayable disp = LocalDatabase.getInstance(activity).findExact(comment.getDisplayId());
-            if (disp == null) {
-                holder.text1.setVisibility(View.GONE);
-                holder.layout.setVisibility(View.GONE);
-            } else {
-                holder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.launch(disp, 0);
-
-                    }
-                });
-                content = "<font color='#33A5FF'>" + comment.getAuthorName() + "</font>" + " posted " + comment.getTable().toLowerCase() + " for " + "<font color='#77AA00'>" + disp.getName() + "</font>";
-                holder.text1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.launch(disp, 0);
-
-                    }
-                });
-
-                String text = comment.getText();
-                if (text.length() > 100) {
-                    text = text.substring(0, 100);
-                    if (text.contains(" ")) {
-                        text = text.substring(0, text.lastIndexOf(' '));
-                    }
-                    text += "...";
                 }
-                holder.text2.setVisibility(View.VISIBLE);
-
-                holder.text2.setText(text);
-            }
-
-        } else if (obj instanceof Image) {
-            holder.text2.setVisibility(View.GONE);
-            holder.divider.setVisibility(View.GONE);
-            final Image img = (Image) obj;
-            final Displayable disp = LocalDatabase.getInstance(activity).findExact(img.getDisplayId());
-            if (disp == null) {
-                holder.text1.setVisibility(View.GONE);
-                holder.layout.setVisibility(View.GONE);
-            } else {
-
-                File album = Image.getAlbumStorageDir("routedb");
-                File save = new File(album.getPath() + "/" + img.getName());
-                if (save.exists()) {
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(save).into(holder.imageView);
-                } else {
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(R.drawable.tap_to_load).into(holder.imageView);
-                    holder.imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int permissionWriteExternal = ContextCompat.checkSelfPermission(activity,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                            if (permissionWriteExternal == PackageManager.PERMISSION_GRANTED) {
-                                holder.imageView.setVisibility(View.GONE);
-                                holder.progress.setVisibility(View.VISIBLE);
-                                new GrabImageTask(activity, LocalDatabase.getInstance(activity), img, holder.imageView, false).onSuccess();
-                            } else {
-                                Toast.makeText(activity, "App needs permission to Write To External Storage to load images.", Toast.LENGTH_SHORT).show();
-                            }
-                            //System.out.println("loading image");
-                            holder.imageView.setOnClickListener(null);
-
-                        }
-                    });
-                }
-
-                content = "<font color='#33A5FF'>" + img.getAuthor() + "</font>" + " posted an image for " + "<font color='#77AA00'>" + disp.getName() + "</font>";
-                holder.text1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (disp instanceof LegacyRoute) {
-                            activity.launch(disp, 5);
-                        } else if (disp instanceof LegacyArea) {
-                            activity.launch(disp, 4);
-                        }
-                    }
-                });
-                holder.text2.setVisibility(View.GONE);
-            }
+            });
         }
-        holder.text1.setText(Html.fromHtml(content));*/
 
     }
 

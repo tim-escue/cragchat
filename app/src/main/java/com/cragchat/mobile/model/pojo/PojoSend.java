@@ -17,6 +17,7 @@ public class PojoSend implements Datable, Send {
     private String climbingStyle; //lead, toprope etc
     private String date;
     private String username;
+    private String entityName;
 
     public String getKey() {
         return key;
@@ -80,5 +81,14 @@ public class PojoSend implements Datable, Send {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

@@ -21,6 +21,7 @@ public class RealmSend extends RealmObject implements Send, Datable {
     public static final String FIELD_CLIMBING_STYLE = "climbingStyle";
     public static final String FIELD_DATE = "date";
     public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_ENTITY_NAME = "entityName";
 
     @PrimaryKey
     private String key;
@@ -33,6 +34,7 @@ public class RealmSend extends RealmObject implements Send, Datable {
     private String date;
     @Index
     private String username;
+    private String entityName;
 
     public static RealmSend from(PojoSend send) {
         RealmSend s = new RealmSend();
@@ -44,6 +46,7 @@ public class RealmSend extends RealmObject implements Send, Datable {
         s.setUsername(send.getUsername());
         s.setDate(send.getDate());
         s.setEntityKey(send.getEntityKey());
+        s.setEntityName(send.getEntityName());
         return s;
     }
 
@@ -109,5 +112,14 @@ public class RealmSend extends RealmObject implements Send, Datable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

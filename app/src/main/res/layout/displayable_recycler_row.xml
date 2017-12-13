@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/cardview_light_background"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/eight_dp"
-    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingBottom="@dimen/eight_dp"
     android:paddingEnd="@dimen/sixteen_dp"
-    android:paddingBottom="@dimen/eight_dp">
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingTop="@dimen/eight_dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -43,24 +43,24 @@
                 android:ellipsize="end"
                 android:maxLines="1" />
 
-           <!-- <TextView
-                andrkeyd:idkey@+id/list_row_three"
-                style="@style/TextValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1" />
+            <!-- <TextView
+                 andrkeyd:idkey@+id/list_row_three"
+                 style="@style/TextValue"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 android:ellipsize="end"
+                 android:maxLines="1" />
 
-            <TextView
-                andrkeyd:idkey@+id/list_row_four"
-                style="@style/TextValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:visibility="gone"
-                android:ellipsize="end"
-                android:maxLines="1" /> -->
+             <TextView
+                 andrkeyd:idkey@+id/list_row_four"
+                 style="@style/TextValue"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0"
+                 android:visibility="gone"
+                 android:ellipsize="end"
+                 android:maxLines="1" /> -->
 
         </LinearLayout>
 

@@ -41,11 +41,6 @@ public class RealmRoute extends RealmObject implements Route {
     public RealmRoute() {
     }
 
-    public Route.Type getRouteType() {
-        return type.equalsIgnoreCase("Trad") ? Type.Trad :
-                type.equalsIgnoreCase("Sport") ? Type.Sport : Type.Mixed;
-    }
-
     public RealmRoute(String key, String name,
                       String type, String latitude,
                       String longitude, int yds,
@@ -74,32 +69,37 @@ public class RealmRoute extends RealmObject implements Route {
                 RealmUtil.convertListToRealmList(route.getImages()));
     }
 
+    public Route.Type getRouteType() {
+        return type.equalsIgnoreCase("Trad") ? Type.Trad :
+                type.equalsIgnoreCase("Sport") ? Type.Sport : Type.Mixed;
+    }
+
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public void setType(String type) {
         this.type = type;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
     public void setLatitude(String latitude) {
         this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
     }
 
     public void setLongitude(String longitude) {

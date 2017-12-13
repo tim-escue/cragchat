@@ -17,19 +17,19 @@
             android:id="@+id/text_recent_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/twelve_dp"
+            android:layout_marginBottom="@dimen/sixteen_dp"
             android:layout_marginEnd="@dimen/sixteen_dp"
-            android:layout_marginTop="@dimen/sixteen_dp"
-            android:layout_marginBottom="@dimen/sixteen_dp"/>
+            android:layout_marginStart="@dimen/twelve_dp"
+            android:layout_marginTop="@dimen/sixteen_dp" />
 
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"
+            android:layout_marginEnd="@dimen/twelve_dp"
             android:layout_marginStart="@dimen/twelve_dp"
-            android:layout_marginEnd="@dimen/twelve_dp"/>
+            android:background="@color/divider" />
 
         <TextView
             android:id="@+id/text_recent_activity_text"

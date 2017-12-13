@@ -10,12 +10,20 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmRoute;
 
 public class CragChatActivity extends AppCompatActivity {
 
     public static final String DATA_STRING = "DATA_STRING";
+    PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
+        public boolean onMenuItemClick(MenuItem item) {
+            Intent intent = null;
+            System.out.println("listener in cragchatactivity");
+            if (intent != null) {
+                startActivity(intent);
+            }
+            return true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +46,6 @@ public class CragChatActivity extends AppCompatActivity {
         popup.show();
         return true;
     }
-
-    PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = null;
-            System.out.println("listener in cragchatactivity");
-            if (intent != null) {
-                startActivity(intent);
-            }
-            return true;
-        }
-    };
 
     public void launch(Area area) {
         launch(area, 0);

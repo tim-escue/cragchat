@@ -8,6 +8,8 @@ public interface Rating {
 
     String getEntityKey();
 
+    String getEntityName();
+
     String getUsername();
 
     int getYds();

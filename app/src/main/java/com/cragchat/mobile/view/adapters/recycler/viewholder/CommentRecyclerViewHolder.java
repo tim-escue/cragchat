@@ -22,6 +22,8 @@ import static android.view.View.GONE;
 
 public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.expanding_layout)
+    public LinearLayout expandable;
     @BindView(R.id.comment_author)
     TextView text1;
     @BindView(R.id.comment_date)
@@ -40,8 +42,6 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
     ImageView image2;
     @BindView(R.id.layout_comment)
     LinearLayout layout;
-    @BindView(R.id.expanding_layout)
-    public LinearLayout expandable;
     @BindView(R.id.line_if_more)
     View lineIfMore;
     @BindView(R.id.subcomment_with_more)
@@ -56,9 +56,9 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
                      View.OnClickListener expandingClickListener, View.OnClickListener voteUpClickListener,
                      View.OnClickListener voteDownClickListener, View.OnClickListener replyClickListener,
                      View.OnClickListener addCommentListener) {
-        //final int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
-        //layout.setBackgroundColor(color);
-        //expandable.setBackgroundColor(color);
+        final int color = (position % 2 == 0) ? Color.TRANSPARENT : Color.argb(255, 225, 225, 225);
+        layout.setBackgroundColor(color);
+        expandable.setBackgroundColor(color);
 
         layout.setOnClickListener(expandingClickListener);
 
@@ -68,7 +68,7 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
             expandable.setVisibility(GONE);
         }
 
-        if (comment.getDepth() != 0) {
+       /* if (comment.getDepth() != 0) {
             subcommentWithMore.setVisibility(View.VISIBLE);
             if (afterComment != null && afterComment.getDepth() == comment.getDepth()) {
                 lineIfMore.setBackgroundColor(Color.BLACK);
@@ -77,7 +77,8 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
             }
         } else {
             subcommentWithMore.setVisibility(GONE);
-        }
+        }*/
+        subcommentWithMore.setVisibility(GONE);
 
         image1.setOnClickListener(voteUpClickListener);
 

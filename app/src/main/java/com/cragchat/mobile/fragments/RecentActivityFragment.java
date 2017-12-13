@@ -99,8 +99,7 @@ public class RecentActivityFragment extends Fragment {
                 }
             });
             adapter.update(data);
-        } else {
-            progressBar.setVisibility(View.VISIBLE);
+
         }
     }
 

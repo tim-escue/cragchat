@@ -14,4 +14,6 @@ public interface NewRatingRequest {
 
     int getYds();
 
+    String getEntityName();
+
 }

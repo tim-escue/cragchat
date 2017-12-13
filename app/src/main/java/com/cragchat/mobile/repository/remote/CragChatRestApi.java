@@ -27,7 +27,8 @@ public interface CragChatRestApi {
     Observable<List<PojoSend>> getSends(String entityKey);
 
     Observable<PojoSend> postSend(String user_token, String entityKey, int pitches,
-                                  int attempts, String sendType, String climbingStyle);
+                                  int attempts, String sendType, String climbingStyle,
+                                  String entityName);
 
     Observable<PojoComment> postCommentVote(String userToken, String vote, String commentKey);
 
@@ -39,7 +40,8 @@ public interface CragChatRestApi {
                                              String table, String parentId, int depth);
 
     Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken,
-                                    RequestBody caption, RequestBody entityKey, RequestBody entityType);
+                                    RequestBody caption, RequestBody entityKey,
+                                    RequestBody entityType, RequestBody entityName);
 
     Observable<List<PojoImage>> getImages(String entityKey);
 
@@ -49,7 +51,8 @@ public interface CragChatRestApi {
 
     Observable<List<PojoRating>> getRatings(String entityKey);
 
-    Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey);
+    Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey,
+                                      String entityName);
 
     Observable<PojoComment> postComment(String userToken, String comment, String entityKey, String table);
 

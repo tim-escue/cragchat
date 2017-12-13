@@ -58,27 +58,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="text"
             android:imeOptions="actionDone"
+            android:inputType="text"
             android:maxLines="1" />
 
     </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/login_button"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/password_layout"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/eight_dp"
         android:text="Submit" />
 
     <TextView
         android:id="@+id/or_label"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
         android:text="- or -" />
 
     <Button

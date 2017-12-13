@@ -8,6 +8,8 @@ public interface Send {
 
     String getEntityKey();
 
+    String getEntityName();
+
     int getPitches();
 
     String getSendType();

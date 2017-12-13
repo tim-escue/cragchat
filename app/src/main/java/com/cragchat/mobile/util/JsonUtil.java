@@ -19,14 +19,6 @@ import java.lang.reflect.Type;
  */
 
 public class JsonUtil {
-    public static String stringArrayToJSon(String[] array) {
-        JsonArray jsonStringArray = new JsonArray();
-        for (String i : array) {
-            jsonStringArray.add(i);
-        }
-        return jsonStringArray.toString();
-    }
-
     private static final JsonDeserializer<Datable> datableDeserializer = new JsonDeserializer<Datable>() {
         @Override
         public Datable deserialize(JsonElement arg0, Type arg1,
@@ -45,6 +37,14 @@ public class JsonUtil {
             return datable;
         }
     };
+
+    public static String stringArrayToJSon(String[] array) {
+        JsonArray jsonStringArray = new JsonArray();
+        for (String i : array) {
+            jsonStringArray.add(i);
+        }
+        return jsonStringArray.toString();
+    }
 
     public static JsonDeserializer<Datable> getDatableDeserializer() {
         return datableDeserializer;

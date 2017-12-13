@@ -13,13 +13,13 @@
         android:layout_margin="@dimen/sixteen_dp"
         android:padding="0dp" />
 
-   <!-- <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/spinner_comment_sort"
-        android:layout_marginEnd="@dimen/sixteen_dp"
-        android:layout_marginStart="@dimen/sixteen_dp"
-        android:background="@color/divider" /> -->
+    <!-- <View
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:layout_below="@id/spinner_comment_sort"
+         android:layout_marginEnd="@dimen/sixteen_dp"
+         android:layout_marginStart="@dimen/sixteen_dp"
+         android:background="@color/divider" /> -->
 
     <TextView
         android:id="@+id/list_empty"

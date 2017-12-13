@@ -20,6 +20,7 @@ import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 
 import static android.view.View.GONE;
@@ -45,8 +46,43 @@ public class ViewImageActivity extends CragChatActivity {
     TextView showCaptionButton;
     @BindView(R.id.author_name)
     TextView author;
-
+    private String entityKey;
     private Realm mRealm;
+
+    private static int getRotation(InputStream stream) {
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(stream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        int orientation = exifInterface.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+        }
+        return -1;
+    }
+
+    @OnClick(R.id.back_button)
+    void back(View view) {
+        RealmArea area = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, entityKey).findFirst();
+        if (area != null) {
+            launch(area);
+        } else {
+            RealmRoute route = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
+            if (route != null) {
+                launch(route);
+            }
+        }
+    }
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -54,7 +90,7 @@ public class ViewImageActivity extends CragChatActivity {
         ButterKnife.bind(this);
         String filename = getIntent().getStringExtra(RealmImage.FIELD_FILENAME);
         String localPath = getIntent().getStringExtra("localPath");
-        final String entityKey = getIntent().getStringExtra("entityKey");
+        entityKey = getIntent().getStringExtra("entityKey");
         mRealm = Realm.getDefaultInstance();
         RealmImage image = mRealm.where(RealmImage.class).equalTo(RealmImage.FIELD_FILENAME, filename).findFirst();
 
@@ -107,47 +143,11 @@ public class ViewImageActivity extends CragChatActivity {
                 showCaptionLayout.setVisibility(GONE);
             }
         });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RealmArea area = mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, entityKey).findFirst();
-                if (area != null) {
-                    launch(area);
-                } else {
-                    RealmRoute route = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
-                    if (route != null) {
-                        launch(route);
-                    }
-                }
-            }
-        });
     }
 
     public void onDestroy() {
         super.onDestroy();
         mRealm.close();
-    }
-
-    private static int getRotation(InputStream stream) {
-        ExifInterface exifInterface = null;
-        try {
-            exifInterface = new ExifInterface(stream);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
-        int orientation = exifInterface.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL);
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return 90;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return 180;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return 270;
-        }
-        return -1;
     }
 
     @Override

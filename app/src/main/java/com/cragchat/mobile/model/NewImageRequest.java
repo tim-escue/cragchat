@@ -12,4 +12,6 @@ public interface NewImageRequest {
     String getEntityType();
 
     String getFilePath();
+
+    String getEntityName();
 }

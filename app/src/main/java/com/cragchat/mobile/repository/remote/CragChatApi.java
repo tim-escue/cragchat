@@ -50,7 +50,8 @@ public interface CragChatApi {
             @Field("pitches") int pitches,
             @Field("attempts") int attempts,
             @Field("send_type") String sendType,
-            @Field("climbing_style") String climbingStyle
+            @Field("climbing_style") String climbingStyle,
+            @Field("entity_name") String entityName
     );
 
     @GET("/api/rating")
@@ -64,7 +65,8 @@ public interface CragChatApi {
             @Field("user_token") String user_token,
             @Field("stars") int stars,
             @Field("yds") int yds,
-            @Field("entity_key") String entityKey
+            @Field("entity_key") String entityKey,
+            @Field("entity_name") String entityName
     );
 
     @Multipart
@@ -74,7 +76,8 @@ public interface CragChatApi {
             @Part("user_token") RequestBody userToken,
             @Part("caption") RequestBody caption,
             @Part("entity_key") RequestBody entityKey,
-            @Part("entity_type") RequestBody entityType
+            @Part("entity_type") RequestBody entityType,
+            @Part("entity_name") RequestBody entityName
     );
 
     @GET("/api/image")

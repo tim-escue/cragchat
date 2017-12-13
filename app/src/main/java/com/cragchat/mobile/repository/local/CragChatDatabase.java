@@ -91,14 +91,14 @@ public interface CragChatDatabase {
 
     void addNewCommentRequest(String comment, String entityKey, String table);
 
-    void addNewRatingRequest(int stars, int yds, String entityKey);
+    void addNewRatingRequest(int stars, int yds, String entityKey, String entityName);
 
     void addNewCommentEditRequest(String comment, String commentKey);
 
-    void addNewImageRequest(String captionString, String entityKey, String entityType, String fileUri);
+    void addNewImageRequest(String captionString, String entityKey, String entityType, String fileUri, String entityName);
 
-    void addNewRealmSendRequest(String entityKey, int pitches, int attempts, String sendType,
-                                String climbingStyle);
+    void addNewSendRequest(String entityKey, int pitches, int attempts, String sendType,
+                           String climbingStyle, String entityName);
 
     void addNewCommentVoteRequest(String vote, String commentKey);
 

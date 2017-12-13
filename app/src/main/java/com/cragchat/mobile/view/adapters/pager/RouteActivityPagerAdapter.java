@@ -15,6 +15,11 @@ import com.cragchat.mobile.model.Route;
 
 public class RouteActivityPagerAdapter extends TabPagerAdapter {
 
+    public static final int TAB_BETA = 0;
+    public static final int TAB_RATINGS = 1;
+    public static final int TAB_SENDS = 2;
+    public static final int TAB_IMAGES = 4;
+
     public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, Route route) {
         super(fragmentManager, appBarLayout, floatingActionButton);
 

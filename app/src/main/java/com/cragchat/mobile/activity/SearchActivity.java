@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,12 @@ public class SearchActivity extends SearchableActivity {
                     LinearLayoutManager.VERTICAL);
         }
     }
+
+    @Override
+    int getToolbarColor() {
+        return ContextCompat.getColor(this, R.color.primary);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

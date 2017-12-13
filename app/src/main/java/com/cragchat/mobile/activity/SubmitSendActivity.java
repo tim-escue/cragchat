@@ -17,11 +17,13 @@ import com.cragchat.mobile.repository.Repository;
 public class SubmitSendActivity extends CragChatActivity {
 
     private String entityKey;
+    private String entityName;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_submit_send);
         entityKey = getIntent().getStringExtra("entityKey");
+        entityName = Repository.getRoute(entityKey, null).getName();
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_select_style);
         ArrayAdapter adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -86,11 +88,12 @@ public class SubmitSendActivity extends CragChatActivity {
         }
 
         Repository.addSend(Authentication.getAuthenticatedUser(this).getToken(),
-                    entityKey,
-                    pitches,
-                    attempts,
-                    sendStyle,
+                entityKey,
+                pitches,
+                attempts,
+                sendStyle,
                 climbStyle,
+                entityName,
                 null);
 
 

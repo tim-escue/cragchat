@@ -56,8 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="text"
                 android:imeOptions="actionNext"
+                android:inputType="text"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
@@ -73,8 +73,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="text"
                 android:imeOptions="actionNext"
+                android:inputType="text"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
@@ -89,8 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Verify Password"
-                android:inputType="text"
                 android:imeOptions="actionDone"
+                android:inputType="text"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>

@@ -14,6 +14,7 @@ public class RealmNewImageRequest extends RealmObject implements NewImageRequest
     private String entityKey;
     private String entityType;
     private String filePath;
+    private String entityName;
 
     public String getCaptionString() {
         return captionString;
@@ -45,5 +46,13 @@ public class RealmNewImageRequest extends RealmObject implements NewImageRequest
 
     public void setFilePath(String fileUri) {
         this.filePath = fileUri;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

@@ -63,6 +63,12 @@ public class CommentRecyclerAdapterTEST extends RecyclerView.Adapter<CommentRecy
         data = arrangeComments(comments);
     }
 
+    public static View getItemView(ViewGroup viewGroup) {
+        return LayoutInflater.
+                from(viewGroup.getContext()).
+                inflate(R.layout.ccomment_lis_item_test, viewGroup, false);
+    }
+
     public void update(List<Comment> comments) {
         data = arrangeComments(comments);
         notifyDataSetChanged();
@@ -85,12 +91,6 @@ public class CommentRecyclerAdapterTEST extends RecyclerView.Adapter<CommentRecy
     @Override
     public CommentRecyclerViewHolderTEST onCreateViewHolder(ViewGroup viewGroup, int i) {
         return new CommentRecyclerViewHolderTEST(getItemView(viewGroup));
-    }
-
-    public static View getItemView(ViewGroup viewGroup) {
-        return LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.ccomment_lis_item_test, viewGroup, false);
     }
 
     public void sort(int j) {
@@ -222,8 +222,23 @@ public class CommentRecyclerAdapterTEST extends RecyclerView.Adapter<CommentRecy
         return data;
     }
 
+    private void addChild(CommentRecyclerViewHolderTEST vh, Comment comment) {
+        if (map.containsKey(comment.getKey())) {
+            List<Comment> children = map.get(comment.getKey());
+            for (Comment i : children) {
+                View v = getItemView(vh.group);
+                CommentRecyclerViewHolderTEST vhn = new CommentRecyclerViewHolderTEST(v);
+                vhn.bind(i, null, 0, lastOpened, null, null, null, null, null);
+                vh.group.addView(v);
+                addChild(vhn, i);
+            }
+        }
+    }
+
     public class CommentRecyclerViewHolderTEST extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.expanding_layout)
+        public LinearLayout expandable;
         @BindView(R.id.comment_author)
         TextView text1;
         @BindView(R.id.comment_date)
@@ -242,8 +257,6 @@ public class CommentRecyclerAdapterTEST extends RecyclerView.Adapter<CommentRecy
         ImageView image2;
         @BindView(R.id.layout_comment)
         LinearLayout layout;
-        @BindView(R.id.expanding_layout)
-        public LinearLayout expandable;
         @BindView(R.id.line_if_more)
         View lineIfMore;
         @BindView(R.id.subcomment_with_more)
@@ -336,19 +349,6 @@ public class CommentRecyclerAdapterTEST extends RecyclerView.Adapter<CommentRecy
             text3.setText(comment.getComment());
             text4.setOnClickListener(replyClickListener);
             text6.setOnClickListener(addCommentListener);
-        }
-    }
-
-    private void addChild(CommentRecyclerViewHolderTEST vh, Comment comment) {
-        if (map.containsKey(comment.getKey())) {
-            List<Comment> children = map.get(comment.getKey());
-            for (Comment i : children) {
-                View v = getItemView(vh.group);
-                CommentRecyclerViewHolderTEST vhn = new CommentRecyclerViewHolderTEST(v);
-                vhn.bind(i, null, 0, lastOpened, null, null, null, null, null);
-                vh.group.addView(v);
-                addChild(vhn, i);
-            }
         }
     }
 

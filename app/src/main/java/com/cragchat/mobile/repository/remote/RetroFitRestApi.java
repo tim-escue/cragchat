@@ -35,15 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroFitRestApi implements CragChatRestApi {
 
-    private CragChatApi api;
     private static RetroFitRestApi instance;
-
-    public static CragChatRestApi getInstance() {
-        if (instance == null) {
-            instance = new RetroFitRestApi();
-        }
-        return instance;
-    }
+    private CragChatApi api;
 
     private RetroFitRestApi() {
         Gson gson = new GsonBuilder().registerTypeAdapter(Datable.class, JsonUtil.getDatableDeserializer())
@@ -78,6 +71,13 @@ public class RetroFitRestApi implements CragChatRestApi {
         api = retrofit.create(CragChatApi.class);
     }
 
+    public static CragChatRestApi getInstance() {
+        if (instance == null) {
+            instance = new RetroFitRestApi();
+        }
+        return instance;
+    }
+
     @Override
     public Observable<List<Datable>> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds) {
         return api.getRecentActivity(entityKey, areaIds, routeIds);
@@ -89,8 +89,10 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<PojoSend> postSend(String user_token, String entityKey, int pitches, int attempts, String sendType, String climbingStyle) {
-        return api.postSend(user_token, entityKey, pitches, attempts, sendType, climbingStyle);
+    public Observable<PojoSend> postSend(String user_token, String entityKey, int pitches,
+                                         int attempts, String sendType, String climbingStyle,
+                                         String entityName) {
+        return api.postSend(user_token, entityKey, pitches, attempts, sendType, climbingStyle, entityName);
     }
 
     @Override
@@ -115,8 +117,10 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken, RequestBody caption, RequestBody entityKey, RequestBody entityType) {
-        return api.postImage(image, userToken, caption, entityKey, entityType);
+    public Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken,
+                                           RequestBody caption, RequestBody entityKey,
+                                           RequestBody entityType, RequestBody entityName) {
+        return api.postImage(image, userToken, caption, entityKey, entityType, entityName);
     }
 
     @Override
@@ -140,8 +144,9 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey) {
-        return api.postRating(userToken, stars, yds, entityKey);
+    public Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey,
+                                             String entityName) {
+        return api.postRating(userToken, stars, yds, entityKey, entityName);
     }
 
     @Override

@@ -31,6 +31,12 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
         this.activity = activity;
     }
 
+    public static View getItemView(ViewGroup root) {
+        return LayoutInflater.
+                from(root.getContext()).
+                inflate(R.layout.displayable_recycler_row, root, false);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(getItemView(parent));
@@ -47,12 +53,6 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final RealmArea area = getItem(position);
         holder.bind(area, activity);
-    }
-
-    public static View getItemView(ViewGroup root) {
-        return LayoutInflater.
-                from(root.getContext()).
-                inflate(R.layout.displayable_recycler_row, root, false);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

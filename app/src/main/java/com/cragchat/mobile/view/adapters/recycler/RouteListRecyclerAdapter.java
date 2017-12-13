@@ -33,6 +33,14 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
     private Realm mRealm;
     private String[] routeIds;
 
+    private RouteListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRoute> data, boolean autoUpdate,
+                                     String[] routeIds, CragChatActivity activity, Realm realm) {
+        super(data, autoUpdate);
+        this.activity = activity;
+        this.mRealm = realm;
+        this.routeIds = routeIds;
+    }
+
     public static RouteListRecyclerAdapter create(String[] routeIds, CragChatActivity activity) {
         Realm realm = Realm.getDefaultInstance();
         return new RouteListRecyclerAdapter(
@@ -44,29 +52,21 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
         );
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public static View getItemView(ViewGroup root) {
+        return LayoutInflater.
+                from(root.getContext()).
+                inflate(R.layout.route_list_item, root, false);
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void disconnectListener() {
         System.out.println("Lifecycle: Actually destroyed");
         mRealm.close();
     }
 
-    private RouteListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmRoute> data, boolean autoUpdate,
-                                     String[] routeIds, CragChatActivity activity, Realm realm) {
-        super(data, autoUpdate);
-        this.activity = activity;
-        this.mRealm = realm;
-        this.routeIds = routeIds;
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(getItemView(parent));
-    }
-
-    public static View getItemView(ViewGroup root) {
-        return LayoutInflater.
-                from(root.getContext()).
-                inflate(R.layout.route_list_item, root, false);
     }
 
     @Override

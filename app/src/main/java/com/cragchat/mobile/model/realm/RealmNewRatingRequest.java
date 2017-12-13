@@ -12,6 +12,7 @@ public class RealmNewRatingRequest extends RealmObject implements NewRatingReque
     private String userToken;
     private int stars;
     private int yds;
+    private String entityName;
     private String entityKey;
 
     public String getUserToken() {
@@ -44,5 +45,14 @@ public class RealmNewRatingRequest extends RealmObject implements NewRatingReque
 
     public void setEntityKey(String entityKey) {
         this.entityKey = entityKey;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

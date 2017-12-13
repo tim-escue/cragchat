@@ -1,9 +1,9 @@
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="25dp"
     android:layout_margin="8dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical"
+    android:padding="25dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -32,9 +32,9 @@
 
         <EditText
             android:id="@+id/login_password"
-            android:inputType="textPassword"
             android:layout_width="200dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
 
     </LinearLayout>
 
@@ -42,34 +42,34 @@
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
         android:clickable="true"
-        android:onClick="auth" />
+        android:onClick="auth"
+        android:text="Login" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Haven't registered yet? No problem, only takes a few seconds."
-        android:paddingTop="20dp" />
+        android:paddingTop="20dp"
+        android:text="Haven't registered yet? No problem, only takes a few seconds." />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
         android:clickable="true"
-        android:onClick="register" />
+        android:onClick="register"
+        android:text="Register" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot your password? Request an email reset here."
-        android:paddingTop="20dp" />
+        android:paddingTop="20dp"
+        android:text="Forgot your password? Request an email reset here." />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Request Reset"
         android:clickable="true"
-        android:onClick="requestReset" />
+        android:onClick="requestReset"
+        android:text="Request Reset" />
 
 </LinearLayout>

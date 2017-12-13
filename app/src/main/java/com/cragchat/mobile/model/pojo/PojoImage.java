@@ -11,6 +11,7 @@ public class PojoImage implements Datable, Image {
     private String filename;
     private String date;
     private String authorName;
+    private String entityName;
 
     public String getEntityKey() {
         return entityKey;
@@ -50,5 +51,13 @@ public class PojoImage implements Datable, Image {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

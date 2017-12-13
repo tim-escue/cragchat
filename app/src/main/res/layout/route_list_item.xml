@@ -30,29 +30,29 @@
         android:id="@+id/yds"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
-        android:textSize="14sp"
         android:layout_alignStart="@+id/author"
-        android:layout_below="@id/author" />
+        android:layout_below="@id/author"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/type"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
-        android:textSize="14sp"
+        android:layout_alignBottom="@id/yds"
         android:layout_toEndOf="@id/yds"
-        android:layout_alignBottom="@id/yds" />
+        android:textColor="@color/primary_text"
+        android:textSize="14sp" />
 
     <RatingBar
         android:id="@+id/stars"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numStars="5"
-        android:isIndicator="true"
-        android:layout_toEndOf="@+id/type"
         android:layout_alignBottom="@id/type"
         android:layout_marginEnd="@dimen/sixteen_dp"
-        style="?android:attr/ratingBarStyleSmall" />
+        android:layout_toEndOf="@+id/type"
+        android:isIndicator="true"
+        android:numStars="5" />
 
 </RelativeLayout>

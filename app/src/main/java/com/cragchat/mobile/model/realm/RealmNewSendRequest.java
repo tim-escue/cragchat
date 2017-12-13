@@ -15,6 +15,7 @@ public class RealmNewSendRequest extends RealmObject implements NewSendRequest {
     private int attempts;
     private String sendType;
     private String climbingStyle;
+    private String entityName;
 
     public String getEntityKey() {
         return entityKey;
@@ -54,5 +55,14 @@ public class RealmNewSendRequest extends RealmObject implements NewSendRequest {
 
     public void setClimbingStyle(String climbingStyle) {
         this.climbingStyle = climbingStyle;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

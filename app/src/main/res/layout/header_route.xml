@@ -2,150 +2,163 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <RatingBar
-        android:id="@+id/stars"
-        style="?android:attr/ratingBarStyleIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:isIndicator="true"
-        android:numStars="5" />
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
 
     <LinearLayout
-        android:id="@+id/yds_layout"
-        android:layout_width="wrap_content"
+        android:id="@+id/rating_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/stars"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/sixteen_dp">
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/yds_label"
+        <RatingBar
+            android:id="@+id/stars"
+            style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yds"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/yds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:isIndicator="true"
+            android:numStars="5" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/type_layout"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/yds_layout"
-        android:layout_alignTop="@id/yds_layout"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/sixteen_dp">
+        android:layout_below="@id/rating_bar_layout"
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/type_label"
+        <LinearLayout
+            android:id="@+id/yds_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Type"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/sixteen_dp">
 
-        <TextView
-            android:id="@+id/type"
+            <TextView
+                android:id="@+id/yds_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yds"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/yds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/type_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_alignTop="@id/yds_layout"
+            android:layout_toEndOf="@id/yds_layout"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/sixteen_dp">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-    <LinearLayout
-        android:id="@+id/areas_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/type_layout"
-        android:layout_alignTop="@id/yds_layout"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/sixteen_dp">
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/ratings_label"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/areas_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ratings"
-            android:textColor="@color/white"
+            android:layout_alignTop="@id/yds_layout"
+            android:layout_toEndOf="@id/type_layout"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/sixteen_dp">
 
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/ratings_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ratings"
+                android:textColor="@color/white"
 
-        <TextView
-            android:id="@+id/ratings"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ratings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sixteen_dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/routes_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sixteen_dp" />
-    </LinearLayout>
+            android:layout_alignTop="@id/yds_layout"
+            android:layout_toEndOf="@id/areas_layout"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/sixteen_dp">
 
-    <LinearLayout
-        android:id="@+id/routes_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/areas_layout"
-        android:gravity="center_horizontal"
-        android:layout_alignTop="@id/yds_layout"
-        android:orientation="vertical"
-        android:padding="@dimen/sixteen_dp">
+            <TextView
+                android:id="@+id/sends_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sends"
 
-        <TextView
-            android:id="@+id/sends_label"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/sends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/images_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sends"
+            android:layout_alignTop="@id/yds_layout"
+            android:layout_toEndOf="@id/routes_layout"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/sixteen_dp">
 
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/images_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Images"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/sends"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/images_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/routes_layout"
-        android:layout_alignTop="@id/yds_layout"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/sixteen_dp">
-
-        <TextView
-            android:id="@+id/images_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Images"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/images"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

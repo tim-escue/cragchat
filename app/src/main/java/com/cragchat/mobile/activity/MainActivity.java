@@ -84,7 +84,7 @@ public class MainActivity extends NavigableActivity {
             if (permissions[i].equals("android.permission.WRITE_EXTERNAL_STORAGE")) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     //Log.d("Permission", "Granted permission for permission[" + i + "] " + permissions[i]);
-                  //  LocalDatabase.getInstance(this).updateAll(this);
+                    //  LocalDatabase.getInstance(this).updateAll(this);
                     Fragment frg = null;
                     frg = getSupportFragmentManager().findFragmentByTag("someString1");
                     if (frg != null) {

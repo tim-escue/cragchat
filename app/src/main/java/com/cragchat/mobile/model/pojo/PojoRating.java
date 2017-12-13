@@ -15,6 +15,7 @@ public class PojoRating implements Datable, Rating {
     private int yds;
     private int stars;
     private String date;
+    private String entityName;
 
     public String getEntityKey() {
         return entityKey;
@@ -62,5 +63,14 @@ public class PojoRating implements Datable, Rating {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

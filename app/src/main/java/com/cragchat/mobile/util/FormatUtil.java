@@ -8,6 +8,7 @@ import com.cragchat.mobile.model.Route;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -31,6 +32,16 @@ public class FormatUtil {
         RAW_FORMAT.setTimeZone(TimeZone.getTimeZone("PST"));
         MONTH_DAY_YEAR = new SimpleDateFormat("MMMM d, yyyy");
         MONTH_DAY_YEAR.setTimeZone(TimeZone.getTimeZone("PST"));
+    }
+
+    public static String getDateAsElapsed(String date) {
+        Date dateObject = null;
+        try {
+            dateObject = FormatUtil.RAW_FORMAT.parse(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : date;
     }
 
     public static String getFormattedDate(String rawDateString) {
@@ -64,6 +75,9 @@ public class FormatUtil {
         }
 
         long elapsedSeconds = different / secondsInMilli;
+        if (elapsedSeconds < 30) {
+            return "Just now";
+        }
         return elapsedSeconds + " seconds ago";
     }
 

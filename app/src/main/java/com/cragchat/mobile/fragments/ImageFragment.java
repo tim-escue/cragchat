@@ -34,13 +34,12 @@ import butterknife.ButterKnife;
 public class ImageFragment extends Fragment implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 873;
-    private String key;
-    private ImageRecyclerAdapter adap;
-
     @BindView(R.id.list_empty)
     TextView empty;
     @BindView(R.id.images_recycler)
     RecyclerView recyclerView;
+    private String key;
+    private ImageRecyclerAdapter adap;
 
     public static ImageFragment newInstance(String displayableId) {
         ImageFragment f = new ImageFragment();

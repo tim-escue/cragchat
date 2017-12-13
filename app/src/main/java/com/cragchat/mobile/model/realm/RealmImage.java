@@ -19,6 +19,7 @@ public class RealmImage extends RealmObject implements Image, Datable {
     public static final String FIELD_CAPTION = "caption";
     public static final String FIELD_FILENAME = "filename";
     public static final String FIELD_DATE = "date";
+    public static final String FIELD_ENTITY_NAME = "entityName";
 
     @Index
     private String entityKey;
@@ -29,6 +30,7 @@ public class RealmImage extends RealmObject implements Image, Datable {
     private String date;
     @Index
     private String authorName;
+    private String entityName;
 
     public static RealmImage from(PojoImage pojoImage) {
         RealmImage image = new RealmImage();
@@ -37,11 +39,16 @@ public class RealmImage extends RealmObject implements Image, Datable {
         image.setEntityKey(pojoImage.getEntityKey());
         image.setFilename(pojoImage.getFilename());
         image.setDate(pojoImage.getDate());
+        image.setEntityName(pojoImage.getEntityName());
         return image;
     }
 
     public String getEntityKey() {
         return entityKey;
+    }
+
+    public void setEntityKey(String entityKey) {
+        this.entityKey = entityKey;
     }
 
     public String getAuthorName() {
@@ -50,10 +57,6 @@ public class RealmImage extends RealmObject implements Image, Datable {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
-    }
-
-    public void setEntityKey(String entityKey) {
-        this.entityKey = entityKey;
     }
 
     public String getCaption() {
@@ -78,5 +81,14 @@ public class RealmImage extends RealmObject implements Image, Datable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

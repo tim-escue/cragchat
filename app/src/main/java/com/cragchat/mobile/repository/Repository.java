@@ -95,7 +95,7 @@ public class Repository {
 
         for (NewSendRequest req : localDatabase.getNewSendRequests()) {
             addSend(userToken, req.getEntityKey(), req.getPitches(), req.getAttempts(),
-                    req.getSendType(), req.getClimbingStyle(), new Callback<Send>() {
+                    req.getSendType(), req.getClimbingStyle(), req.getEntityName(), new Callback<Send>() {
                         @Override
                         public void onSuccess(Send object) {
                             showSentQueuedSent("send");
@@ -109,7 +109,7 @@ public class Repository {
         }
 
         for (NewRatingRequest req : localDatabase.getNewRatingRequests()) {
-            addRating(userToken, req.getStars(), req.getYds(), req.getEntityKey(),
+            addRating(userToken, req.getStars(), req.getYds(), req.getEntityKey(), req.getEntityName(),
                     new Callback<Rating>() {
                         @Override
                         public void onSuccess(Rating object) {
@@ -185,7 +185,7 @@ public class Repository {
             try {
                 final File file = new File(req.getFilePath());
                 addImage(req.getCaptionString(), req.getEntityKey(), req.getEntityType(), file,
-                        new Callback<Image>() {
+                        req.getEntityName(), new Callback<Image>() {
                             @Override
                             public void onSuccess(Image object) {
                                 file.delete();
@@ -211,51 +211,51 @@ public class Repository {
 
     public static List getQueryMatches(final String query, final Callback<List> updateCallback) {
         if (Network.isConnected(applicationContext)) {
-                networkApi.getAreasContaining(query)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new EntityRequestObserver<ResponseBody>() {
-                            @Override
-                            public void onNext(ResponseBody object) {
-                                Gson gson = new Gson();
-                                Type areaType = new TypeToken<PojoArea>() {
-                                }.getType();
-                                Type routeType = new TypeToken<PojoRoute>() {
-                                }.getType();
-                                List<Object> objs = new ArrayList<>();
-                                try {
-                                    JSONArray array = new JSONArray(object.string());
-                                    for (int i = 0; i < array.length(); i++) {
-                                        String result = array.getString(i);
-                                        if (result.contains("routes")) {
-                                            PojoArea area = gson.fromJson(result, areaType);
-                                            localDatabase.update(area);
-                                            objs.add(area);
-                                        } else {
-                                            PojoRoute route = gson.fromJson(result, routeType);
-                                            localDatabase.update(route);
-                                            objs.add(route);
-                                        }
+            networkApi.getAreasContaining(query)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new EntityRequestObserver<ResponseBody>() {
+                        @Override
+                        public void onNext(ResponseBody object) {
+                            Gson gson = new Gson();
+                            Type areaType = new TypeToken<PojoArea>() {
+                            }.getType();
+                            Type routeType = new TypeToken<PojoRoute>() {
+                            }.getType();
+                            List<Object> objs = new ArrayList<>();
+                            try {
+                                JSONArray array = new JSONArray(object.string());
+                                for (int i = 0; i < array.length(); i++) {
+                                    String result = array.getString(i);
+                                    if (result.contains("routes")) {
+                                        PojoArea area = gson.fromJson(result, areaType);
+                                        localDatabase.update(area);
+                                        objs.add(area);
+                                    } else {
+                                        PojoRoute route = gson.fromJson(result, routeType);
+                                        localDatabase.update(route);
+                                        objs.add(route);
+                                    }
 
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
-                                if (objs.size() > 0) {
-                                    if (updateCallback != null) {
-                                        updateCallback.onSuccess(objs);
-                                    }
-                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                showGetFailure("query matches for: " + query);
+                            if (objs.size() > 0) {
                                 if (updateCallback != null) {
-                                    updateCallback.onFailure();
+                                    updateCallback.onSuccess(objs);
                                 }
                             }
-                        });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            showGetFailure("query matches for: " + query);
+                            if (updateCallback != null) {
+                                updateCallback.onFailure();
+                            }
+                        }
+                    });
         } else {
             if (updateCallback != null) {
                 updateCallback.onFailure();
@@ -298,9 +298,10 @@ public class Repository {
     }
 
     public static void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
-                               final String sendType, final String climbingStyle, final Callback<Send> callback) {
+                               final String sendType, final String climbingStyle, final String entityName,
+                               final Callback<Send> callback) {
         if (Network.isConnected(applicationContext)) {
-            networkApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle)
+            networkApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -315,8 +316,8 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
-                                    localDatabase.addNewRealmSendRequest(entityKey, pitches, attempts,
-                                            sendType, climbingStyle);
+                                    localDatabase.addNewSendRequest(entityKey, pitches, attempts,
+                                            sendType, climbingStyle, entityName);
                                     showQueueMessage("send");
                                     if (callback != null) {
                                         callback.onFailure();
@@ -325,8 +326,8 @@ public class Repository {
                             }
                     );
         } else {
-            localDatabase.addNewRealmSendRequest(entityKey, pitches, attempts,
-                    sendType, climbingStyle);
+            localDatabase.addNewSendRequest(entityKey, pitches, attempts,
+                    sendType, climbingStyle, entityName);
             showQueueMessage("send");
             if (callback != null) {
                 callback.onFailure();
@@ -384,6 +385,7 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
+                                    throwable.printStackTrace();
                                     showGetFailure("comments");
                                     if (updateCallback != null) {
                                         updateCallback.onFailure();
@@ -402,7 +404,7 @@ public class Repository {
 
     public static void addImage(final String captionString,
                                 final String entityKey, final String entityType, final File imageFile,
-                                final Callback<Image> callback) {
+                                final String entityName, final Callback<Image> callback) {
         if (Network.isConnected(applicationContext)) {
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
@@ -412,7 +414,8 @@ public class Repository {
             RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
             RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"),
                     Authentication.getAuthenticatedUser(applicationContext).getToken());
-            networkApi.postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest)
+            RequestBody entityNameRequest = RequestBody.create(MediaType.parse("text/plain"), entityName);
+            networkApi.postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest, entityNameRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoImage>() {
@@ -431,7 +434,7 @@ public class Repository {
                                 Toast.makeText(applicationContext, "Image could no longer be found" +
                                         " to be uploaded", Toast.LENGTH_LONG).show();
                             } else {
-                                localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath());
+                                localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
                                 showQueueMessage("image");
                             }
                             if (callback != null) {
@@ -442,7 +445,7 @@ public class Repository {
 
         } else {
             showQueueMessage("image");
-            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath());
+            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
             if (callback != null) {
                 callback.onFailure();
             }
@@ -566,9 +569,9 @@ public class Repository {
     }
 
     public static void addRating(final String userToken, final int stars, final int yds, final String entityKey,
-                                 final Callback<Rating> callback) {
+                                 final String entityName, final Callback<Rating> callback) {
         if (Network.isConnected(applicationContext)) {
-            networkApi.postRating(userToken, stars, yds, entityKey)
+            networkApi.postRating(userToken, stars, yds, entityKey, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoRating>() {
@@ -582,7 +585,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            localDatabase.addNewRatingRequest(stars, yds, entityKey);
+                            localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
                             showQueueMessage("rating");
                             if (callback != null) {
                                 callback.onFailure();
@@ -590,7 +593,7 @@ public class Repository {
                         }
                     });
         } else {
-            localDatabase.addNewRatingRequest(stars, yds, entityKey);
+            localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
             showQueueMessage("rating");
             if (callback != null) {
                 callback.onFailure();

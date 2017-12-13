@@ -44,10 +44,6 @@ public class ImageEditView extends AppCompatImageView {
     private Stack<Path> pointMap;
     private List<Point> currentPoitns;
 
-    public void setDrawColor(int color) {
-        mPaint.setColor(color);
-    }
-
     public ImageEditView(Context context) {
         this(context, null);
     }
@@ -106,31 +102,6 @@ public class ImageEditView extends AppCompatImageView {
         });
     }
 
-    @Override
-    public void setImageBitmap(Bitmap bitmap) {
-        super.setImageBitmap(bitmap);
-        points.clear();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mBitmap != null) {
-            canvas.drawBitmap(mBitmap, bitmapStartX, bitmapStartY, mBitmapPaint);
-        }
-    }
-
-    public Bitmap scaleDown() {
-
-        Bitmap bitmap = convertToMutable(((BitmapDrawable) getDrawable()).getBitmap());
-        Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, bitmap.getWidth(),
-                bitmap.getHeight(), true);
-        mBitmap.recycle();
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(newBitmap, 0, 0, mBitmapPaint);
-        return bitmap;
-    }
-
     public static Bitmap convertToMutable(Bitmap imgIn) {
         try {
             //this is the file going to use temporally to save the bytes.
@@ -175,6 +146,35 @@ public class ImageEditView extends AppCompatImageView {
         }
 
         return imgIn;
+    }
+
+    public void setDrawColor(int color) {
+        mPaint.setColor(color);
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap bitmap) {
+        super.setImageBitmap(bitmap);
+        points.clear();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mBitmap != null) {
+            canvas.drawBitmap(mBitmap, bitmapStartX, bitmapStartY, mBitmapPaint);
+        }
+    }
+
+    public Bitmap scaleDown() {
+
+        Bitmap bitmap = convertToMutable(((BitmapDrawable) getDrawable()).getBitmap());
+        Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, bitmap.getWidth(),
+                bitmap.getHeight(), true);
+        mBitmap.recycle();
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(newBitmap, 0, 0, mBitmapPaint);
+        return bitmap;
     }
 
     public void setDrawing(boolean drawing) {
@@ -249,6 +249,14 @@ public class ImageEditView extends AppCompatImageView {
         return true;
     }
 
+    private void addPoint(int curX, int curY) {
+        mCanvas.drawLine(lastX, lastY, curX, curY, mPaint);
+        invalidate();
+        lastX = curX;
+        lastY = curY;
+        currentPoitns.add(new Point(curX, curY));
+    }
+
     class Path {
 
         private List<Point> points;
@@ -260,14 +268,6 @@ public class ImageEditView extends AppCompatImageView {
             this.color = color;
             this.stroke = stroke;
         }
-    }
-
-    private void addPoint(int curX, int curY) {
-        mCanvas.drawLine(lastX, lastY, curX, curY, mPaint);
-        invalidate();
-        lastX = curX;
-        lastY = curY;
-        currentPoitns.add(new Point(curX, curY));
     }
 }
 

@@ -18,11 +18,13 @@ import io.realm.Realm;
 public class RateRouteActivity extends CragChatActivity {
 
     private String entityKey;
+    private String entityName;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_rate_route);
         entityKey = getIntent().getStringExtra("entityKey");
+        entityName = Repository.getRoute(entityKey, null).getName();
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_rate_yds);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -70,13 +72,14 @@ public class RateRouteActivity extends CragChatActivity {
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
         int yds = ydsSpinner.getSelectedItemPosition();
 
-            Repository.addRating(
-                    Authentication.getAuthenticatedUser(this).getToken(),
-                    stars,
-                    yds,
-                    entityKey,
-                    null
-            );
+        Repository.addRating(
+                Authentication.getAuthenticatedUser(this).getToken(),
+                stars,
+                yds,
+                entityKey,
+                entityName,
+                null
+        );
         Realm realm = Realm.getDefaultInstance();
         RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
         realm.close();

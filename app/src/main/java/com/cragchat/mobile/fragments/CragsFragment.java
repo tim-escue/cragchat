@@ -22,11 +22,11 @@ import io.realm.Realm;
 
 public class CragsFragment extends Fragment {
 
+    private Realm realm;
+
     public static CragsFragment newInstance() {
         return new CragsFragment();
     }
-
-    private Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

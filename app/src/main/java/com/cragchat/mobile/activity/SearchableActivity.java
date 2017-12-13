@@ -1,7 +1,6 @@
 package com.cragchat.mobile.activity;
 
 import android.app.SearchManager;
-import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,7 +22,9 @@ import java.util.List;
  * Created by timde on 11/9/2017.
  */
 
-public class SearchableActivity extends CragChatActivity {
+public abstract class SearchableActivity extends CragChatActivity {
+
+    abstract int getToolbarColor();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +83,7 @@ public class SearchableActivity extends CragChatActivity {
                     searchItem.collapseActionView();
                     searchView.setQuery("", false);
                     filter.setVisibility(View.GONE);
-                    toolbar.setBackgroundColor(Color.TRANSPARENT);
+                    toolbar.setBackgroundColor(getToolbarColor());
                 }
             }
         });

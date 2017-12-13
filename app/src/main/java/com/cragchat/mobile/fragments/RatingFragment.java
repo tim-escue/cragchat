@@ -20,7 +20,6 @@ import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 
 
-
 public class RatingFragment extends Fragment implements View.OnClickListener {
 
     private String entityKey;

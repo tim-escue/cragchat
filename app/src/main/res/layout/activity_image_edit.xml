@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-     <com.cragchat.mobile.view.ImageEditView
+    <com.cragchat.mobile.view.ImageEditView
         android:id="@+id/image_edit_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter" />
 
     <!-- <include layout="@layout/simple_toolbar"
         andrkeyd:idkey@+id/toolbarholder"/> -->
@@ -19,8 +19,8 @@
         android:id="@+id/horizontal_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:id="@+id/layout_edit_options"
@@ -34,30 +34,30 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:src="@drawable/ic_format_paint_white_24dp"/>
+                android:src="@drawable/ic_format_paint_white_24dp" />
 
             <ImageView
                 android:id="@+id/button_caption"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:src="@drawable/add_caption"/>
+                android:src="@drawable/add_caption" />
 
             <ImageView
                 android:id="@+id/button_stroke"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_line_weight_white_24dp"/>
+                android:src="@drawable/ic_line_weight_white_24dp"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/button_color_picker"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_color_lens_white_24dp"/>
+                android:src="@drawable/ic_color_lens_white_24dp"
+                android:visibility="gone" />
 
 
             <ImageView
@@ -65,16 +65,16 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_undo_white_24dp"/>
+                android:src="@drawable/ic_undo_white_24dp"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/button_done"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="@dimen/sixteen_dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_done_white_24dp"/>
+                android:src="@drawable/ic_done_white_24dp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </HorizontalScrollView>
@@ -83,9 +83,9 @@
         android:id="@+id/button_submit_image"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_margin="@dimen/sixteen_dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_done_white_24dp"/>
+        android:layout_margin="@dimen/sixteen_dp"
+        android:src="@drawable/ic_done_white_24dp" />
 
 </RelativeLayout>

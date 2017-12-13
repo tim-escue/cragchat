@@ -28,18 +28,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class CragChatMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static View view;
+    LocationManager lm;
+    private GoogleApiClient apiClient;
+    private Location curLoc;
+    private GoogleMap map;
+
     public static CragChatMapFragment newInstance() {
         CragChatMapFragment f = new CragChatMapFragment();
         return f;
     }
-
-    private GoogleApiClient apiClient;
-    private Location curLoc;
-    private GoogleMap map;
-    private static View view;
-
-    LocationManager lm;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,7 +111,6 @@ public class CragChatMapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -161,8 +159,6 @@ public class CragChatMapFragment extends Fragment implements OnMapReadyCallback,
         //Log.d("LOCATION", "PROVIDER DISABLED");
 
     }
-
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     /**
      * Determines whether one Location reading is better than the current Location fix

@@ -2,9 +2,7 @@ package com.cragchat.mobile.view.adapters.recycler.viewholder;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.model.Image;
+import com.cragchat.mobile.util.FileUtil;
 import com.cragchat.mobile.util.FormatUtil;
 import com.cragchat.mobile.view.GlideApp;
 import com.cragchat.mobile.view.adapters.recycler.ImageRecyclerAdapter;
@@ -25,6 +24,8 @@ import butterknife.ButterKnife;
 
 public class ImageRecyclerViewHolder extends RecyclerView.ViewHolder {
 
+    public static final File ALBUM = FileUtil.getAlbumStorageDir("routedb");
+
     @BindView(R.id.caption)
     public TextView caption;
     @BindView(R.id.image)
@@ -37,19 +38,15 @@ public class ImageRecyclerViewHolder extends RecyclerView.ViewHolder {
     public ProgressBar progressBar;
     @BindView(R.id.date)
     public TextView dateTextView;
+    @BindView(R.id.entity)
+    TextView entity;
 
     public ImageRecyclerViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public static View getItemViewRecentActivity(ViewGroup parent) {
-        return LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.recent_activity_image, parent, false);
-    }
-
-    public void bind(Image image, File album, Context activity) {
+    public void bind(Image image, Context activity) {
         authorName.setText(image.getAuthorName());
         if (image.getCaption().isEmpty()) {
             caption.setVisibility(View.GONE);
@@ -57,6 +54,7 @@ public class ImageRecyclerViewHolder extends RecyclerView.ViewHolder {
             caption.setVisibility(View.VISIBLE);
             caption.setText(image.getCaption());
         }
+        entity.setText("Submitted for " + image.getEntityName());
         String date = image.getDate();
         Date dateObject = null;
         try {
@@ -66,7 +64,7 @@ public class ImageRecyclerViewHolder extends RecyclerView.ViewHolder {
         }
         dateTextView.setText(dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : date);
 
-        final String localPath = album.getPath() + "/" + image.getFilename();
+        final String localPath = ALBUM.getPath() + "/" + image.getFilename();
         final String remotePath = "http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com/static/" + image.getFilename();
 
         File localImage = new File(localPath);

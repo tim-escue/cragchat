@@ -17,7 +17,8 @@
     <!-- Generic colors -->
     <color name="dark_grey">#FF797979</color>
     <color name="black">#FF000000</color>
-    <color name="red">#FFFF4444</color>>
+    <color name="red">#FFFF4444</color>
+    <color name="material_background">#FAFAFA</color>>
 
 
     <!-- <item name="black" type="color">#FF000000</item>

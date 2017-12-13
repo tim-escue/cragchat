@@ -16,4 +16,6 @@ public interface Image {
 
     String getDate();
 
+    String getEntityName();
+
 }

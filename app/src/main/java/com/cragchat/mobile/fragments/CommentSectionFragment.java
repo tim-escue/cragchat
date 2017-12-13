@@ -68,55 +68,6 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
         return f;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        final View view = inflater.inflate(R.layout.fragment_comment_section, container, false);
-
-        mEntityId = getArguments().getString("entityId");
-        table = getArguments().getString("table");
-
-
-        adapter = new CommentRecyclerAdapter(getContext(),
-                Repository.getComments(mEntityId, table, commentsCallback), table, mEntityId);
-        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
-        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
-
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner_comment_sort);
-        final ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
-                R.array.spinner_comment_sort_options, R.layout.spinner_item);
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterSpinner);
-        spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapter.sort(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        return view;
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.add_button) {
-            if (Authentication.isLoggedIn(getContext())) {
-                getAddCommentDialog(adapter, null, getContext(),
-                        mEntityId, table, null, newCommentCallback).show();
-            } else {
-                Toast.makeText(getContext(),
-                        "Must be logged in to add a comment", Toast.LENGTH_LONG).show();
-            }
-        }
-
-    }
-
     public static AlertDialog getAddCommentDialog(final CommentRecyclerAdapter adapter,
                                                   final String currentText, final Context context,
                                                   final String entityId, final String table,
@@ -133,14 +84,14 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                                String token = Authentication.getAuthenticatedUser(context).getToken();
-                                if (commentToEdit != null) {
-                                    Repository.editComment(token, comment,
-                                            commentToEdit.getKey(), callback);
-                                } else {
-                                    Repository.addComment(token, comment,
-                                            entityId, table, callback);
-                                }
+                            String token = Authentication.getAuthenticatedUser(context).getToken();
+                            if (commentToEdit != null) {
+                                Repository.editComment(token, comment,
+                                        commentToEdit.getKey(), callback);
+                            } else {
+                                Repository.addComment(token, comment,
+                                        entityId, table, callback);
+                            }
 
                         } else {
                             Toast.makeText(context, "Can't add empty comment", Toast.LENGTH_SHORT).show();
@@ -191,13 +142,13 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                                String token = Authentication.getAuthenticatedUser(context).getToken();
+                            String token = Authentication.getAuthenticatedUser(context).getToken();
                             Repository.replyToComment(
-                                        token,
-                                        comment,
-                                        entityId,
-                                        table,
-                                        parentId,
+                                    token,
+                                    comment,
+                                    entityId,
+                                    table,
+                                    parentId,
                                     depth,
                                     callback
                             );
@@ -232,5 +183,54 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                 }).create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        final View view = inflater.inflate(R.layout.fragment_comment_section, container, false);
+
+        mEntityId = getArguments().getString("entityId");
+        table = getArguments().getString("table");
+
+
+        adapter = new CommentRecyclerAdapter(getContext(),
+                Repository.getComments(mEntityId, table, commentsCallback), table, mEntityId);
+        RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
+        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinner_comment_sort);
+        final ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
+                R.array.spinner_comment_sort_options, R.layout.spinner_item);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterSpinner);
+        spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapter.sort(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.add_button) {
+            if (Authentication.isLoggedIn(getContext())) {
+                getAddCommentDialog(adapter, null, getContext(),
+                        mEntityId, table, null, newCommentCallback).show();
+            } else {
+                Toast.makeText(getContext(),
+                        "Must be logged in to add a comment", Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 }

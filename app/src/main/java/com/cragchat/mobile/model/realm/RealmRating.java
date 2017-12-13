@@ -19,6 +19,7 @@ public class RealmRating extends RealmObject implements Rating, Datable {
     public static final String FIELD_YDS = "yds";
     public static final String FIELD_STARS = "stars";
     public static final String FIELD_DATE = "date";
+    public static final String FIELD_ENTITY_NAME = "entityName";
 
     @Index
     private String entityKey;
@@ -29,6 +30,8 @@ public class RealmRating extends RealmObject implements Rating, Datable {
     private int yds;
     private int stars;
     private String date;
+    private String entityName;
+
 
     public static RealmRating from(PojoRating pojo) {
         RealmRating rating = new RealmRating();
@@ -38,6 +41,7 @@ public class RealmRating extends RealmObject implements Rating, Datable {
         rating.setYds(pojo.getYds());
         rating.setStars(pojo.getStars());
         rating.setDate(pojo.getDate());
+        rating.setEntityName(pojo.getEntityName());
         return rating;
     }
 
@@ -87,5 +91,14 @@ public class RealmRating extends RealmObject implements Rating, Datable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 }

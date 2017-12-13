@@ -49,20 +49,44 @@ import io.realm.RealmObject;
 
 public class RealmDatabase implements CragChatDatabase {
 
+    private static final String QUEUE = "QUEUE";
     private Realm mRealm;
+
 
     public RealmDatabase() {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(1)
                 .name("cragchat.realm")
                 .build());
-        //Realm.deleteRealm(Realm.getDefaultConfiguration());
+        // Realm.deleteRealm(Realm.getDefaultConfiguration());
+        /*Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmRating rating = new RealmRating();
+                rating.setEntityName("Make belieb");
+                rating.setDate("2017-11-30 20:22:05");
+                rating.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
+                rating.setKey("ddd");
+                rating.setStars(3);
+                rating.setUsername("FAKTEST");
+                rating.setYds(8);
+
+                RealmSend send = new RealmSend();
+                send.setEntityName("Make belieb");
+                send.setDate("2017-11-30 20:22:05");
+                send.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
+                send.setKey("dddaaa");
+                send.setUsername("FAKTEST");
+                send.setAttempts(1);
+                send.setClimbingStyle("lead");
+                send.setPitches(1);
+                send.setSendType("Onsight");
+
+                realm.insert(send);
+                realm.insert(rating);
+            }
+        });*/
         mRealm = Realm.getDefaultInstance();
-    }
-
-
-    public void close() {
-        mRealm.close();
     }
 
     public List getQueryMatches(String query) {
@@ -287,7 +311,6 @@ public class RealmDatabase implements CragChatDatabase {
         });
     }
 
-
     @Override
     public RealmArea getArea(String areaKey) {
         return mRealm.where(RealmArea.class).equalTo(RealmArea.FIELD_KEY, areaKey).findFirst();
@@ -317,10 +340,8 @@ public class RealmDatabase implements CragChatDatabase {
         });
     }
 
-    private static final String QUEUE = "QUEUE";
-
     @Override
-    public void addNewRatingRequest(final int stars, final int yds, final String entityKey) {
+    public void addNewRatingRequest(final int stars, final int yds, final String entityKey, final String entityName) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -328,6 +349,7 @@ public class RealmDatabase implements CragChatDatabase {
                 rating.setStars(stars);
                 rating.setYds(yds);
                 rating.setEntityKey(entityKey);
+                rating.setEntityName(entityName);
             }
         });
     }
@@ -345,7 +367,7 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void addNewImageRequest(final String captionString, final String entityKey, final String entityType, final String fileUri) {
+    public void addNewImageRequest(final String captionString, final String entityKey, final String entityType, final String fileUri, final String entityName) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -354,13 +376,14 @@ public class RealmDatabase implements CragChatDatabase {
                 req.setEntityKey(entityKey);
                 req.setFilePath(fileUri);
                 req.setEntityType(entityType);
+                req.setEntityName(entityName);
             }
         });
     }
 
     @Override
-    public void addNewRealmSendRequest(final String entityKey, final int pitches,
-                                       final int attempts, final String sendType, final String climbingStyle) {
+    public void addNewSendRequest(final String entityKey, final int pitches,
+                                  final int attempts, final String sendType, final String climbingStyle, final String entityName) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -370,6 +393,7 @@ public class RealmDatabase implements CragChatDatabase {
                 send.setAttempts(attempts);
                 send.setSendType(sendType);
                 send.setClimbingStyle(climbingStyle);
+                send.setEntityName(entityName);
             }
         });
     }

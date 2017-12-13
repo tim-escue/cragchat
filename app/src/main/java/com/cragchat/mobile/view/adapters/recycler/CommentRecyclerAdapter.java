@@ -38,6 +38,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     private String entityId;
     private String table;
     private Context context;
+    private int sort;
     private Callback<Comment> callback = new Callback<Comment>() {
         @Override
         public void onSuccess(Comment object) {
@@ -49,13 +50,18 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
 
         }
     };
-    private int sort;
 
     public CommentRecyclerAdapter(Context context, List<Comment> comments, String table, String entityId) {
         this.table = table;
         this.entityId = entityId;
         this.context = context;
         data = arrangeComments(comments);
+    }
+
+    public static View getItemView(ViewGroup viewGroup) {
+        return LayoutInflater.
+                from(viewGroup.getContext()).
+                inflate(R.layout.comment_list_item, viewGroup, false);
     }
 
     public void update(List<Comment> comments) {
@@ -80,12 +86,6 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     @Override
     public CommentRecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         return new CommentRecyclerViewHolder(getItemView(viewGroup));
-    }
-
-    public static View getItemView(ViewGroup viewGroup) {
-        return LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.comment_list_item, viewGroup, false);
     }
 
     public void sort(int j) {
@@ -166,14 +166,14 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     private void vote(String commentKey, boolean up) {
         if (Authentication.isLoggedIn(context)) {
             Repository.addCommentVote(
-                        Authentication.getAuthenticatedUser(context).getToken(),
-                        up ? "up" : "down",
+                    Authentication.getAuthenticatedUser(context).getToken(),
+                    up ? "up" : "down",
                     commentKey,
                     new Callback<Comment>() {
-                            @Override
-                            public void onSuccess(Comment object) {
-                                updateSingle(object);
-                            }
+                        @Override
+                        public void onSuccess(Comment object) {
+                            updateSingle(object);
+                        }
 
                         @Override
                         public void onFailure() {

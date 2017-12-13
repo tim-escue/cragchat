@@ -42,17 +42,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 import static android.view.View.GONE;
 
 public class EditImageActivity extends CragChatActivity implements ColorPickerDialog.OnColorChangedListener {
-
-    private RealmObject entity;
-    private String captionString;
-    private Realm mRealm;
-    private String entityType;
 
     @BindView(R.id.image_edit_view)
     ImageEditView imageEditView;
@@ -70,52 +64,11 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
     ImageView caption;
     @BindView(R.id.button_submit_image)
     ImageView submit;
-
-    public void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
-        setContentView(R.layout.activity_image_edit);
-        ButterKnife.bind(this);
-        String entityKey = getIntent().getStringExtra("displayable_id");
-        entityType = getIntent().getStringExtra("entityType");
-        mRealm = Realm.getDefaultInstance();
-        Class<? extends RealmModel> classType;
-        if (entityType.equals("route")) {
-            classType = RealmRoute.class;
-        } else {
-            classType = RealmArea.class;
-        }
-        entity = (RealmObject) mRealm.where(classType).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
-
-
-        final View decorView = getWindow().getDecorView();
-        final int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
-            }
-        });
-        decorView.setSystemUiVisibility(uiOptions);
-
-        Uri uri = Uri.parse(getIntent().getStringExtra("image_uri"));
-
-        Bitmap bitmap = getBitmap(uri, getContentResolver());
-
-        imageEditView.setImageBitmap(bitmap);
-
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
+    private RealmObject entity;
+    private String captionString;
+    private Realm mRealm;
+    private String entityType;
+    private String entityName;
 
     private static int getRotation(InputStream stream) {
         ExifInterface exifInterface = null;
@@ -137,19 +90,6 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                 return 270;
         }
         return -1;
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
     }
 
     private static Bitmap getBitmap(Uri uri, ContentResolver resolver) {
@@ -215,6 +155,66 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        setContentView(R.layout.activity_image_edit);
+        ButterKnife.bind(this);
+        String entityKey = getIntent().getStringExtra("displayable_id");
+        entityType = getIntent().getStringExtra("entityType");
+        mRealm = Realm.getDefaultInstance();
+        if (entityType.equals("route")) {
+            entity = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
+            entityName = ((RealmRoute) entity).getName();
+        } else {
+            entity = mRealm.where(RealmArea.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
+            entityName = ((RealmArea) entity).getName();
+        }
+
+
+        final View decorView = getWindow().getDecorView();
+        final int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    decorView.setSystemUiVisibility(uiOptions);
+                }
+            }
+        });
+        decorView.setSystemUiVisibility(uiOptions);
+
+        Uri uri = Uri.parse(getIntent().getStringExtra("image_uri"));
+
+        Bitmap bitmap = getBitmap(uri, getContentResolver());
+
+        imageEditView.setImageBitmap(bitmap);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+    }
 
     @OnClick(R.id.button_submit_image)
     public void onSubmit() {
@@ -248,7 +248,7 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                     entityKey = ((RealmArea) entity).getKey();
                 }
                 Repository.addImage(captionString, entityKey, entityType, newFile,
-                        new Callback<Image>() {
+                        entityName, new Callback<Image>() {
                             @Override
                             public void onSuccess(Image object) {
                                 newFile.delete();

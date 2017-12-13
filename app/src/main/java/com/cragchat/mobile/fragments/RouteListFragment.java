@@ -29,20 +29,23 @@ public class RouteListFragment extends Fragment {
 
     private static final String IDS_String = "routeIds";
     private static final String AREA_String = "areaKey";
-
-    private String[] routeIds;
-    private String areaKey;
-
-    private View filterView;
-    private RouteListRecyclerAdapter adap;
-    private PopupWindow popupWindow;
     boolean filterSport;
     boolean filterTrad;
     boolean filterMixed;
-
+    private String[] routeIds;
+    private String areaKey;
+    private View filterView;
+    private RouteListRecyclerAdapter adap;
+    private PopupWindow popupWindow;
     private SwitchCompat sportSwitch;
     private SwitchCompat tradSwitch;
     private SwitchCompat mixedSwitch;
+    private CompoundButton.OnCheckedChangeListener filterListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            adap.filter(sportSwitch.isChecked(), tradSwitch.isChecked(), mixedSwitch.isChecked());
+        }
+    };
 
     public static RouteListFragment newInstance(String areaKey, String[] routeIds) {
         RouteListFragment f = new RouteListFragment();
@@ -137,12 +140,5 @@ public class RouteListFragment extends Fragment {
 
         return view;
     }
-
-    private CompoundButton.OnCheckedChangeListener filterListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            adap.filter(sportSwitch.isChecked(), tradSwitch.isChecked(), mixedSwitch.isChecked());
-        }
-    };
 
 }

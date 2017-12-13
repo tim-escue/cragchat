@@ -16,4 +16,6 @@ public interface NewSendRequest {
 
     String getClimbingStyle();
 
+    String getEntityName();
+
 }

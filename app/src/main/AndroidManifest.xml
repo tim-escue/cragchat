@@ -35,24 +35,28 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".SearchActivity" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.cragchat.mobile.activity.SearchActivity" />
         </activity>
 
         <activity android:name=".activity.ViewImageActivity" />
 
-        <activity android:name="com.cragchat.mobile.activity.RouteActivity" >
-            <meta-data android:name="android.app.default_searchable"
+        <activity android:name="com.cragchat.mobile.activity.RouteActivity">
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value="com.cragchat.mobile.activity.SearchActivity" />
         </activity>
 
-        <activity android:name="com.cragchat.mobile.activity.ProfileActivity" >
-            <meta-data android:name="android.app.default_searchable"
+        <activity android:name="com.cragchat.mobile.activity.ProfileActivity">
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value="com.cragchat.mobile.activity.SearchActivity" />
         </activity>
 
-        <activity android:name="com.cragchat.mobile.activity.AreaActivity" >
-            <meta-data android:name="android.app.default_searchable"
+        <activity android:name="com.cragchat.mobile.activity.AreaActivity">
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value="com.cragchat.mobile.activity.SearchActivity" />
         </activity>
 

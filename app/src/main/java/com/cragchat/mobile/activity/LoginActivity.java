@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends CragChatActivity implements View.OnClickListener {
 
+    static String email;
     @BindView(R.id.login_button)
     Button loginButton;
     @BindView(R.id.username_input)
@@ -51,7 +52,6 @@ public class LoginActivity extends CragChatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
     public void register(View v) {
         if (Network.isConnected(this)) {
             Intent reg = new Intent(this, RegisterActivity.class);
@@ -60,8 +60,6 @@ public class LoginActivity extends CragChatActivity implements View.OnClickListe
             Toast.makeText(this, "Must have data connection to register", Toast.LENGTH_LONG).show();
         }
     }
-
-    static String email;
 
     public void requestReset(View v) {
 

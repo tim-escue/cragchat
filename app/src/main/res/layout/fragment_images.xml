@@ -18,6 +18,7 @@
         android:id="@+id/images_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/eight_dp" />
+        android:background="@color/material_background"
+        android:paddingTop="@dimen/four_dp" />
 
 </LinearLayout>
