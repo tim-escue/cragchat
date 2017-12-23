@@ -13,6 +13,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.util.NavigationUtil;
 
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
             rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.launch(area);
+                    NavigationUtil.launch(activity, area);
                 }
             });
         }

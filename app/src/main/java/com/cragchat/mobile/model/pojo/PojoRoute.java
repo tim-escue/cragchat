@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model.pojo;
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Route;
 
 import java.util.List;
@@ -114,4 +116,54 @@ public class PojoRoute implements Route {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.key);
+        dest.writeString(this.name);
+        dest.writeString(this.type);
+        dest.writeString(this.latitude);
+        dest.writeString(this.longitude);
+        dest.writeInt(this.yds);
+        dest.writeDouble(this.stars);
+        dest.writeString(this.parent);
+        dest.writeString(this.sends);
+        dest.writeString(this.ratings);
+        dest.writeStringList(this.images);
+    }
+
+    public PojoRoute() {
+    }
+
+    protected PojoRoute(Parcel in) {
+        this.key = in.readString();
+        this.name = in.readString();
+        this.type = in.readString();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.yds = in.readInt();
+        this.stars = in.readDouble();
+        this.parent = in.readString();
+        this.sends = in.readString();
+        this.ratings = in.readString();
+        this.images = in.createStringArrayList();
+    }
+
+    public static final Creator<PojoRoute> CREATOR = new Creator<PojoRoute>() {
+        @Override
+        public PojoRoute createFromParcel(Parcel source) {
+            return new PojoRoute(source);
+        }
+
+        @Override
+        public PojoRoute[] newArray(int size) {
+            return new PojoRoute[size];
+        }
+    };
 }

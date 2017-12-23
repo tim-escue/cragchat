@@ -12,6 +12,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.util.NavigationUtil;
 
 import io.realm.Realm;
 
@@ -83,7 +84,7 @@ public class RateRouteActivity extends CragChatActivity {
         Realm realm = Realm.getDefaultInstance();
         RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
         realm.close();
-        launch(route);
+        NavigationUtil.launch(this, route);
     }
 
 

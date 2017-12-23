@@ -19,6 +19,7 @@ import com.cragchat.mobile.binding.AreaHeaderBinding;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.util.NavigationUtil;
 import com.cragchat.mobile.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
@@ -41,8 +42,8 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
 
         final AreaHeaderBinding headerBinding = new AreaHeaderBinding(header);
 
-        String areaKey = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
-        area = Repository.getArea(areaKey, new Callback<Area>() {
+        area = (Area) getIntent().getParcelableExtra(NavigationUtil.ENTITY);
+        Repository.getArea(area.getKey(), new Callback<Area>() {
             @Override
             public void onSuccess(Area object) {
                 headerBinding.bind(object);
@@ -156,7 +157,7 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
         if (item.getItemId() == android.R.id.home) {
             Area parent = Repository.getArea(area.getParent(), null);
             if (parent != null) {
-                launch(parent);
+                NavigationUtil.launch(this, parent);
             } else {
                 startActivity(new Intent(this, MainActivity.class));
             }

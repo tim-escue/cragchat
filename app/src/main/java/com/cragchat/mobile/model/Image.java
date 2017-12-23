@@ -1,10 +1,12 @@
 package com.cragchat.mobile.model;
 
+import android.os.Parcelable;
+
 /**
  * Created by timde on 11/13/2017.
  */
 
-public interface Image {
+public interface Image extends Parcelable {
 
     String getEntityKey();
 

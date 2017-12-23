@@ -13,6 +13,7 @@ import com.cragchat.mobile.model.Rating;
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.model.Send;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.util.NavigationUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.viewholder.ImageRecyclerViewHolder;
 import com.cragchat.mobile.view.adapters.recycler.viewholder.RecentActivityCommentViewHolder;
@@ -87,7 +88,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.launch(Repository.getRoute(send.getEntityKey(), null),
+                    NavigationUtil.launch(activity, Repository.getRoute(send.getEntityKey(), null),
                             RouteActivityPagerAdapter.TAB_SENDS);
                 }
             });
@@ -98,7 +99,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.launch(Repository.getRoute(rating.getEntityKey(), null),
+                    NavigationUtil.launch(activity, Repository.getRoute(rating.getEntityKey(), null),
                             RouteActivityPagerAdapter.TAB_RATINGS);
                 }
             });
@@ -111,9 +112,9 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 public void onClick(View view) {
                     Route r = Repository.getRoute(image.getEntityKey(), null);
                     if (r != null) {
-                        activity.launch(r, RouteActivityPagerAdapter.TAB_IMAGES);
+                        NavigationUtil.launch(activity, r, RouteActivityPagerAdapter.TAB_IMAGES);
                     } else {
-                        activity.launch(Repository.getArea(image.getEntityKey(), null));
+                        NavigationUtil.launch(activity, Repository.getArea(image.getEntityKey(), null));
                     }
                 }
             });
@@ -126,9 +127,9 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 public void onClick(View view) {
                     Route r = Repository.getRoute(comment.getEntityId(), null);
                     if (r != null) {
-                        activity.launch(r, RouteActivityPagerAdapter.TAB_BETA);
+                        NavigationUtil.launch(activity, r, RouteActivityPagerAdapter.TAB_BETA);
                     } else {
-                        activity.launch(Repository.getArea(comment.getEntityId(), null));
+                        NavigationUtil.launch(activity, Repository.getArea(comment.getEntityId(), null));
                     }
                 }
             });

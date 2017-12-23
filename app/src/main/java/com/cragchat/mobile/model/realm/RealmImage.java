@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model.realm;
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.model.pojo.PojoImage;
@@ -91,4 +93,43 @@ public class RealmImage extends RealmObject implements Image, Datable {
     public void setEntityName(String entityName) {
         this.entityName = entityName;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.entityKey);
+        dest.writeString(this.caption);
+        dest.writeString(this.filename);
+        dest.writeString(this.date);
+        dest.writeString(this.authorName);
+        dest.writeString(this.entityName);
+    }
+
+    public RealmImage() {
+    }
+
+    protected RealmImage(Parcel in) {
+        this.entityKey = in.readString();
+        this.caption = in.readString();
+        this.filename = in.readString();
+        this.date = in.readString();
+        this.authorName = in.readString();
+        this.entityName = in.readString();
+    }
+
+    public static final Creator<RealmImage> CREATOR = new Creator<RealmImage>() {
+        @Override
+        public RealmImage createFromParcel(Parcel source) {
+            return new RealmImage(source);
+        }
+
+        @Override
+        public RealmImage[] newArray(int size) {
+            return new RealmImage[size];
+        }
+    };
 }

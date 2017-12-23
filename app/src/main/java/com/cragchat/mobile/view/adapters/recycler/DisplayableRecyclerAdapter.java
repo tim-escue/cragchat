@@ -12,6 +12,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
+import com.cragchat.mobile.util.NavigationUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -86,7 +87,7 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
             holder.rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.launch((Area) displayable);
+                    NavigationUtil.launch(activity, (Area) displayable);
                 }
 
             });

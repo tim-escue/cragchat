@@ -4,6 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/list_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/empty"
+        android:textSize="20sp"
+        android:textColor="@color/secondary_text"
+        android:visibility="gone" />
+
     <Spinner
         android:id="@+id/spinner_comment_sort"
         android:layout_width="wrap_content"
@@ -12,26 +24,6 @@
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/sixteen_dp"
         android:padding="0dp" />
-
-    <!-- <View
-         android:layout_width="match_parent"
-         android:layout_height="1dp"
-         android:layout_below="@id/spinner_comment_sort"
-         android:layout_marginEnd="@dimen/sixteen_dp"
-         android:layout_marginStart="@dimen/sixteen_dp"
-         android:background="@color/divider" /> -->
-
-    <TextView
-        android:id="@+id/list_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_comment_sort"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="Be the first to add a submission!!!"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/comment_section_list"

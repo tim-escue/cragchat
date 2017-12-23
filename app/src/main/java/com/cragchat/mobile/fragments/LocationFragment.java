@@ -1,23 +1,18 @@
 package com.cragchat.mobile.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.view.adapters.pager.LocationPagerAdapter;
-import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
 public class LocationFragment extends Fragment implements View.OnClickListener {
 
-    private TabPagerAdapter pageAdapter;
-    private ViewPager pager;
+    private CommentSectionFragment commentFragment;
 
     public static LocationFragment newInstance(String routeId) {
         LocationFragment f = new LocationFragment();
@@ -28,36 +23,25 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
-        Fragment fragment = pageAdapter.getItem(pager.getCurrentItem());
-        if (fragment instanceof View.OnClickListener) {
-            View.OnClickListener clickListener = (View.OnClickListener) fragment;
-            clickListener.onClick(view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_location, container, false);
+        String entityId = getArguments().getString("routeId");
+        if (entityId == null) {
+            Toast.makeText(getContext(), "NO ENTITYID _ LOCATION FRAG", Toast.LENGTH_LONG).show();
         }
 
+        commentFragment = CommentSectionFragment.newInstance(entityId, "LOCATION");
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_location, commentFragment);
+        transaction.commit();
+
+        return view;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String routeId = getArguments().getString("routeId");
-        View view = inflater.inflate(R.layout.fragment_location, container, false);
-
-        pageAdapter = new LocationPagerAdapter(getChildFragmentManager(), routeId, (FloatingActionButton) getActivity().findViewById(R.id.add_button));
-        pager = (ViewPager) view.findViewById(R.id.pager_inside);
-        pager.setAdapter(pageAdapter);
-        pager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN && v instanceof ViewGroup) {
-                    ((ViewGroup) v).requestDisallowInterceptTouchEvent(true);
-                }
-                return false;
-            }
-        });
-
-        TabLayout slab = (TabLayout) view.findViewById(R.id.sliding_tabs_inside);
-        slab.setupWithViewPager(pager);
-
-        return view;
+    public void onClick(View view) {
+        if (commentFragment != null) {
+            commentFragment.onClick(view);
+        }
     }
 }

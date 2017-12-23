@@ -44,7 +44,7 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void disconnectListener() {
         System.out.println("Lifecycle: Actually destroyed");
-        mRealm.close();
+        // mRealm.close();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model.realm;
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.model.pojo.PojoRoute;
 import com.cragchat.mobile.util.RealmUtil;
@@ -170,4 +172,50 @@ public class RealmRoute extends RealmObject implements Route {
     public void setImages(RealmList<String> images) {
         this.images = images;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.key);
+        dest.writeString(this.name);
+        dest.writeString(this.type);
+        dest.writeString(this.latitude);
+        dest.writeString(this.longitude);
+        dest.writeInt(this.yds);
+        dest.writeDouble(this.stars);
+        dest.writeString(this.parent);
+        dest.writeString(this.sends);
+        dest.writeString(this.ratings);
+        dest.writeStringList(this.images);
+    }
+
+    protected RealmRoute(Parcel in) {
+        this.key = in.readString();
+        this.name = in.readString();
+        this.type = in.readString();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.yds = in.readInt();
+        this.stars = in.readDouble();
+        this.parent = in.readString();
+        this.sends = in.readString();
+        this.ratings = in.readString();
+        this.images = RealmUtil.convertListToRealmList(in.createStringArrayList());
+    }
+
+    public static final Creator<RealmRoute> CREATOR = new Creator<RealmRoute>() {
+        @Override
+        public RealmRoute createFromParcel(Parcel source) {
+            return new RealmRoute(source);
+        }
+
+        @Override
+        public RealmRoute[] newArray(int size) {
+            return new RealmRoute[size];
+        }
+    };
 }

@@ -7,16 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.ViewImageActivity;
+import com.cragchat.mobile.model.Image;
 import com.cragchat.mobile.model.realm.RealmImage;
 import com.cragchat.mobile.task.GetImageTask;
 import com.cragchat.mobile.task.TaskCallback;
+import com.cragchat.mobile.util.NavigationUtil;
 import com.cragchat.mobile.view.adapters.recycler.viewholder.ImageRecyclerViewHolder;
 
 import java.io.File;
@@ -25,24 +27,25 @@ import java.io.FileOutputStream;
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
+import io.realm.Sort;
 
 public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, ImageRecyclerViewHolder> implements LifecycleObserver {
 
-    private CragChatActivity activity;
+    private Context activity;
     private Realm mRealm;
 
     private ImageRecyclerAdapter(@Nullable OrderedRealmCollection<RealmImage> data
-            , boolean autoUpdate, CragChatActivity activity, String entityKey, Realm realm) {
+            , boolean autoUpdate, Context context, Realm realm) {
         super(data, autoUpdate);
-        this.activity = activity;
+        this.activity = context;
         this.mRealm = realm;
     }
 
-    public static ImageRecyclerAdapter create(String entityKey, CragChatActivity activity) {
+    public static ImageRecyclerAdapter create(String entityKey, Context activity) {
         Realm realm = Realm.getDefaultInstance();
         return new ImageRecyclerAdapter(
-                realm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, entityKey).findAll(),
-                true, activity, entityKey, realm);
+                realm.where(RealmImage.class).equalTo(RealmImage.FIELD_ENTITY_KEY, entityKey).findAll().sort(RealmImage.FIELD_DATE, Sort.DESCENDING),
+                true, activity, realm);
     }
 
     public static View getItemView(ViewGroup parent) {
@@ -53,7 +56,7 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void disconnectListener() {
-        System.out.println("Lifecycle: Actually destroyed images");
+        Log.d("Images", "Destroyed realm");
         mRealm.close();
     }
 
@@ -64,31 +67,25 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
 
     @Override
     public void onBindViewHolder(final ImageRecyclerViewHolder holder, int position) {
-        final RealmImage image = getItem(position);
+        final Image image = getItem(position);
         if (image != null) {
             holder.bind(image, activity);
         }
     }
 
     public static class OpenImageListener implements View.OnClickListener {
-        private String localPath;
-        private String imageFileName;
-        private String entityKey;
+        private Image image;
         private Context activity;
 
-        public OpenImageListener(String imageFileName, String localPath, String entityKey, Context activity) {
-            this.localPath = localPath;
-            this.imageFileName = imageFileName;
-            this.entityKey = entityKey;
+        public OpenImageListener(Image image, Context activity) {
             this.activity = activity;
+            this.image = image;
         }
 
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(activity, ViewImageActivity.class);
-            intent.putExtra(RealmImage.FIELD_FILENAME, imageFileName);
-            intent.putExtra("localPath", localPath);
-            intent.putExtra("entityKey", entityKey);
+            intent.putExtra(NavigationUtil.IMAGE, image);
             activity.startActivity(intent);
         }
 
@@ -140,7 +137,7 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
                     }
 
                     holder.image.setImageBitmap(result);
-                    holder.imageCard.setOnClickListener(new OpenImageListener(imageKey, localPath, entityKey, activity));
+                    //holder.imageCard.setOnClickListener(new OpenImageListener(image, activity));
                     holder.image.setVisibility(View.VISIBLE);
                     holder.progressBar.setVisibility(View.GONE);
                     if (!holder.caption.getText().toString().isEmpty()) {

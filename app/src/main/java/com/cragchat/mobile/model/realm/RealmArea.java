@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model.realm;
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.pojo.PojoArea;
 import com.cragchat.mobile.util.RealmUtil;
@@ -138,4 +140,45 @@ public class RealmArea extends RealmObject implements Area {
     public void setImages(RealmList<String> images) {
         this.images = images;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.key);
+        dest.writeString(this.name);
+        dest.writeString(this.latitude);
+        dest.writeString(this.longitude);
+        dest.writeString(this.parent);
+        dest.writeStringList(this.subAreas);
+        dest.writeStringList(this.routes);
+        dest.writeStringList(this.images);
+    }
+
+    protected RealmArea(Parcel in) {
+        this.key = in.readString();
+        this.name = in.readString();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.parent = in.readString();
+        this.subAreas = RealmUtil.convertListToRealmList(in.createStringArrayList());
+        this.routes = RealmUtil.convertListToRealmList(in.createStringArrayList());
+        this.images = RealmUtil.convertListToRealmList(in.createStringArrayList());
+    }
+
+    public static final Creator<RealmArea> CREATOR = new Creator<RealmArea>() {
+        @Override
+        public RealmArea createFromParcel(Parcel source) {
+            return new RealmArea(source);
+        }
+
+        @Override
+        public RealmArea[] newArray(int size) {
+            return new RealmArea[size];
+        }
+    };
 }

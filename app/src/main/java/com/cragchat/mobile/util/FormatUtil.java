@@ -34,14 +34,14 @@ public class FormatUtil {
         MONTH_DAY_YEAR.setTimeZone(TimeZone.getTimeZone("PST"));
     }
 
-    public static String getDateAsElapsed(String date) {
+    public static String getDateAsElapsed(String rawDate) {
         Date dateObject = null;
         try {
-            dateObject = FormatUtil.RAW_FORMAT.parse(date);
+            dateObject = FormatUtil.RAW_FORMAT.parse(rawDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : date;
+        return dateObject != null ? FormatUtil.elapsed(dateObject, Calendar.getInstance().getTime()) : rawDate;
     }
 
     public static String getFormattedDate(String rawDateString) {

@@ -19,6 +19,7 @@ import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.util.NavigationUtil;
 import com.cragchat.mobile.view.adapters.pager.RouteActivityPagerAdapter;
 import com.cragchat.mobile.view.adapters.pager.TabPagerAdapter;
 
@@ -35,14 +36,14 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String displayableString = getIntent().getStringExtra(CragChatActivity.DATA_STRING);
+        route = (Route) getIntent().getParcelableExtra(NavigationUtil.ENTITY);
 
         setContentView(R.layout.activity_route_new);
         ButterKnife.bind(this);
 
         final RouteHeaderBinding headerBinding = new RouteHeaderBinding(header);
 
-        route = Repository.getRoute(displayableString, new Callback<Route>() {
+        Repository.getRoute(route.getKey(), new Callback<Route>() {
             @Override
             public void onSuccess(Route object) {
                 headerBinding.bind(object);
@@ -151,7 +152,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            launch(Repository.getArea(route.getParent(), null));
+            NavigationUtil.launch(this, Repository.getArea(route.getParent(), null));
         }
         return super.onOptionsItemSelected(item);
     }

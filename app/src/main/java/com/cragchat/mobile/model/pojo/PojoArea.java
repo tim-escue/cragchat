@@ -1,5 +1,7 @@
 package com.cragchat.mobile.model.pojo;
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Area;
 
 import java.util.List;
@@ -82,4 +84,47 @@ public class PojoArea implements Area {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.key);
+        dest.writeString(this.name);
+        dest.writeString(this.latitude);
+        dest.writeString(this.longitude);
+        dest.writeString(this.parent);
+        dest.writeStringList(this.subAreas);
+        dest.writeStringList(this.routes);
+        dest.writeStringList(this.images);
+    }
+
+    public PojoArea() {
+    }
+
+    protected PojoArea(Parcel in) {
+        this.key = in.readString();
+        this.name = in.readString();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.parent = in.readString();
+        this.subAreas = in.createStringArrayList();
+        this.routes = in.createStringArrayList();
+        this.images = in.createStringArrayList();
+    }
+
+    public static final Creator<PojoArea> CREATOR = new Creator<PojoArea>() {
+        @Override
+        public PojoArea createFromParcel(Parcel source) {
+            return new PojoArea(source);
+        }
+
+        @Override
+        public PojoArea[] newArray(int size) {
+            return new PojoArea[size];
+        }
+    };
 }

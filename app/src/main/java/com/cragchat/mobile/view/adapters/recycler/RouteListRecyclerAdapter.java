@@ -18,6 +18,7 @@ import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.util.NavigationUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,7 +62,7 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void disconnectListener() {
         System.out.println("Lifecycle: Actually destroyed");
-        mRealm.close();
+        //Realm.close();
     }
 
     @Override
@@ -140,7 +141,7 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
             rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.launch(r);
+                    NavigationUtil.launch(activity, r);
                 }
             });
         }

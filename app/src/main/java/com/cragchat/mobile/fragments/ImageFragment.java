@@ -2,11 +2,12 @@ package com.cragchat.mobile.fragments;
 
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.EditImageActivity;
 import com.cragchat.mobile.activity.RouteActivity;
 import com.cragchat.mobile.authentication.Authentication;
@@ -34,12 +34,8 @@ import butterknife.ButterKnife;
 public class ImageFragment extends Fragment implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 873;
-    @BindView(R.id.list_empty)
-    TextView empty;
-    @BindView(R.id.images_recycler)
-    RecyclerView recyclerView;
     private String key;
-    private ImageRecyclerAdapter adap;
+    private ImageFragmentPresenter presenter;
 
     public static ImageFragment newInstance(String displayableId) {
         ImageFragment f = new ImageFragment();
@@ -55,48 +51,58 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_images, container, false);
 
-        ButterKnife.bind(this, view);
-
         key = getArguments().getString("id");
 
-        load();
-
         /*
-            Called with a null callback because the adapter consumes Realm API and handles
-            updating data internally. Method is called simply to update local data from remote.
+            Called only to update images. The return value is not used because ImageRecyclerAdapte
+            relies upon an instance of Realm and Repository can not expose Realm API in order to
+            preserve CLEAN architecture.
          */
-        if (Repository.getImages(key, new Callback<List<Image>>() {
+        presenter = new ImageFragmentPresenter(view, getLifecycle());
+        List<Image> sends = Repository.getImages(key, new Callback<List<Image>>() {
             @Override
             public void onSuccess(List<Image> object) {
-                hideEmptyIfShowing();
+                presenter.present(object);
             }
 
             @Override
             public void onFailure() {
 
             }
-        }) != null) {
-            hideEmptyIfShowing();
-        }
+        });
+        presenter.present(sends);
 
         return view;
     }
 
-    private void hideEmptyIfShowing() {
-        if (empty.getVisibility() == View.VISIBLE) {
-            empty.setVisibility(View.GONE);
+    class ImageFragmentPresenter {
+
+        @BindView(R.id.images_recycler)
+        RecyclerView recyclerView;
+        @BindView(R.id.list_empty)
+        TextView empty;
+        private ImageRecyclerAdapter adapter;
+
+        public ImageFragmentPresenter(View parent, Lifecycle lifecycle) {
+            ButterKnife.bind(this, parent);
+            adapter = ImageRecyclerAdapter.create(key, parent.getContext());
+            RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
+            lifecycle.addObserver(adapter);
+        }
+
+        public void present(List<Image> images) {
+            Resources resources = recyclerView.getContext().getResources();
+            if (images.isEmpty()) {
+                empty.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                recyclerView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            } else {
+                empty.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setBackgroundColor(resources.getColor(R.color.material_background));
+            }
         }
     }
-
-    public void load() {
-        //recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adap = ImageRecyclerAdapter.create(key, (CragChatActivity) getActivity());
-        RecyclerUtils.setAdapterAndManager(recyclerView, adap, LinearLayoutManager.VERTICAL);
-        //recyclerView.setAdapter(adap);
-        this.getLifecycle().addObserver(adap);
-    }
-
 
     @Override
     public void onClick(View view) {

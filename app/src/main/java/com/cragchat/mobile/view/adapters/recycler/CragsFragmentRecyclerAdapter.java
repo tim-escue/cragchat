@@ -12,6 +12,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.util.NavigationUtil;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -43,7 +44,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.launch(crag);
+                NavigationUtil.launch(activity, crag);
             }
         });
     }

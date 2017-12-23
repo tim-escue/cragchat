@@ -27,6 +27,7 @@ import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.FileUtil;
+import com.cragchat.mobile.util.NavigationUtil;
 import com.cragchat.mobile.view.ImageEditView;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -260,9 +261,9 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                             }
                         });
                 if (entity instanceof RealmRoute) {
-                    launch((RealmRoute) entity);
+                    NavigationUtil.launch(this, (RealmRoute) entity);
                 } else {
-                    launch((RealmArea) entity);
+                    NavigationUtil.launch(this, (RealmArea) entity);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

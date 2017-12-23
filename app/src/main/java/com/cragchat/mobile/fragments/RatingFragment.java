@@ -1,7 +1,9 @@
 package com.cragchat.mobile.fragments;
 
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -10,20 +12,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.activity.RateRouteActivity;
 import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.model.Rating;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.RatingRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class RatingFragment extends Fragment implements View.OnClickListener {
 
+    private RatingFragmentPresenter presenter;
     private String entityKey;
-    private RatingRecyclerAdapter adapter;
 
     public static RatingFragment newInstance(String displayableId) {
         RatingFragment f = new RatingFragment();
@@ -45,14 +55,51 @@ public class RatingFragment extends Fragment implements View.OnClickListener {
             relies upon an instance of Realm and Reposity can not expose Realm API
             in order to preserve CLEAN architecture.
          */
-        Repository.getRatings(entityKey, null);
-        adapter = RatingRecyclerAdapter.create(entityKey, (CragChatActivity) getActivity());
+        presenter = new RatingFragmentPresenter(view, getLifecycle());
+        List<Rating> ratings = Repository.getRatings(entityKey, new Callback<List<Rating>>() {
+            @Override
+            public void onSuccess(List<Rating> object) {
+                presenter.present(object);
+            }
 
-        RecyclerView recyclerView = view.findViewById(R.id.list_ratings);
-        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
-        this.getLifecycle().addObserver(adapter);
+            @Override
+            public void onFailure() {
+
+            }
+        });
+        presenter.present(ratings);
 
         return view;
+    }
+
+    class RatingFragmentPresenter {
+
+        @BindView(R.id.list_ratings)
+        RecyclerView recyclerView;
+        @BindView(R.id.list_empty)
+        TextView empty;
+        private RatingRecyclerAdapter adapter;
+
+        public RatingFragmentPresenter(View parent, Lifecycle lifecycle) {
+            ButterKnife.bind(this, parent);
+            adapter = RatingRecyclerAdapter.create(entityKey, (CragChatActivity) getActivity());
+
+            RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
+            lifecycle.addObserver(adapter);
+        }
+
+        public void present(List<Rating> ratings) {
+            Resources resources = recyclerView.getContext().getResources();
+            if (ratings.isEmpty()) {
+                empty.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                recyclerView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            } else {
+                empty.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setBackgroundColor(resources.getColor(R.color.material_background));
+            }
+        }
     }
 
 

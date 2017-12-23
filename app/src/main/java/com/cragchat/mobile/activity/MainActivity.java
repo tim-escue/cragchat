@@ -26,6 +26,7 @@ public class MainActivity extends NavigableActivity {
 
         addContent(R.layout.activity_main);
 
+
         setupToolBar();
 
         handlePermission();
@@ -45,7 +46,9 @@ public class MainActivity extends NavigableActivity {
         } else {
             System.out.println("ALready logged in.");
         }
+
     }
+
 
     private void setupToolBar() {
         getSupportActionBar().setTitle("CragChat");

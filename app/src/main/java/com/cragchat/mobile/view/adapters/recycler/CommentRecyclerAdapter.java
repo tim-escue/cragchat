@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.fragments.CommentSectionFragment;
+import com.cragchat.mobile.fragments.Dialog;
 import com.cragchat.mobile.model.Comment;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
@@ -128,8 +128,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     @Override
                     public void onClick(View v) {
                         if (Authentication.isLoggedIn(context)) {
-                            CommentSectionFragment.getReplyCommentDialog(
-                                    CommentRecyclerAdapter.this,
+                            Dialog.getReplyCommentDialog(
                                     null,
                                     context,
                                     entityId,
@@ -150,7 +149,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     @Override
                     public void onClick(View v) {
                         if (Authentication.isLoggedIn(context)) {
-                            CommentSectionFragment.getAddCommentDialog(CommentRecyclerAdapter.this,
+                            Dialog.getAddCommentDialog(
                                     comment.getComment(), context, entityId, table, comment, callback).show();
                         } else {
                             Toast.makeText(context, "Must be logged in to edit comment", Toast.LENGTH_LONG).show();
@@ -209,7 +208,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
             addChildrenFor(hMap, "", comments);
             return comments;
         }
-        return data;
+        return Collections.emptyList();
     }
 
 

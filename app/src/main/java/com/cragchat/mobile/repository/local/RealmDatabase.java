@@ -1,5 +1,7 @@
 package com.cragchat.mobile.repository.local;
 
+import android.support.annotation.NonNull;
+
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Comment;
 import com.cragchat.mobile.model.Datable;
@@ -22,7 +24,6 @@ import com.cragchat.mobile.model.pojo.PojoRoute;
 import com.cragchat.mobile.model.pojo.PojoSend;
 import com.cragchat.mobile.model.realm.RealmArea;
 import com.cragchat.mobile.model.realm.RealmComment;
-import com.cragchat.mobile.model.realm.RealmDerivable;
 import com.cragchat.mobile.model.realm.RealmImage;
 import com.cragchat.mobile.model.realm.RealmNewCommentEditRequest;
 import com.cragchat.mobile.model.realm.RealmNewCommentReplyRequest;
@@ -49,9 +50,7 @@ import io.realm.RealmObject;
 
 public class RealmDatabase implements CragChatDatabase {
 
-    private static final String QUEUE = "QUEUE";
     private Realm mRealm;
-
 
     public RealmDatabase() {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
@@ -170,7 +169,7 @@ public class RealmDatabase implements CragChatDatabase {
         final List<NewSendRequest> sends = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
-            public void execute(Realm realm) {
+            public void execute(@NonNull Realm realm) {
                 sends.addAll(realm.copyFromRealm(realm.where(RealmNewSendRequest.class).findAll()));
                 realm.delete(RealmNewSendRequest.class);
             }
@@ -496,17 +495,6 @@ public class RealmDatabase implements CragChatDatabase {
             @Override
             public void execute(Realm realm) {
                 realm.insertOrUpdate(object);
-            }
-        });
-    }
-
-    private void insertOrUpdate(final List<Object> object, final Class<? extends RealmDerivable> clazz) {
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                for (Object i : object) {
-
-                }
             }
         });
     }

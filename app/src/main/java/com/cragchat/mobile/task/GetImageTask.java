@@ -36,7 +36,7 @@ public class GetImageTask extends AsyncTask<String, Void, Bitmap> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (response.isSuccessful()) {
+        if (response != null && response.isSuccessful()) {
             try {
                 mIcon11 = BitmapFactory.decodeStream(response.body().byteStream());
             } catch (Exception e) {

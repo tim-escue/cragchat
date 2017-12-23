@@ -8,12 +8,9 @@ import android.view.MenuItem;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
 
 public class CragChatActivity extends AppCompatActivity {
 
-    public static final String DATA_STRING = "DATA_STRING";
     PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
         public boolean onMenuItemClick(MenuItem item) {
             Intent intent = null;
@@ -47,25 +44,5 @@ public class CragChatActivity extends AppCompatActivity {
         return true;
     }
 
-    public void launch(Area area) {
-        launch(area, 0);
-    }
 
-    public void launch(Area area, int tab) {
-        Intent intent = new Intent(this, AreaActivity.class);
-        intent.putExtra(DATA_STRING, area.getKey());
-        intent.putExtra("TAB", tab);
-        startActivity(intent);
-    }
-
-    public void launch(Route route) {
-        launch(route, 0);
-    }
-
-    public void launch(Route route, int tab) {
-        Intent intent = new Intent(this, RouteActivity.class);
-        intent.putExtra(DATA_STRING, route.getKey());
-        intent.putExtra("TAB", tab);
-        startActivity(intent);
-    }
 }

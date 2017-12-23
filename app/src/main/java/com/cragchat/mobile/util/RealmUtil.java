@@ -11,11 +11,7 @@ import io.realm.RealmList;
 public class RealmUtil {
 
     public static RealmList<String> convertListToRealmList(List<String> strings) {
-        String[] subAreas = new String[strings.size()];
-        for (int i = 0; i < subAreas.length; i++) {
-            subAreas[i] = new String(strings.get(i));
-        }
-        return new RealmList<>(subAreas);
+        return new RealmList<>(strings.toArray(new String[strings.size()]));
     }
 
 }

@@ -1,6 +1,8 @@
 package com.cragchat.mobile.model.pojo;
 
 
+import android.os.Parcel;
+
 import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.Image;
 
@@ -60,4 +62,43 @@ public class PojoImage implements Datable, Image {
     public void setEntityName(String entityName) {
         this.entityName = entityName;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.entityKey);
+        dest.writeString(this.caption);
+        dest.writeString(this.filename);
+        dest.writeString(this.date);
+        dest.writeString(this.authorName);
+        dest.writeString(this.entityName);
+    }
+
+    public PojoImage() {
+    }
+
+    protected PojoImage(Parcel in) {
+        this.entityKey = in.readString();
+        this.caption = in.readString();
+        this.filename = in.readString();
+        this.date = in.readString();
+        this.authorName = in.readString();
+        this.entityName = in.readString();
+    }
+
+    public static final Creator<PojoImage> CREATOR = new Creator<PojoImage>() {
+        @Override
+        public PojoImage createFromParcel(Parcel source) {
+            return new PojoImage(source);
+        }
+
+        @Override
+        public PojoImage[] newArray(int size) {
+            return new PojoImage[size];
+        }
+    };
 }

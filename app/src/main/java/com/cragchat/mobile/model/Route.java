@@ -1,12 +1,14 @@
 package com.cragchat.mobile.model;
 
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by timde on 9/27/2017.
  */
 
-public interface Route {
+public interface Route extends Parcelable {
 
     String getKey();
 

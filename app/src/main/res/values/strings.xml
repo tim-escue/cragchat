@@ -47,6 +47,7 @@
     <string name="string_submissions">Submissions </string>
     <string name="pick_edit_option">Select type</string>
     <string name="cd_crag_image">Crag Image</string>
+    <string name="empty">Empty</string>
 
 
     <string-array name="array_edit_options">

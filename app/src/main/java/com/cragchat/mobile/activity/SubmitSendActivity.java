@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.util.NavigationUtil;
 
 public class SubmitSendActivity extends CragChatActivity {
 
@@ -97,7 +98,7 @@ public class SubmitSendActivity extends CragChatActivity {
                 null);
 
 
-        launch(Repository.getRoute(entityKey, null));
+        NavigationUtil.launch(this, Repository.getRoute(entityKey, null));
     }
 
 
