@@ -10,11 +10,8 @@ import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.NavigationUtil;
-
-import io.realm.Realm;
 
 public class RateRouteActivity extends CragChatActivity {
 
@@ -81,10 +78,8 @@ public class RateRouteActivity extends CragChatActivity {
                 entityName,
                 null
         );
-        Realm realm = Realm.getDefaultInstance();
-        RealmRoute route = realm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
-        realm.close();
-        NavigationUtil.launch(this, route);
+
+        NavigationUtil.launch(this, Repository.getRoute(entityKey, null));
     }
 
 

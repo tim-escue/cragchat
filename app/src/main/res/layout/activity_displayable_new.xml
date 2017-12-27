@@ -80,6 +80,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/primary_light"
         android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone"
         app:borderWidth="0dp" />
 
     <include layout="@layout/search_suggestions_layout" />

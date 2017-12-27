@@ -49,6 +49,11 @@ import static android.view.View.GONE;
 
 public class EditImageActivity extends CragChatActivity implements ColorPickerDialog.OnColorChangedListener {
 
+    public static String ENTITY_TYPE = "ENTITY_TYPE";
+    public static String TYPE_ROUTE = "ROUTE";
+    public static String TYPE_AREA = "AREA";
+    public static String ENTITY_KEY = "ENTITY_KEY";
+
     @BindView(R.id.image_edit_view)
     ImageEditView imageEditView;
     @BindView(R.id.button_paint)
@@ -161,10 +166,10 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_image_edit);
         ButterKnife.bind(this);
-        String entityKey = getIntent().getStringExtra("displayable_id");
-        entityType = getIntent().getStringExtra("entityType");
+        String entityKey = getIntent().getStringExtra(ENTITY_KEY);
+        entityType = getIntent().getStringExtra(ENTITY_TYPE);
         mRealm = Realm.getDefaultInstance();
-        if (entityType.equals("route")) {
+        if (entityType.equals(TYPE_ROUTE)) {
             entity = mRealm.where(RealmRoute.class).equalTo(RealmRoute.FIELD_KEY, entityKey).findFirst();
             entityName = ((RealmRoute) entity).getName();
         } else {
@@ -201,7 +206,9 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRealm.close();
+        if (!mRealm.isClosed()) {
+            mRealm.close();
+        }
     }
 
     @Override

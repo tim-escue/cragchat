@@ -48,6 +48,7 @@
     <string name="pick_edit_option">Select type</string>
     <string name="cd_crag_image">Crag Image</string>
     <string name="empty">Empty</string>
+    <string name="no_recent_activity">No Recent Activity</string>
 
 
     <string-array name="array_edit_options">
@@ -98,7 +99,6 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
-
     </string-array>
 
     <string-array name="yds_options">

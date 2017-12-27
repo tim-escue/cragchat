@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.binding.RouteHeaderBinding;
+import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Route;
 import com.cragchat.mobile.repository.Callback;
@@ -30,6 +31,8 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
 
     @BindView(R.id.header)
     View header;
+    @BindView(R.id.viewpager)
+    ViewPager pager;
     private FloatingActionButton floatingActionButton;
     private Route route;
 
@@ -72,7 +75,6 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
 
         final RouteActivityPagerAdapter pageAdapter = new RouteActivityPagerAdapter(this,
                 getSupportFragmentManager(), appBarLayout, floatingActionButton, route);
-        final ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
 
         setAddButtonPagerAndAdapter(pager, pageAdapter);
 
@@ -83,6 +85,20 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
 
+    }
+
+    public int getTabForCommentTable(String table) {
+        int tab = 0;
+        if (table.equals(CommentSectionFragment.TABLE_BETA)) {
+            tab = 0;
+        } else if (table.equals(CommentSectionFragment.TABLE_LOCATION)) {
+            tab = 3;
+        }
+        return tab;
+    }
+
+    public void switchTab(int tab) {
+        pager.setCurrentItem(tab, true);
     }
 
     @Override

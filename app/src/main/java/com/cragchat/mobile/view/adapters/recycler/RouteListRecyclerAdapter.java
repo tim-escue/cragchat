@@ -59,10 +59,9 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
                 inflate(R.layout.route_list_item, root, false);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void disconnectListener() {
-        System.out.println("Lifecycle: Actually destroyed");
-        //Realm.close();
+        mRealm.close();
     }
 
     @Override

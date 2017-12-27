@@ -33,6 +33,10 @@ import butterknife.ButterKnife;
 
 public class CommentSectionFragment extends Fragment implements View.OnClickListener {
 
+    public static final String TABLE_LOCATION = "Location";
+    public static final String TABLE_DISCUSSION = "Discussion";
+    public static final String TABLE_BETA = "Beta";
+
     private String mEntityId;
     private String table;
     private CommentSectionPresenter presenter;

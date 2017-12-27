@@ -22,7 +22,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
         addFragment(context.getString(R.string.title_recent_activity),
-                RecentActivityFragment.newInstance(area.getKey()), false, false);
+                RecentActivityFragment.newInstance(area), false, false);
 
         RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
                 area.getRoutes().toArray(new String[area.getRoutes().size()]));
@@ -41,7 +41,7 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
         }
 
         addFragment(context.getString(R.string.title_discussion),
-                CommentSectionFragment.newInstance(area.getKey(), "Discussion"), false, true);
+                CommentSectionFragment.newInstance(area.getKey(), CommentSectionFragment.TABLE_DISCUSSION), false, true);
 
         addFragment(context.getString(R.string.title_location),
                 LocationFragment.newInstance(area.getKey()), false, true);

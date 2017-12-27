@@ -652,7 +652,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("areas");
+                            showGetFailure("area");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -685,7 +685,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("routes");
+                            showGetFailure("route");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }

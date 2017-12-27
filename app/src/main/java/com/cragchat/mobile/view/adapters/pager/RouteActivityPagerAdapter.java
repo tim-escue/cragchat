@@ -24,7 +24,7 @@ public class RouteActivityPagerAdapter extends TabPagerAdapter {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
         addFragment(context.getString(R.string.title_beta),
-                CommentSectionFragment.newInstance(route.getKey(), "beta"), false, true);
+                CommentSectionFragment.newInstance(route.getKey(), CommentSectionFragment.TABLE_BETA), false, true);
         addFragment(context.getString(R.string.title_ratings),
                 RatingFragment.newInstance(route.getKey()), false, true);
         addFragment(context.getString(R.string.title_sends),

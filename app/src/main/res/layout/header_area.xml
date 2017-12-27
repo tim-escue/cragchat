@@ -21,14 +21,14 @@
             android:text="Sub Areas"
             android:textColor="@color/white"
 
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/areas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="@dimen/sixteen_dp" />
+            android:textSize="32sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,14 +47,14 @@
             android:text="Routes"
 
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/routes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="32sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,13 +72,13 @@
             android:layout_height="wrap_content"
             android:text="Images"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/images"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="32sp" />
     </LinearLayout>
 </RelativeLayout>

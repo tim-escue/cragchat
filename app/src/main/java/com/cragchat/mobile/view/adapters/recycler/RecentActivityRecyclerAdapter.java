@@ -1,11 +1,17 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.activity.AreaActivity;
 import com.cragchat.mobile.activity.CragChatActivity;
+import com.cragchat.mobile.activity.EditImageActivity;
+import com.cragchat.mobile.activity.RouteActivity;
+import com.cragchat.mobile.activity.ViewImageActivity;
+import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.Comment;
 import com.cragchat.mobile.model.Datable;
 import com.cragchat.mobile.model.Image;
@@ -33,9 +39,11 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_IMAGE = 3;
     private CragChatActivity activity;
     private List<Datable> data;
+    private String entityKey;
 
-    public RecentActivityRecyclerAdapter(CragChatActivity a, List<Datable> data) {
-        activity = a;
+    public RecentActivityRecyclerAdapter(CragChatActivity activity, String entityKey, List<Datable> data) {
+        this.activity = activity;
+        this.entityKey = entityKey;
         if (data != null) {
             this.data = data;
         } else {
@@ -88,8 +96,8 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NavigationUtil.launch(activity, Repository.getRoute(send.getEntityKey(), null),
-                            RouteActivityPagerAdapter.TAB_SENDS);
+                    launch(entityKey, RouteActivityPagerAdapter.TAB_SENDS);
+
                 }
             });
         } else if (holder instanceof RatingRecyclerAdapter.ViewHolder) {
@@ -99,8 +107,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NavigationUtil.launch(activity, Repository.getRoute(rating.getEntityKey(), null),
-                            RouteActivityPagerAdapter.TAB_RATINGS);
+                    launch(entityKey, RouteActivityPagerAdapter.TAB_RATINGS);
                 }
             });
         } else if (holder instanceof ImageRecyclerViewHolder) {
@@ -110,12 +117,15 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.imageCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Route r = Repository.getRoute(image.getEntityKey(), null);
-                    if (r != null) {
-                        NavigationUtil.launch(activity, r, RouteActivityPagerAdapter.TAB_IMAGES);
-                    } else {
-                        NavigationUtil.launch(activity, Repository.getArea(image.getEntityKey(), null));
+                    Intent intent = new Intent(activity, ViewImageActivity.class);
+                    if (activity instanceof RouteActivity) {
+                        intent.putExtra(EditImageActivity.ENTITY_TYPE, EditImageActivity.TYPE_ROUTE);
+                    } else if (activity instanceof AreaActivity) {
+                        intent.putExtra(EditImageActivity.ENTITY_TYPE, EditImageActivity.TYPE_AREA);
                     }
+                    intent.putExtra(NavigationUtil.IMAGE, image);
+                    activity.startActivity(intent);
+
                 }
             });
         } else if (holder instanceof RecentActivityCommentViewHolder) {
@@ -125,16 +135,53 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Route r = Repository.getRoute(comment.getEntityId(), null);
-                    if (r != null) {
-                        NavigationUtil.launch(activity, r, RouteActivityPagerAdapter.TAB_BETA);
-                    } else {
-                        NavigationUtil.launch(activity, Repository.getArea(comment.getEntityId(), null));
+                    if (activity instanceof RouteActivity) {
+                        launchOrSwitchTab(comment.getEntityId(),
+                                ((RouteActivity) activity).getTabForCommentTable(comment.getTable()));
+                    } else if (activity instanceof AreaActivity) {
+                        launchOrSwitchTab(comment.getEntityId(),
+                                ((AreaActivity) activity).getTabForCommentTable(comment.getTable()));
                     }
                 }
             });
         }
 
+    }
+
+    private void launchOrSwitchTab(String entityKey, int tab) {
+        if (entityKey.equals(this.entityKey)) {
+            if (activity instanceof RouteActivity) {
+                RouteActivity routeActivity = (RouteActivity) activity;
+                routeActivity.switchTab(tab);
+            } else if (activity instanceof AreaActivity) {
+                AreaActivity areaActivity = (AreaActivity) activity;
+                areaActivity.switchTab(tab);
+            }
+        } else {
+            launch(entityKey, tab);
+        }
+    }
+
+    /*
+        Launches an Area activity
+     */
+    private void launchArea(String entityKey, int tab) {
+        Area a = Repository.getArea(entityKey,
+                null);
+        NavigationUtil.launch(activity, a, tab);
+    }
+
+    /*
+        Attempts to launch Route activity first, if Route with entityKey does not exist then tries
+        for an Area with the given entityKey.
+     */
+    private void launch(String entityKey, int tab) {
+        Route r = Repository.getRoute(entityKey, null);
+        if (r != null) {
+            NavigationUtil.launch(activity, r, tab);
+        } else {
+            launchArea(entityKey, tab);
+        }
     }
 
     @Override

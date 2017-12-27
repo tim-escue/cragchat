@@ -46,9 +46,8 @@ public class RatingRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRating,
         );
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void disconnectListener() {
-        System.out.println("Lifecycle: Actually destroyed");
         mRealm.close();
     }
 

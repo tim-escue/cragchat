@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +53,8 @@ public class ImageRecyclerAdapter extends RealmRecyclerViewAdapter<RealmImage, I
                 inflate(R.layout.recent_activity_image, parent, false);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void disconnectListener() {
-        Log.d("Images", "Destroyed realm");
         mRealm.close();
     }
 

@@ -21,7 +21,8 @@ import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
-public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, SendRecyclerAdapter.ViewHolder> implements LifecycleObserver {
+public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend,
+        SendRecyclerAdapter.ViewHolder> implements LifecycleObserver {
 
     private Realm mRealm;
 
@@ -41,10 +42,9 @@ public class SendRecyclerAdapter extends RealmRecyclerViewAdapter<RealmSend, Sen
         return RecyclerUtils.getItemView(parent, R.layout.item_list_send);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void disconnectListener() {
-        System.out.println("Lifecycle: Actually destroyed");
-        // mRealm.close();
+        mRealm.close();
     }
 
     @Override

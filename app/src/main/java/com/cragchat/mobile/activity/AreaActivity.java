@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.binding.AreaHeaderBinding;
+import com.cragchat.mobile.fragments.CommentSectionFragment;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
@@ -30,6 +31,8 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
 
     @BindView(R.id.header)
     View header;
+    @BindView(R.id.viewpager)
+    ViewPager pager;
     private Area area;
     private FloatingActionButton floatingActionButton;
 
@@ -69,7 +72,6 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this,
                 getSupportFragmentManager(), appBarLayout, area, floatingActionButton);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
         pager.addOnPageChangeListener(pageAdapter);
         pager.setCurrentItem(getInitialTabIndex());
@@ -78,6 +80,28 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
         TabLayout slab = (TabLayout) findViewById(R.id.tabs);
         slab.setupWithViewPager(pager);
 
+    }
+
+    public int getTabForCommentTable(String commentTable) {
+        int tab = 0;
+        if (area.getSubAreas().size() == 0) {
+            if (commentTable.equals(CommentSectionFragment.TABLE_DISCUSSION)) {
+                tab = 2;
+            } else if (commentTable.equals(CommentSectionFragment.TABLE_LOCATION)) {
+                tab = 3;
+            }
+        } else {
+            if (commentTable.equals(CommentSectionFragment.TABLE_DISCUSSION)) {
+                tab = 3;
+            } else if (commentTable.equals(CommentSectionFragment.TABLE_LOCATION)) {
+                tab = 4;
+            }
+        }
+        return tab;
+    }
+
+    public void switchTab(int tab) {
+        pager.setCurrentItem(tab, true);
     }
 
     @Override

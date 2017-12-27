@@ -1,7 +1,12 @@
 package com.cragchat.mobile.view.adapters.recycler;
 
+import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.Area;
 import com.cragchat.mobile.model.realm.RealmArea;
+import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.util.NavigationUtil;
 
 import java.util.List;
@@ -20,16 +25,34 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 import io.realm.Sort;
 
-public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea, AreaListRecyclerAdapter.ViewHolder> {
+public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
+        AreaListRecyclerAdapter.ViewHolder> implements LifecycleObserver {
 
-    private CragChatActivity activity;
+    private Activity activity;
+    private Realm mRealm;
 
-    public AreaListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmArea> data, boolean autoUpdate, CragChatActivity activity) {
+    private AreaListRecyclerAdapter(@Nullable OrderedRealmCollection<RealmArea> data,
+                                    boolean autoUpdate, Activity activity, Realm realm) {
         super(data, autoUpdate);
         this.activity = activity;
+        this.mRealm = realm;
+    }
+
+    public static AreaListRecyclerAdapter create(Activity context, String[] entityKeys) {
+        Realm realm = Realm.getDefaultInstance();
+        return new AreaListRecyclerAdapter(
+                realm.where(RealmArea.class).in(RealmRoute.FIELD_KEY, entityKeys).findAll(),
+                false, context, realm);
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void disconnectListener() {
+        mRealm.close();
     }
 
     public static View getItemView(ViewGroup root) {
@@ -44,10 +67,12 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
     }
 
     public void sort(String field) {
+        long start = System.currentTimeMillis();
         OrderedRealmCollection<RealmArea> data = getData();
         if (data != null) {
             updateData(data.sort(field, Sort.ASCENDING));
         }
+        Log.d("SORT", String.valueOf(System.currentTimeMillis() - start));
     }
 
     @Override
@@ -75,7 +100,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(final Area area, final CragChatActivity activity) {
+        public void bind(final Area area, final Activity activity) {
             text1.setText(area.getName());
             List<String> routes = area.getRoutes();
             StringBuilder info = new StringBuilder();

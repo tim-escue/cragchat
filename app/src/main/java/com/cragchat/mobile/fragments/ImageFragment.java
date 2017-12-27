@@ -130,9 +130,10 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
             try {
                 Intent editImage = new Intent(getContext(), EditImageActivity.class);
                 editImage.putExtra("image_uri", data.getData().toString());
-                editImage.putExtra("displayable_id", key);
+                editImage.putExtra(EditImageActivity.ENTITY_KEY, key);
                 Activity activity = getActivity();
-                editImage.putExtra("entityType", activity instanceof RouteActivity ? "route" : "area");
+                editImage.putExtra(EditImageActivity.ENTITY_TYPE, activity instanceof RouteActivity
+                        ? EditImageActivity.TYPE_ROUTE : EditImageActivity.TYPE_AREA);
                 startActivity(editImage);
             } catch (Exception e) {
                 e.printStackTrace();

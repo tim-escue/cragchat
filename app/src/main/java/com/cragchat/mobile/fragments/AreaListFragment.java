@@ -14,14 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.activity.CragChatActivity;
 import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmRoute;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.view.adapters.recycler.AreaListRecyclerAdapter;
 import com.cragchat.mobile.view.adapters.recycler.RecyclerUtils;
-
-import io.realm.Realm;
 
 import static android.view.View.GONE;
 
@@ -35,7 +31,6 @@ public class AreaListFragment extends Fragment {
     private String areaKey;
 
     private AreaListRecyclerAdapter adap;
-    private Realm mRealm;
 
     public static AreaListFragment newInstance(String areaKey, String[] areaIds) {
         AreaListFragment f = new AreaListFragment();
@@ -55,8 +50,6 @@ public class AreaListFragment extends Fragment {
         areaIds = getArguments().getStringArray(IDS_String);
 
         Repository.getAreas(areaIds, null);
-
-        mRealm = Realm.getDefaultInstance();
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -84,18 +77,15 @@ public class AreaListFragment extends Fragment {
             }
         });
 
-        adap = new AreaListRecyclerAdapter(mRealm.where(RealmArea.class).in(RealmRoute.FIELD_KEY, areaIds).findAll(), true, (CragChatActivity) getActivity());
+        adap = AreaListRecyclerAdapter.create(getActivity(), areaIds);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
         recList.setItemAnimator(new DefaultItemAnimator());
         RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
 
+        getLifecycle().addObserver(adap);
+
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
-    }
 
 }

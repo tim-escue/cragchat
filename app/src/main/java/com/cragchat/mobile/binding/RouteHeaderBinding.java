@@ -45,8 +45,8 @@ public class RouteHeaderBinding {
         }
         type.setText(route.getRouteType().toString());
         stars.setRating((float) route.getStars());
-        ratings.setText(route.getRatings());
-        sends.setText(route.getSends());
+        ratings.setText(String.valueOf(route.getRatings()));
+        sends.setText(String.valueOf(route.getSends()));
         images.setText(String.valueOf(route.getImages().size()));
     }
 

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
-import android.view.View;
 
 public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
 
@@ -59,20 +58,9 @@ public class TabPagerAdapter extends FragmentPagerAdapter implements ViewPager.O
             appBarLayout.setExpanded(true);
         }
         if (fab != null) {
-            System.out.println("togglefabhere");
             if (fragment.getShowFloatingActionButton()) {
-                System.out.println("togglefabhere yes");
-                if (fab.getVisibility() != View.VISIBLE) {
-                    // fab.setVisibility(View.VISIBLE);
-                }
                 fab.show();
             } else {
-                System.out.println("togglefabhere nod");
-
-                if (fab.getVisibility() != View.GONE) {
-                    // fab.setVisibility(View.GONE);
-
-                }
                 fab.hide();
             }
         }

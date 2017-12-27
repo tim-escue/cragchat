@@ -63,6 +63,8 @@ public class CragsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
+        if (!realm.isClosed()) {
+            realm.close();
+        }
     }
 }

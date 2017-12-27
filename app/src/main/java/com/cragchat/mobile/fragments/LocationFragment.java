@@ -30,7 +30,7 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), "NO ENTITYID _ LOCATION FRAG", Toast.LENGTH_LONG).show();
         }
 
-        commentFragment = CommentSectionFragment.newInstance(entityId, "LOCATION");
+        commentFragment = CommentSectionFragment.newInstance(entityId, CommentSectionFragment.TABLE_LOCATION);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.fragment_location, commentFragment);
         transaction.commit();
