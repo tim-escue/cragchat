@@ -2,6 +2,7 @@ package com.cragchat.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
@@ -151,8 +151,8 @@ public class CommentSectionFragment extends Fragment implements View.OnClickList
                             }
                         }).show();
             } else {
-                Toast.makeText(getContext(),
-                        "Must be logged in to add a comment", Toast.LENGTH_LONG).show();
+                DialogFragment df = NotificationDialog.newInstance("Must be logged in to add a comment.");
+                df.show(getFragmentManager(), "dialog");
             }
         }
 

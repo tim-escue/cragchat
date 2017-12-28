@@ -113,8 +113,7 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             } else {
-                //Log.d("RouteActivity", "Must be logged in to add an image");
-                DialogFragment df = NotificationDialog.newInstance("Must be logged in to add an image");
+                DialogFragment df = NotificationDialog.newInstance("Must be logged in to add an image.");
                 df.show(getFragmentManager(), "dialog");
             }
         }

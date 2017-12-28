@@ -96,7 +96,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launch(entityKey, RouteActivityPagerAdapter.TAB_SENDS);
+                    launch(send.getEntityKey(), RouteActivityPagerAdapter.TAB_SENDS);
 
                 }
             });
@@ -107,7 +107,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launch(entityKey, RouteActivityPagerAdapter.TAB_RATINGS);
+                    launch(rating.getEntityKey(), RouteActivityPagerAdapter.TAB_RATINGS);
                 }
             });
         } else if (holder instanceof ImageRecyclerViewHolder) {

@@ -5,6 +5,7 @@ import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.activity.SubmitSendActivity;
@@ -108,7 +108,8 @@ public class SendsFragment extends Fragment implements View.OnClickListener {
                 next.putExtra("entityKey", entityKey);
                 startActivity(next);
             } else {
-                Toast.makeText(getContext(), "Must be logged in to submit send", Toast.LENGTH_SHORT).show();
+                DialogFragment df = NotificationDialog.newInstance("Must be logged in to add a send.");
+                df.show(getFragmentManager(), "dialog");
             }
         }
     }
