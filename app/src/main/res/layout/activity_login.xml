@@ -87,7 +87,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/or_label"
         android:layout_centerHorizontal="true"
-        android:onClick="register"
         android:text="@string/register" />
 
     <!--  <TextView

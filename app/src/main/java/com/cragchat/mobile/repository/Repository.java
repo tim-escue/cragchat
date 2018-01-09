@@ -5,32 +5,32 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Comment;
-import com.cragchat.mobile.model.Datable;
-import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.model.NewCommentEditRequest;
-import com.cragchat.mobile.model.NewCommentReplyRequest;
-import com.cragchat.mobile.model.NewCommentRequest;
-import com.cragchat.mobile.model.NewCommentVoteRequest;
-import com.cragchat.mobile.model.NewImageRequest;
-import com.cragchat.mobile.model.NewRatingRequest;
-import com.cragchat.mobile.model.NewSendRequest;
-import com.cragchat.mobile.model.Rating;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.model.pojo.PojoArea;
-import com.cragchat.mobile.model.pojo.PojoComment;
-import com.cragchat.mobile.model.pojo.PojoImage;
-import com.cragchat.mobile.model.pojo.PojoRating;
-import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.pojo.PojoSend;
-import com.cragchat.mobile.network.Network;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
 import com.cragchat.mobile.repository.local.RealmDatabase;
 import com.cragchat.mobile.repository.remote.CragChatRestApi;
 import com.cragchat.mobile.repository.remote.EntityRequestObserver;
 import com.cragchat.mobile.repository.remote.RetroFitRestApi;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Comment;
+import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.model.Image;
+import com.cragchat.mobile.ui.model.NewCommentEditRequest;
+import com.cragchat.mobile.ui.model.NewCommentReplyRequest;
+import com.cragchat.mobile.ui.model.NewCommentRequest;
+import com.cragchat.mobile.ui.model.NewCommentVoteRequest;
+import com.cragchat.mobile.ui.model.NewImageRequest;
+import com.cragchat.mobile.ui.model.NewRatingRequest;
+import com.cragchat.mobile.ui.model.NewSendRequest;
+import com.cragchat.mobile.ui.model.Rating;
+import com.cragchat.mobile.ui.model.Route;
+import com.cragchat.mobile.ui.model.Send;
+import com.cragchat.mobile.ui.model.pojo.PojoArea;
+import com.cragchat.mobile.ui.model.pojo.PojoComment;
+import com.cragchat.mobile.ui.model.pojo.PojoImage;
+import com.cragchat.mobile.ui.model.pojo.PojoRating;
+import com.cragchat.mobile.ui.model.pojo.PojoRoute;
+import com.cragchat.mobile.ui.model.pojo.PojoSend;
+import com.cragchat.mobile.util.NetworkUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -70,7 +70,7 @@ public class Repository {
     private static void showQueueMessage(String queuedObjectType) {
         StringBuilder message = new StringBuilder();
         message.append(queuedObjectType);
-        if (!Network.isConnected(applicationContext)) {
+        if (!NetworkUtil.isConnected(applicationContext)) {
             message.append(" cannot be added while offline.");
         } else {
             message.append(" could not be added, there was a network error.");
@@ -210,7 +210,7 @@ public class Repository {
     }
 
     public static List getQueryMatches(final String query, final Callback<List> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getAreasContaining(query)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -267,7 +267,7 @@ public class Repository {
 
     public static void addCommentVote(String userToken, final String vote, final String commentKey,
                                       final Callback<Comment> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentVote(userToken, vote, commentKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -300,7 +300,7 @@ public class Repository {
     public static void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
                                final String sendType, final String climbingStyle, final String entityName,
                                final Callback<Send> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -336,7 +336,7 @@ public class Repository {
     }
 
     public static List<Send> getSends(final String entityId, final Callback<List<Send>> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getSends(entityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -369,7 +369,7 @@ public class Repository {
 
     public static List<Comment> getComments(final String entityId, final String table,
                                             final Callback<List<Comment>> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getComments(entityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -405,7 +405,7 @@ public class Repository {
     public static void addImage(final String captionString,
                                 final String entityKey, final String entityType, final File imageFile,
                                 final String entityName, final Callback<Image> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
                     imageFile.getName(), reqFile);
@@ -453,7 +453,7 @@ public class Repository {
     }
 
     public static List<Image> getImages(final String key, final Callback<List<Image>> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getImages(key)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -484,7 +484,7 @@ public class Repository {
 
     public static void replyToComment(String userToken, final String comment, final String entityKey,
                                       final String table, final String parentId, final int depth, final Callback<Comment> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentReply(userToken, comment, entityKey, table, parentId, depth)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -516,7 +516,7 @@ public class Repository {
 
     public static void addComment(final String userToken, final String comment, final String entityKey,
                                   final String table, final Callback<Comment> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postComment(userToken, comment, entityKey, table)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -532,18 +532,18 @@ public class Repository {
                         @Override
                         public void onError(Throwable throwable) {
                             localDatabase.addNewCommentRequest(comment, entityKey, table);
-                            showQueueMessage("comment");
+                            showQueueMessage("Comment");
                         }
                     });
         } else {
             localDatabase.addNewCommentRequest(comment, entityKey, table);
-            showQueueMessage("comment");
+            showQueueMessage("Comment");
         }
     }
 
     public static void editComment(final String userToken, final String comment, final String commentKey,
                                    final Callback<Comment> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentEdit(userToken, comment, commentKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -559,18 +559,18 @@ public class Repository {
                         @Override
                         public void onError(Throwable throwable) {
                             localDatabase.addNewCommentEditRequest(comment, commentKey);
-                            showQueueMessage("comment edit");
+                            showQueueMessage("Comment edit");
                         }
                     });
         } else {
             localDatabase.addNewCommentEditRequest(comment, commentKey);
-            showQueueMessage("comment edit");
+            showQueueMessage("Comment edit");
         }
     }
 
     public static void addRating(final String userToken, final int stars, final int yds, final String entityKey,
                                  final String entityName, final Callback<Rating> callback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postRating(userToken, stars, yds, entityKey, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -586,7 +586,7 @@ public class Repository {
                         @Override
                         public void onError(Throwable throwable) {
                             localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
-                            showQueueMessage("rating");
+                            showQueueMessage("Rating");
                             if (callback != null) {
                                 callback.onFailure();
                             }
@@ -594,7 +594,7 @@ public class Repository {
                     });
         } else {
             localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
-            showQueueMessage("rating");
+            showQueueMessage("Rating");
             if (callback != null) {
                 callback.onFailure();
             }
@@ -605,7 +605,7 @@ public class Repository {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getRatings(entityKey).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<PojoRating>>() {
@@ -622,7 +622,7 @@ public class Repository {
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
-                            showGetFailure("ratings");
+                            showGetFailure("Ratings");
                         }
                     });
         } else {
@@ -637,7 +637,7 @@ public class Repository {
         if (areaKey == null || areaKey.isEmpty()) {
             return null;
         }
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getArea(areaKey, null)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -652,7 +652,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("area");
+                            showGetFailure("Area");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -670,7 +670,7 @@ public class Repository {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getRoute(entityKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -685,7 +685,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("route");
+                            showGetFailure("Route");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -712,7 +712,7 @@ public class Repository {
         if (routeList != null) {
             routeList.addAll(routeIds);
         }
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getRecentActivity(entityKey, areaList, routeList)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -727,7 +727,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("recent activity");
+                            showGetFailure("Recent activity");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -751,7 +751,7 @@ public class Repository {
         if (areaName == null || areaName.isEmpty()) {
             return null;
         }
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getArea(null, areaName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -766,7 +766,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("area by name \"" + areaName + "\"");
+                            showGetFailure("Area by name \"" + areaName + "\"");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -781,7 +781,7 @@ public class Repository {
     }
 
     public static List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getRoutes(routeIds)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -796,7 +796,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("routes");
+                            showGetFailure("Routes");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -812,7 +812,7 @@ public class Repository {
     }
 
     public static List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
-        if (Network.isConnected(applicationContext)) {
+        if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getAreas(areaIds)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -830,7 +830,7 @@ public class Repository {
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
-                            showGetFailure("areas");
+                            showGetFailure("Areas");
                         }
                     });
         } else {

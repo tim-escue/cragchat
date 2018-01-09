@@ -82,7 +82,6 @@ public class Authentication {
         if (mUser == null) {
             String token = getSharedPreferences(context).getString(AUTHENTICATION_TOKEN, DEFAULT_NULL);
             String name = getSharedPreferences(context).getString(AUTHENTICATION_USERNAME, DEFAULT_NULL);
-            System.out.println("gAU: " + token + " " + name);
             if (!token.equals(DEFAULT_NULL) && !name.equals(DEFAULT_NULL)) {
                 mUser = new AuthenticatedUser(name, token);
             }
@@ -99,7 +98,6 @@ public class Authentication {
         sharedPreference.putString(AUTHENTICATION_TOKEN, token);
         sharedPreference.putString(AUTHENTICATION_USERNAME, name);
         sharedPreference.apply();
-        System.out.println("now " + token + " " + name);
     }
 
     private static SharedPreferences getSharedPreferences(Context context) {

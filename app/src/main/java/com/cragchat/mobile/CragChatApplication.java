@@ -17,7 +17,7 @@ public class CragChatApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Repository.init(this);
-        Authentication.init(getApplicationContext());
+        Authentication.init(this);
         registerReceiver(new ConnectionReceiver(),
                 new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }

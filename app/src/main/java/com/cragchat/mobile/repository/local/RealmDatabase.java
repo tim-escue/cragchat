@@ -2,39 +2,39 @@ package com.cragchat.mobile.repository.local;
 
 import android.support.annotation.NonNull;
 
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Comment;
-import com.cragchat.mobile.model.Datable;
-import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.model.NewCommentEditRequest;
-import com.cragchat.mobile.model.NewCommentReplyRequest;
-import com.cragchat.mobile.model.NewCommentRequest;
-import com.cragchat.mobile.model.NewCommentVoteRequest;
-import com.cragchat.mobile.model.NewImageRequest;
-import com.cragchat.mobile.model.NewRatingRequest;
-import com.cragchat.mobile.model.NewSendRequest;
-import com.cragchat.mobile.model.Rating;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.model.pojo.PojoArea;
-import com.cragchat.mobile.model.pojo.PojoComment;
-import com.cragchat.mobile.model.pojo.PojoImage;
-import com.cragchat.mobile.model.pojo.PojoRating;
-import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.pojo.PojoSend;
-import com.cragchat.mobile.model.realm.RealmArea;
-import com.cragchat.mobile.model.realm.RealmComment;
-import com.cragchat.mobile.model.realm.RealmImage;
-import com.cragchat.mobile.model.realm.RealmNewCommentEditRequest;
-import com.cragchat.mobile.model.realm.RealmNewCommentReplyRequest;
-import com.cragchat.mobile.model.realm.RealmNewCommentRequest;
-import com.cragchat.mobile.model.realm.RealmNewCommentVoteRequest;
-import com.cragchat.mobile.model.realm.RealmNewImageRequest;
-import com.cragchat.mobile.model.realm.RealmNewRatingRequest;
-import com.cragchat.mobile.model.realm.RealmNewSendRequest;
-import com.cragchat.mobile.model.realm.RealmRating;
-import com.cragchat.mobile.model.realm.RealmRoute;
-import com.cragchat.mobile.model.realm.RealmSend;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Comment;
+import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.model.Image;
+import com.cragchat.mobile.ui.model.NewCommentEditRequest;
+import com.cragchat.mobile.ui.model.NewCommentReplyRequest;
+import com.cragchat.mobile.ui.model.NewCommentRequest;
+import com.cragchat.mobile.ui.model.NewCommentVoteRequest;
+import com.cragchat.mobile.ui.model.NewImageRequest;
+import com.cragchat.mobile.ui.model.NewRatingRequest;
+import com.cragchat.mobile.ui.model.NewSendRequest;
+import com.cragchat.mobile.ui.model.Rating;
+import com.cragchat.mobile.ui.model.Route;
+import com.cragchat.mobile.ui.model.Send;
+import com.cragchat.mobile.ui.model.pojo.PojoArea;
+import com.cragchat.mobile.ui.model.pojo.PojoComment;
+import com.cragchat.mobile.ui.model.pojo.PojoImage;
+import com.cragchat.mobile.ui.model.pojo.PojoRating;
+import com.cragchat.mobile.ui.model.pojo.PojoRoute;
+import com.cragchat.mobile.ui.model.pojo.PojoSend;
+import com.cragchat.mobile.ui.model.realm.RealmArea;
+import com.cragchat.mobile.ui.model.realm.RealmComment;
+import com.cragchat.mobile.ui.model.realm.RealmImage;
+import com.cragchat.mobile.ui.model.realm.RealmNewCommentEditRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewCommentReplyRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewCommentRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewCommentVoteRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewImageRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewRatingRequest;
+import com.cragchat.mobile.ui.model.realm.RealmNewSendRequest;
+import com.cragchat.mobile.ui.model.realm.RealmRating;
+import com.cragchat.mobile.ui.model.realm.RealmRoute;
+import com.cragchat.mobile.ui.model.realm.RealmSend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -502,11 +502,11 @@ public class RealmDatabase implements CragChatDatabase {
     /*
     public static void create(final Context context) {
         Realm realm = Realm.getDefaultInstance();
-        System.out.println("logged in successfully as timsqdev");
+        Log.d("logged in successfully as timsqdev");
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void onSuccess(Realm realm) {
-                System.out.println("Creating ozone and other areas");
+                Log.d("Creating ozone and other areas");
                 RealmArea ozone = new RealmArea("Ozone", null, "0", "0", null, new RealmList<String>(), new RealmList<String>());
                 ozone = realm.copyToRealm(ozone);
                 //RealmArea ozone = realm.where(RealmArea.class).equalTo("name", "Ozone").findFirst();
@@ -521,7 +521,7 @@ public class RealmDatabase implements CragChatDatabase {
                 }
                 scanner.close();
 
-                System.out.println("Creating routes");
+                Log.d("Creating routes");
                 Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.routes));
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
@@ -539,22 +539,22 @@ public class RealmDatabase implements CragChatDatabase {
                     ozone.getRoutes().add(new String(route.getFilename()));
                 }
 
-                System.out.println("Finished copying to realm");
+                Log.d("Finished copying to realm");
                 List<RealmArea> areas = realm.where(RealmArea.class).findAll();
-                System.out.println("Areas(" + areas.size() + "): ");
+                Log.d("Areas(" + areas.size() + "): ");
                 for (RealmArea area : areas) {
-                    System.out.println("\t" + area.getName());
+                    Log.d("\t" + area.getName());
                     for (String subArea : area.getSubAreas()) {
-                        System.out.println("\t\t" + subArea.getValue());
+                        Log.d("\t\t" + subArea.getValue());
                     }
                     for (String route : area.getRoutes()) {
-                        System.out.println("\t\t" + route.getValue());
+                        Log.d("\t\t" + route.getValue());
                     }
                 }
                 List<RealmRoute> routes = realm.where(RealmRoute.class).findAll();
-                System.out.println("Routes(" + routes.size() + "):  ");
+                Log.d("Routes(" + routes.size() + "):  ");
                 for (RealmRoute route : routes) {
-                    System.out.println("\t" + route.getName());
+                    Log.d("\t" + route.getName());
                 }
             }
         });

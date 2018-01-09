@@ -1,13 +1,13 @@
 package com.cragchat.mobile.repository.remote;
 
 import com.cragchat.mobile.authentication.AuthenticatedUser;
-import com.cragchat.mobile.model.Datable;
-import com.cragchat.mobile.model.pojo.PojoArea;
-import com.cragchat.mobile.model.pojo.PojoComment;
-import com.cragchat.mobile.model.pojo.PojoImage;
-import com.cragchat.mobile.model.pojo.PojoRating;
-import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.pojo.PojoSend;
+import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.model.pojo.PojoArea;
+import com.cragchat.mobile.ui.model.pojo.PojoComment;
+import com.cragchat.mobile.ui.model.pojo.PojoImage;
+import com.cragchat.mobile.ui.model.pojo.PojoRating;
+import com.cragchat.mobile.ui.model.pojo.PojoRoute;
+import com.cragchat.mobile.ui.model.pojo.PojoSend;
 
 import java.util.List;
 

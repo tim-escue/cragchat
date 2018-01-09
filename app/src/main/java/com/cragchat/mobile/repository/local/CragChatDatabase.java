@@ -1,25 +1,25 @@
 package com.cragchat.mobile.repository.local;
 
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Comment;
-import com.cragchat.mobile.model.Datable;
-import com.cragchat.mobile.model.Image;
-import com.cragchat.mobile.model.NewCommentEditRequest;
-import com.cragchat.mobile.model.NewCommentReplyRequest;
-import com.cragchat.mobile.model.NewCommentRequest;
-import com.cragchat.mobile.model.NewCommentVoteRequest;
-import com.cragchat.mobile.model.NewImageRequest;
-import com.cragchat.mobile.model.NewRatingRequest;
-import com.cragchat.mobile.model.NewSendRequest;
-import com.cragchat.mobile.model.Rating;
-import com.cragchat.mobile.model.Route;
-import com.cragchat.mobile.model.Send;
-import com.cragchat.mobile.model.pojo.PojoArea;
-import com.cragchat.mobile.model.pojo.PojoComment;
-import com.cragchat.mobile.model.pojo.PojoImage;
-import com.cragchat.mobile.model.pojo.PojoRating;
-import com.cragchat.mobile.model.pojo.PojoRoute;
-import com.cragchat.mobile.model.pojo.PojoSend;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Comment;
+import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.model.Image;
+import com.cragchat.mobile.ui.model.NewCommentEditRequest;
+import com.cragchat.mobile.ui.model.NewCommentReplyRequest;
+import com.cragchat.mobile.ui.model.NewCommentRequest;
+import com.cragchat.mobile.ui.model.NewCommentVoteRequest;
+import com.cragchat.mobile.ui.model.NewImageRequest;
+import com.cragchat.mobile.ui.model.NewRatingRequest;
+import com.cragchat.mobile.ui.model.NewSendRequest;
+import com.cragchat.mobile.ui.model.Rating;
+import com.cragchat.mobile.ui.model.Route;
+import com.cragchat.mobile.ui.model.Send;
+import com.cragchat.mobile.ui.model.pojo.PojoArea;
+import com.cragchat.mobile.ui.model.pojo.PojoComment;
+import com.cragchat.mobile.ui.model.pojo.PojoImage;
+import com.cragchat.mobile.ui.model.pojo.PojoRating;
+import com.cragchat.mobile.ui.model.pojo.PojoRoute;
+import com.cragchat.mobile.ui.model.pojo.PojoSend;
 
 import java.util.List;
 

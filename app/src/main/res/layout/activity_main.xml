@@ -3,7 +3,7 @@
 
     <fragment
         android:id="@+id/fragment_crags"
-        android:name="com.cragchat.mobile.fragments.CragsFragment"
+        android:name="com.cragchat.mobile.ui.view.fragments.CragsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

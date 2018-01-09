@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.cragchat.mobile.activity.EditImageActivity;
 import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.ui.view.activity.EditImageActivity;
 
 /**
  * Created by timde on 11/28/2017.

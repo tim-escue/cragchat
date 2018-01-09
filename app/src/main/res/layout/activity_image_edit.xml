@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <com.cragchat.mobile.view.ImageEditView
+    <com.cragchat.mobile.ui.view.ImageEditView
         android:id="@+id/image_edit_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

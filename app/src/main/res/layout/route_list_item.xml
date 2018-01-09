@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/author"
         android:layout_below="@id/author"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/secondary_text"
         android:textSize="14sp" />
 
     <TextView
@@ -41,8 +41,17 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/yds"
         android:layout_toEndOf="@id/yds"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/secondary_text"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/not_rated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Rated"
+        android:visibility="gone"
+        android:layout_alignBottom="@+id/type"
+        android:layout_toEndOf="@id/type" />
 
     <RatingBar
         android:id="@+id/stars"

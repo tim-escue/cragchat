@@ -3,8 +3,8 @@ package com.cragchat.mobile.util;
 import android.content.Context;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.model.Area;
-import com.cragchat.mobile.model.Route;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Route;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
