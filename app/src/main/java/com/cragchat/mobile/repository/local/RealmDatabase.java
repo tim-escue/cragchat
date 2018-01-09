@@ -57,34 +57,6 @@ public class RealmDatabase implements CragChatDatabase {
                 .schemaVersion(1)
                 .name("cragchat.realm")
                 .build());
-        // Realm.deleteRealm(Realm.getDefaultConfiguration());
-        /*Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmRating rating = new RealmRating();
-                rating.setEntityName("Make belieb");
-                rating.setDate("2017-11-30 20:22:05");
-                rating.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
-                rating.setKey("ddd");
-                rating.setStars(3);
-                rating.setUsername("FAKTEST");
-                rating.setYds(8);
-
-                RealmSend send = new RealmSend();
-                send.setEntityName("Make belieb");
-                send.setDate("2017-11-30 20:22:05");
-                send.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
-                send.setKey("dddaaa");
-                send.setUsername("FAKTEST");
-                send.setAttempts(1);
-                send.setClimbingStyle("lead");
-                send.setPitches(1);
-                send.setSendType("Onsight");
-
-                realm.insert(send);
-                realm.insert(rating);
-            }
-        });*/
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -559,5 +531,34 @@ public class RealmDatabase implements CragChatDatabase {
             }
         });
     }*/
+
+    // Realm.deleteRealm(Realm.getDefaultConfiguration());
+        /*Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmRating rating = new RealmRating();
+                rating.setEntityName("Make belieb");
+                rating.setDate("2017-11-30 20:22:05");
+                rating.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
+                rating.setKey("ddd");
+                rating.setStars(3);
+                rating.setUsername("FAKTEST");
+                rating.setYds(8);
+
+                RealmSend send = new RealmSend();
+                send.setEntityName("Make belieb");
+                send.setDate("2017-11-30 20:22:05");
+                send.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
+                send.setKey("dddaaa");
+                send.setUsername("FAKTEST");
+                send.setAttempts(1);
+                send.setClimbingStyle("lead");
+                send.setPitches(1);
+                send.setSendType("Onsight");
+
+                realm.insert(send);
+                realm.insert(rating);
+            }
+        });*/
 
 }
