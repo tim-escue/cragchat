@@ -1,7 +1,9 @@
 package com.cragchat.mobile.repository.local;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
@@ -52,7 +54,8 @@ public class RealmDatabase implements CragChatDatabase {
 
     private Realm mRealm;
 
-    public RealmDatabase() {
+    public RealmDatabase(@ApplicationContext Context context) {
+        Realm.init(context);
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(1)
                 .name("cragchat.realm")
