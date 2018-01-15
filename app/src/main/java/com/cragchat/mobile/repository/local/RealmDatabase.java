@@ -1,7 +1,9 @@
 package com.cragchat.mobile.repository.local;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
@@ -52,7 +54,8 @@ public class RealmDatabase implements CragChatDatabase {
 
     private Realm mRealm;
 
-    public RealmDatabase() {
+    public RealmDatabase(@ApplicationContext Context context) {
+        Realm.init(context);
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(1)
                 .name("cragchat.realm")
@@ -471,94 +474,6 @@ public class RealmDatabase implements CragChatDatabase {
         });
     }
 
-    /*
-    public static void create(final Context context) {
-        Realm realm = Realm.getDefaultInstance();
-        Log.d("logged in successfully as timsqdev");
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void onSuccess(Realm realm) {
-                Log.d("Creating ozone and other areas");
-                RealmArea ozone = new RealmArea("Ozone", null, "0", "0", null, new RealmList<String>(), new RealmList<String>());
-                ozone = realm.copyToRealm(ozone);
-                //RealmArea ozone = realm.where(RealmArea.class).equalTo("name", "Ozone").findFirst();
 
-                Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.walls));
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String[] params = line.split("#");
-                    RealmArea newArea = new RealmArea(params[0], params[0] + ozone.getName(), "0", "0", ozone, new RealmList<RealmArea>(), new RealmList<RealmRoute>());
-                    newArea = realm.copyToRealm(newArea);
-                    ozone.getSubAreas().add(newArea);
-                }
-                scanner.close();
-
-                Log.d("Creating routes");
-                Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.routes));
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String[] params = line.split("#");
-
-                    String type = params[3];
-                    if (type.contains("Top Rope")) {
-                        type = "Trad"; // only one rout ehas tope rope and its other type is trad
-                    }
-
-                    RealmArea parent = realm.where(RealmArea.class).equalTo("name", params[2]).findFirst();
-                    RealmRoute route = new RealmRoute(params[0] + parent.getName(), params[0], type, "0", "0", parent.getFilename(), 0, 0);
-                    route = realm.copyToRealm(route);
-                    parent.getRoutes().add(new String(route.getFilename()));
-                    ozone.getRoutes().add(new String(route.getFilename()));
-                }
-
-                Log.d("Finished copying to realm");
-                List<RealmArea> areas = realm.where(RealmArea.class).findAll();
-                Log.d("Areas(" + areas.size() + "): ");
-                for (RealmArea area : areas) {
-                    Log.d("\t" + area.getName());
-                    for (String subArea : area.getSubAreas()) {
-                        Log.d("\t\t" + subArea.getValue());
-                    }
-                    for (String route : area.getRoutes()) {
-                        Log.d("\t\t" + route.getValue());
-                    }
-                }
-                List<RealmRoute> routes = realm.where(RealmRoute.class).findAll();
-                Log.d("Routes(" + routes.size() + "):  ");
-                for (RealmRoute route : routes) {
-                    Log.d("\t" + route.getName());
-                }
-            }
-        });
-    }*/
-
-    // Realm.deleteRealm(Realm.getDefaultConfiguration());
-        /*Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmRating rating = new RealmRating();
-                rating.setEntityName("Make belieb");
-                rating.setDate("2017-11-30 20:22:05");
-                rating.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
-                rating.setKey("ddd");
-                rating.setStars(3);
-                rating.setUsername("FAKTEST");
-                rating.setYds(8);
-
-                RealmSend send = new RealmSend();
-                send.setEntityName("Make belieb");
-                send.setDate("2017-11-30 20:22:05");
-                send.setEntityKey("ed0ebf5726fa4c16a05c767abadc366e");
-                send.setKey("dddaaa");
-                send.setUsername("FAKTEST");
-                send.setAttempts(1);
-                send.setClimbingStyle("lead");
-                send.setPitches(1);
-                send.setSendType("Onsight");
-
-                realm.insert(send);
-                realm.insert(rating);
-            }
-        });*/
 
 }
