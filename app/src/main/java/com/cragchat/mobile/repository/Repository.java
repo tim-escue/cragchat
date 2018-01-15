@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
-import com.cragchat.mobile.repository.local.RealmDatabase;
 import com.cragchat.mobile.repository.remote.CragChatRestApi;
 import com.cragchat.mobile.repository.remote.EntityRequestObserver;
 import com.cragchat.mobile.repository.remote.RetroFitRestApi;
@@ -42,9 +42,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -60,10 +61,10 @@ public class Repository {
     private static CragChatRestApi networkApi;
     private static Context applicationContext;
 
-    public static void init(Context context) {
+    @Inject
+    public Repository(@ApplicationContext Context context, CragChatDatabase cragChatDatabase) {
         applicationContext = context;
-        Realm.init(context);
-        localDatabase = new RealmDatabase();
+        localDatabase = cragChatDatabase;
         networkApi = RetroFitRestApi.getInstance();
     }
 

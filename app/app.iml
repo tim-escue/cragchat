@@ -119,8 +119,10 @@
     <orderEntry type="library" exported="" name="com.android.support:support-compat-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="com.jakewharton:butterknife-annotations:8.8.1@jar" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-basement-11.6.2" level="project" />
+    <orderEntry type="library" exported="" name="com.google.dagger:dagger-android-2.11" level="project" />
     <orderEntry type="library" exported="" name="android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tasks-11.6.2" level="project" />
+    <orderEntry type="library" exported="" name="com.google.dagger:dagger-android-support-2.11" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-location-license-11.6.2" level="project" />
     <orderEntry type="library" exported="" name="io.reactivex.rxjava2:rxjava:2.0.1@jar" level="project" />
     <orderEntry type="library" exported="" name="org.reactivestreams:reactive-streams:1.0.0@jar" level="project" />
@@ -136,6 +138,7 @@
     <orderEntry type="library" exported="" name="com.android.support:support-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="io.realm:realm-android-library-object-server-4.1.1" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-maps-license-11.6.2" level="project" />
+    <orderEntry type="library" exported="" name="com.google.dagger:dagger:2.11@jar" level="project" />
     <orderEntry type="library" exported="" name="com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="com.squareup.okio:okio:1.13.0@jar" level="project" />
     <orderEntry type="library" exported="" name="com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
