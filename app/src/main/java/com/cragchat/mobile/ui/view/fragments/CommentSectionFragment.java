@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.view.adapters.recycler.CommentRecyclerAdapter;
@@ -87,7 +86,7 @@ public class CommentSectionFragment extends BaseFragment implements View.OnClick
 
         public CommentSectionPresenter(View parent) {
             ButterKnife.bind(this, parent);
-            adapter = new CommentRecyclerAdapter(getContext(), null, table, mEntityId, repository);
+            adapter = new CommentRecyclerAdapter(getContext(), null, table, mEntityId, repository, mAuthentication);
             RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
             final ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
                     R.array.spinner_comment_sort_options, R.layout.spinner_item);
@@ -135,8 +134,8 @@ public class CommentSectionFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
-            if (Authentication.isLoggedIn(view.getContext())) {
-                Dialog.getAddCommentDialog(repository, null, view.getContext(),
+            if (mAuthentication.isLoggedIn(view.getContext())) {
+                Dialog.getAddCommentDialog(mAuthentication, repository, null, view.getContext(),
                         mEntityId, table, null, new Callback<Comment>() {
                             @Override
                             public void onSuccess(Comment object) {

@@ -25,6 +25,9 @@ public class CragChatApplication extends Application {
     @Inject
     Repository repository;
 
+    @Inject
+    Authentication authentication;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,8 +39,7 @@ public class CragChatApplication extends Application {
                 .build();
         applicationComponent.inject(this);
 
-        Authentication.init(this);
-        registerReceiver(new ConnectionReceiver(repository),
+        registerReceiver(new ConnectionReceiver(repository, authentication),
                 new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 

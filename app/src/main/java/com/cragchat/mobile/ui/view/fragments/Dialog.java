@@ -18,6 +18,7 @@ import com.cragchat.mobile.ui.model.Comment;
 public class Dialog {
 
     public static AlertDialog getAddCommentDialog(
+            final Authentication mAuthentication,
             final Repository repository,
             final String currentText, final Context context,
             final String entityId, final String table,
@@ -34,7 +35,7 @@ public class Dialog {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            String token = Authentication.getAuthenticatedUser(context).getToken();
+                            String token = mAuthentication.getAuthenticatedUser(context).getToken();
                             if (commentToEdit != null) {
                                 repository.editComment(token, comment,
                                         commentToEdit.getKey(), callback);
@@ -54,7 +55,7 @@ public class Dialog {
                                 .setMessage("Are you sure you want to cancel this comment?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        getAddCommentDialog(repository, editText.getText().toString(),
+                                        getAddCommentDialog(mAuthentication, repository, editText.getText().toString(),
                                                 context, entityId, table, commentToEdit, callback)
                                                 .show();
                                     }
@@ -76,6 +77,7 @@ public class Dialog {
     }
 
     public static AlertDialog getReplyCommentDialog(
+            final Authentication authentication,
             final Repository repository,
             String currentText, final Context context,
             final String entityId, final String table,
@@ -93,7 +95,7 @@ public class Dialog {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String comment = editText.getText().toString().trim();
                         if (!comment.isEmpty()) {
-                            String token = Authentication.getAuthenticatedUser(context).getToken();
+                            String token = authentication.getAuthenticatedUser(context).getToken();
                             repository.replyToComment(token, comment, entityId, table, parentId,
                                     depth, callback
                             );
@@ -110,7 +112,7 @@ public class Dialog {
                                 .setMessage("Are you sure you want to cancel this comment?")
                                 .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        getReplyCommentDialog(repository, editText.getText().toString(),
+                                        getReplyCommentDialog(authentication, repository, editText.getText().toString(),
                                                 context, entityId, table, parentId, depth, callback).show();
                                     }
                                 })

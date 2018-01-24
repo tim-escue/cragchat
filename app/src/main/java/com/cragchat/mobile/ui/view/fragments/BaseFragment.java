@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 
@@ -20,6 +21,9 @@ public class BaseFragment extends Fragment {
 
     @Inject
     public Repository repository;
+
+    @Inject
+    public Authentication mAuthentication;
 
     @Nullable
     @Override

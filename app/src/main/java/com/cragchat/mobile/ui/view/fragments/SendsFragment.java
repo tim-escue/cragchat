@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.ui.model.Send;
 import com.cragchat.mobile.ui.presenter.SendFragmentPresenter;
@@ -63,7 +62,7 @@ public class SendsFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
-            if (Authentication.isLoggedIn(getContext())) {
+            if (mAuthentication.isLoggedIn(getContext())) {
                 Intent next = new Intent(getContext(), SubmitSendActivity.class);
                 next.putExtra("entityKey", entityKey);
                 startActivity(next);

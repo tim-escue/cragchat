@@ -19,6 +19,9 @@ public class CragChatActivity extends AppCompatActivity {
     @Inject
     public Repository repository;
 
+    @Inject
+    public Authentication authentication;
+
     private RepositoryComponent activityComponent;
 
     private final PopupMenu.OnMenuItemClickListener menuListener = new PopupMenu.OnMenuItemClickListener() {
@@ -54,13 +57,12 @@ public class CragChatActivity extends AppCompatActivity {
     }
 
     public boolean openPopupMenu(MenuItem menuItem) {
-        int layout = Authentication.isLoggedIn(this) ? R.menu.menu_profile : R.menu.menu_not_logged_in;
+        int layout = authentication.isLoggedIn(this) ? R.menu.menu_profile : R.menu.menu_not_logged_in;
         PopupMenu popup = new PopupMenu(this, findViewById(R.id.more));
         popup.getMenuInflater().inflate(layout, popup.getMenu());
         popup.setOnMenuItemClickListener(menuListener);
         popup.show();
         return true;
     }
-
 
 }

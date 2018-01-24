@@ -33,9 +33,11 @@ public class RegisterActivityPresenter {
     Toolbar toolbar;
 
     private RegisterActivity activity;
+    private Authentication mAuthentication;
 
-    public RegisterActivityPresenter(RegisterActivity activity) {
+    public RegisterActivityPresenter(RegisterActivity activity, Authentication authentication) {
         this.activity = activity;
+        this.mAuthentication = authentication;
         ButterKnife.bind(this, activity);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setHomeButtonEnabled(true);
@@ -48,7 +50,7 @@ public class RegisterActivityPresenter {
         String password = editPassword.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         if (password.equals(editPasswordVerify.getText().toString().trim()) && !email.isEmpty()) {
-            Authentication.register(v.getContext(), username, password, email, true, new AuthenticationCallback() {
+            mAuthentication.register(v.getContext(), username, password, email, true, new AuthenticationCallback() {
                 @Override
                 public void onAuthenticateSuccess(AuthenticatedUser justLoggedIn) {
                     String str = "Logged in an registered as " + justLoggedIn.getName();

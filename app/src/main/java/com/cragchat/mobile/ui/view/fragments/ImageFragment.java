@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.ui.model.Image;
 import com.cragchat.mobile.ui.presenter.ImageFragmentPresenter;
@@ -70,7 +69,7 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
             int permissionWriteExternal = ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionWriteExternal == PackageManager.PERMISSION_GRANTED) {
-                if (Authentication.isLoggedIn(getContext())) {
+                if (mAuthentication.isLoggedIn(getContext())) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);

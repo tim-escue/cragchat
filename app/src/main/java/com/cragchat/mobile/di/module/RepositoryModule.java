@@ -2,8 +2,10 @@ package com.cragchat.mobile.di.module;
 
 import android.content.Context;
 
+import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
+import com.cragchat.mobile.repository.remote.CragChatRestApi;
 
 import javax.inject.Singleton;
 
@@ -19,7 +21,9 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    Repository provideRepository(Context context, CragChatDatabase database) {
-        return new Repository(context, database);
+    Repository provideRepository(Context context, CragChatDatabase database,
+                                 CragChatRestApi restApi, Authentication authentication) {
+        return new Repository(context, database, restApi, authentication);
     }
+
 }

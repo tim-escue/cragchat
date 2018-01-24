@@ -32,9 +32,11 @@ public class LoginActivityPresenter {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private Authentication mAuthentication;
+
     @OnClick(R.id.login_button)
     void login(final View view) {
-        Authentication.login(view.getContext(), usernameInput.getText().toString(),
+        mAuthentication.login(view.getContext(), usernameInput.getText().toString(),
                 passwordInput.getText().toString(), new AuthenticationCallback() {
                     @Override
                     public void onAuthenticateSuccess(AuthenticatedUser user) {
@@ -59,7 +61,8 @@ public class LoginActivityPresenter {
         }
     }
 
-    public LoginActivityPresenter(LoginActivity activity) {
+    public LoginActivityPresenter(LoginActivity activity, Authentication authentication) {
+        this.mAuthentication = authentication;
         ButterKnife.bind(this, activity);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setHomeButtonEnabled(true);

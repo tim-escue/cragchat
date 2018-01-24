@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.util.NavigationUtil;
 
 public class RateRouteActivity extends CragChatActivity {
@@ -70,7 +69,7 @@ public class RateRouteActivity extends CragChatActivity {
         int yds = ydsSpinner.getSelectedItemPosition();
 
         repository.addRating(
-                Authentication.getAuthenticatedUser(this).getToken(),
+                authentication.getAuthenticatedUser(this).getToken(),
                 stars,
                 yds,
                 entityKey,

@@ -35,10 +35,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroFitRestApi implements CragChatRestApi {
 
-    private static RetroFitRestApi instance;
     private CragChatApi api;
 
-    private RetroFitRestApi() {
+    public RetroFitRestApi() {
         Gson gson = new GsonBuilder().registerTypeAdapter(Datable.class, JsonUtil.getDatableDeserializer())
                 .create();
         OkHttpClient client = new OkHttpClient.Builder()
@@ -69,13 +68,6 @@ public class RetroFitRestApi implements CragChatRestApi {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         api = retrofit.create(CragChatApi.class);
-    }
-
-    public static CragChatRestApi getInstance() {
-        if (instance == null) {
-            instance = new RetroFitRestApi();
-        }
-        return instance;
     }
 
     @Override

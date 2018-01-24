@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
@@ -104,7 +103,7 @@ public class RatingFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.add_button) {
-            if (Authentication.isLoggedIn(view.getContext())) {
+            if (mAuthentication.isLoggedIn(view.getContext())) {
                 Intent intent = new Intent(view.getContext(), RateRouteActivity.class);
                 intent.putExtra("entityKey", entityKey);
                 view.getContext().startActivity(intent);

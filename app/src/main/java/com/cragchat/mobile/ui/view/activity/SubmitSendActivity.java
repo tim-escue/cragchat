@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.util.NavigationUtil;
 
 public class SubmitSendActivity extends CragChatActivity {
@@ -87,7 +86,7 @@ public class SubmitSendActivity extends CragChatActivity {
             return;
         }
 
-        repository.addSend(Authentication.getAuthenticatedUser(this).getToken(),
+        repository.addSend(authentication.getAuthenticatedUser(this).getToken(),
                 entityKey,
                 pitches,
                 attempts,

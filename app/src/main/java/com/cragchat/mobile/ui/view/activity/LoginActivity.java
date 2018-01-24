@@ -13,7 +13,7 @@ public class LoginActivity extends CragChatActivity {
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_login);
-        LoginActivityPresenter presenter = new LoginActivityPresenter(this);
+        LoginActivityPresenter presenter = new LoginActivityPresenter(this, authentication);
     }
 
     @Override

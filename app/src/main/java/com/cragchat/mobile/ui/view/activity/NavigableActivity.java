@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
 
 public class NavigableActivity extends SearchableActivity {
 
@@ -89,7 +88,7 @@ public class NavigableActivity extends SearchableActivity {
         navigationView.getMenu().getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Authentication.logout(NavigableActivity.this);
+                authentication.logout(NavigableActivity.this);
                 setupNavMenu();
                 mDrawerLayout.closeDrawer(Gravity.START);
                 navigationTitle.setText(("CragChat"));
@@ -98,13 +97,13 @@ public class NavigableActivity extends SearchableActivity {
         });
 
         navigationTitle = navigationView.getHeaderView(0).findViewById(R.id.navigation_view_title);
-        if (Authentication.isLoggedIn(this)) {
-            navigationTitle.setText(Authentication.getAuthenticatedUser(this).getName());
+        if (authentication.isLoggedIn(this)) {
+            navigationTitle.setText(authentication.getAuthenticatedUser(this).getName());
         }
     }
 
     public void setupNavMenu() {
-        if (Authentication.isLoggedIn(this)) {
+        if (authentication.isLoggedIn(this)) {
             navigationView.getMenu().getItem(0).setVisible(false);
             navigationView.getMenu().getItem(1).setVisible(true);
         } else {
