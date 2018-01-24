@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.ui.view.adapters.recycler.SearchResultsRecyclerAdapter;
 
@@ -49,7 +48,7 @@ public abstract class SearchableActivity extends CragChatActivity {
                 if (s.isEmpty()) {
                     data = Collections.emptyList();
                 } else {
-                    data = Repository.getQueryMatches(s,
+                    data = repository.getQueryMatches(s,
                             new Callback<List>() {
                                 @Override
                                 public void onSuccess(List object) {

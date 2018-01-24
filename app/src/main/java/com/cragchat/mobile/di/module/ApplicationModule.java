@@ -3,7 +3,6 @@ package com.cragchat.mobile.di.module;
 import android.app.Application;
 import android.content.Context;
 
-import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
 import com.cragchat.mobile.repository.local.RealmDatabase;
 
@@ -20,7 +19,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @ApplicationContext
     Context provideContext() {
         return mApplication;
     }

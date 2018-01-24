@@ -26,7 +26,7 @@ public class SearchActivity extends SearchableActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            presenter.present(query);
+            presenter.present(query, repository);
         }
     }
 

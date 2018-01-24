@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Image;
 import com.cragchat.mobile.ui.presenter.ImageFragmentPresenter;
 import com.cragchat.mobile.ui.view.activity.EditImageActivity;
@@ -28,7 +26,7 @@ import java.util.List;
 import static com.cragchat.mobile.util.NavigationUtil.ENTITY_KEY;
 
 
-public class ImageFragment extends Fragment implements View.OnClickListener {
+public class ImageFragment extends BaseFragment implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 873;
     private String entityKey;
@@ -50,7 +48,7 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
         entityKey = getArguments().getString(ENTITY_KEY);
 
         presenter = new ImageFragmentPresenter(view, getLifecycle(), entityKey);
-        List<Image> sends = Repository.getImages(entityKey, new Callback<List<Image>>() {
+        List<Image> sends = repository.getImages(entityKey, new Callback<List<Image>>() {
             @Override
             public void onSuccess(List<Image> object) {
                 presenter.present(object);

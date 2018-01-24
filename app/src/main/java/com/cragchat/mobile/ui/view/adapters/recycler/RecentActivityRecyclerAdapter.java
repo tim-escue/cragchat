@@ -40,8 +40,9 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private CragChatActivity activity;
     private List<Datable> data;
     private String entityKey;
+    private Repository mRepository;
 
-    public RecentActivityRecyclerAdapter(CragChatActivity activity, String entityKey, List<Datable> data) {
+    public RecentActivityRecyclerAdapter(CragChatActivity activity, String entityKey, List<Datable> data, Repository repository) {
         this.activity = activity;
         this.entityKey = entityKey;
         if (data != null) {
@@ -49,6 +50,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
         } else {
             this.data = new ArrayList<>();
         }
+        this.mRepository = repository;
     }
 
     @Override
@@ -162,21 +164,15 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    /*
-        Launches an Area activity
-     */
+
     private void launchArea(String entityKey, int tab) {
-        Area a = Repository.getArea(entityKey,
+        Area a = mRepository.getArea(entityKey,
                 null);
         NavigationUtil.launch(activity, a, tab);
     }
 
-    /*
-        Attempts to launch Route activity first, if Route with entityKey does not exist then tries
-        for an Area with the given entityKey.
-     */
     private void launch(String entityKey, int tab) {
-        Route r = Repository.getRoute(entityKey, null);
+        Route r = mRepository.getRoute(entityKey, null);
         if (r != null) {
             NavigationUtil.launch(activity, r, tab);
         } else {

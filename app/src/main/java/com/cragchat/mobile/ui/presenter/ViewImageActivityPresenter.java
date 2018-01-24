@@ -47,22 +47,24 @@ public class ViewImageActivityPresenter {
     TextView author;
 
     private Image image;
+    private Repository repository;
 
     @OnClick(R.id.back_button)
     void back(View view) {
-        Area area = Repository.getArea(image.getEntityKey(), null);
+        Area area = repository.getArea(image.getEntityKey(), null);
         if (area != null) {
             NavigationUtil.launch(view.getContext(), area);
         } else {
-            Route route = Repository.getRoute(image.getEntityKey(), null);
+            Route route = repository.getRoute(image.getEntityKey(), null);
             if (route != null) {
                 NavigationUtil.launch(view.getContext(), route);
             }
         }
     }
 
-    public ViewImageActivityPresenter(ViewImageActivity activity, Image image) {
+    public ViewImageActivityPresenter(ViewImageActivity activity, Image image, Repository repository) {
         this.image = image;
+        this.repository = repository;
         ButterKnife.bind(this, activity);
         final View decorView = activity.getWindow().getDecorView();
         final int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE

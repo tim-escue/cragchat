@@ -1,7 +1,6 @@
 package com.cragchat.mobile.ui.view.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ProgressBar;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Datable;
 import com.cragchat.mobile.ui.presenter.RecentActivityFragmentPresenter;
@@ -22,7 +20,7 @@ import butterknife.ButterKnife;
 
 import static com.cragchat.mobile.util.NavigationUtil.ENTITY_KEY;
 
-public class RecentActivityFragment extends Fragment {
+public class RecentActivityFragment extends BaseFragment {
 
     @BindView(R.id.progressBar1)
     ProgressBar progressBar;
@@ -43,11 +41,13 @@ public class RecentActivityFragment extends Fragment {
 
         Area area = getArguments().getParcelable(ENTITY_KEY);
 
-        final RecentActivityFragmentPresenter presenter = new RecentActivityFragmentPresenter((CragChatActivity) getActivity(), view, area);
+        final RecentActivityFragmentPresenter presenter =
+                new RecentActivityFragmentPresenter((CragChatActivity) getActivity(), view, area,
+                        repository);
 
-        List<Datable> recentActivity = Repository.getRecentActivity(area.getKey(),
-                area != null ? area.getSubAreas() : null,
-                area != null ? area.getRoutes() : null,
+        List<Datable> recentActivity = repository.getRecentActivity(area.getKey(),
+                area.getSubAreas(),
+                area.getRoutes(),
                 new Callback<List<Datable>>() {
                     @Override
                     public void onSuccess(List<Datable> object) {

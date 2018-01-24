@@ -39,6 +39,8 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     private String table;
     private Context context;
     private int sort;
+    private Repository mRepository;
+
     private Callback<Comment> callback = new Callback<Comment>() {
         @Override
         public void onSuccess(Comment object) {
@@ -51,10 +53,11 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
         }
     };
 
-    public CommentRecyclerAdapter(Context context, List<Comment> comments, String table, String entityId) {
+    public CommentRecyclerAdapter(Context context, List<Comment> comments, String table, String entityId, Repository repository) {
         this.table = table;
         this.entityId = entityId;
         this.context = context;
+        this.mRepository = repository;
         data = arrangeComments(comments);
     }
 
@@ -129,6 +132,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     public void onClick(View v) {
                         if (Authentication.isLoggedIn(context)) {
                             Dialog.getReplyCommentDialog(
+                                    mRepository,
                                     null,
                                     context,
                                     entityId,
@@ -149,8 +153,8 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     @Override
                     public void onClick(View v) {
                         if (Authentication.isLoggedIn(context)) {
-                            Dialog.getAddCommentDialog(
-                                    comment.getComment(), context, entityId, table, comment, callback).show();
+                            Dialog.getAddCommentDialog(mRepository, comment.getComment(), context,
+                                    entityId, table, comment, callback).show();
                         } else {
                             Toast.makeText(context, "Must be logged in to edit comment", Toast.LENGTH_LONG).show();
                         }
@@ -164,7 +168,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
 
     private void vote(String commentKey, boolean up) {
         if (Authentication.isLoggedIn(context)) {
-            Repository.addCommentVote(
+            mRepository.addCommentVote(
                     Authentication.getAuthenticatedUser(context).getToken(),
                     up ? "up" : "down",
                     commentKey,

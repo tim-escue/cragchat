@@ -85,7 +85,7 @@ public class RouteActivityPresenter implements AppBarLayout.OnOffsetChangedListe
         tabs.setupWithViewPager(pager);
     }
 
-    public void present(Route route) {
+    public void present(Route route, Repository repository) {
         if (!route.getRatings().equalsIgnoreCase("0")) {
             yds.setText(FormatUtil.getYdsString(yds.getContext(), route.getYds()));
         } else {
@@ -100,7 +100,7 @@ public class RouteActivityPresenter implements AppBarLayout.OnOffsetChangedListe
         activity.getSupportActionBar().setTitle(route.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = Repository.getArea(route.getParent(), null);
+        Area current = repository.getArea(route.getParent(), null);
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -108,7 +108,7 @@ public class RouteActivityPresenter implements AppBarLayout.OnOffsetChangedListe
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = Repository.getArea(current.getParent(), null);
+            current = repository.getArea(current.getParent(), null);
         }
 
         activity.getSupportActionBar().setSubtitle(subTitle.toString());

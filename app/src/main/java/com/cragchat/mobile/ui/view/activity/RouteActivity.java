@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Route;
 import com.cragchat.mobile.ui.presenter.RouteActivityPresenter;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
@@ -29,10 +28,10 @@ public class RouteActivity extends SearchableActivity {
 
         presenter = new RouteActivityPresenter(this, route.getKey(), initialTab);
 
-        Repository.getRoute(route.getKey(), new Callback<Route>() {
+        repository.getRoute(route.getKey(), new Callback<Route>() {
             @Override
             public void onSuccess(Route object) {
-                presenter.present(object);
+                presenter.present(object, repository);
                 route = object;
             }
 
@@ -42,7 +41,7 @@ public class RouteActivity extends SearchableActivity {
             }
         });
 
-        presenter.present(route);
+        presenter.present(route, repository);
     }
 
     public int getTabForCommentTable(String table) {
@@ -73,7 +72,7 @@ public class RouteActivity extends SearchableActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            NavigationUtil.launch(this, Repository.getArea(route.getParent(), null));
+            NavigationUtil.launch(this, repository.getArea(route.getParent(), null));
         }
         return super.onOptionsItemSelected(item);
     }

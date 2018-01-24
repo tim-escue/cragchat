@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.activity.RateRouteActivity;
@@ -30,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class RatingFragment extends Fragment implements View.OnClickListener {
+public class RatingFragment extends BaseFragment implements View.OnClickListener {
 
     private RatingFragmentPresenter presenter;
     private String entityKey;
@@ -56,7 +54,7 @@ public class RatingFragment extends Fragment implements View.OnClickListener {
             in order to preserve CLEAN architecture.
          */
         presenter = new RatingFragmentPresenter(view, getLifecycle());
-        List<Rating> ratings = Repository.getRatings(entityKey, new Callback<List<Rating>>() {
+        List<Rating> ratings = repository.getRatings(entityKey, new Callback<List<Rating>>() {
             @Override
             public void onSuccess(List<Rating> object) {
                 presenter.present(object);

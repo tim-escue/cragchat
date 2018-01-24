@@ -16,12 +16,17 @@ import com.cragchat.mobile.util.NetworkUtil;
 public class ConnectionReceiver extends BroadcastReceiver {
 
     private static long lastTime;
+    private Repository mrepository;
+
+    public ConnectionReceiver(Repository repository) {
+        this.mrepository = repository;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (NetworkUtil.isConnected(context) && Authentication.isLoggedIn(context) && System.currentTimeMillis() - lastTime > 15000) {
             Log.w("ConnectionRececeiver", "Triggering queue upload.");
-            Repository.sendQueuedRequests();
+            mrepository.sendQueuedRequests();
             lastTime = System.currentTimeMillis();
         }
     }

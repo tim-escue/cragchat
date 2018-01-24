@@ -57,9 +57,9 @@ import okhttp3.ResponseBody;
 
 public class Repository {
 
-    private static CragChatDatabase localDatabase;
-    private static CragChatRestApi networkApi;
-    private static Context applicationContext;
+    private CragChatDatabase localDatabase;
+    private CragChatRestApi networkApi;
+    private Context applicationContext;
 
     @Inject
     public Repository(@ApplicationContext Context context, CragChatDatabase cragChatDatabase) {
@@ -68,7 +68,7 @@ public class Repository {
         networkApi = RetroFitRestApi.getInstance();
     }
 
-    private static void showQueueMessage(String queuedObjectType) {
+    private void showQueueMessage(String queuedObjectType) {
         StringBuilder message = new StringBuilder();
         message.append(queuedObjectType);
         if (!NetworkUtil.isConnected(applicationContext)) {
@@ -81,17 +81,17 @@ public class Repository {
         Toast.makeText(applicationContext, message.toString(), Toast.LENGTH_LONG).show();
     }
 
-    private static void showGetFailure(String getRequest) {
+    private void showGetFailure(String getRequest) {
         Toast.makeText(applicationContext, "Could not get " + getRequest + ".",
                 Toast.LENGTH_LONG).show();
     }
 
-    private static void showSentQueuedSent(String type) {
+    private void showSentQueuedSent(String type) {
         Toast.makeText(applicationContext, "Queued " + type + " successfully added",
                 Toast.LENGTH_LONG).show();
     }
 
-    public static void sendQueuedRequests() {
+    public void sendQueuedRequests() {
         String userToken = Authentication.getAuthenticatedUser(applicationContext).getToken();
 
         for (NewSendRequest req : localDatabase.getNewSendRequests()) {
@@ -210,7 +210,7 @@ public class Repository {
 
     }
 
-    public static List getQueryMatches(final String query, final Callback<List> updateCallback) {
+    public List getQueryMatches(final String query, final Callback<List> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getAreasContaining(query)
                     .subscribeOn(Schedulers.io())
@@ -266,8 +266,8 @@ public class Repository {
         return localDatabase.getQueryMatches(query);
     }
 
-    public static void addCommentVote(String userToken, final String vote, final String commentKey,
-                                      final Callback<Comment> callback) {
+    public void addCommentVote(String userToken, final String vote, final String commentKey,
+                               final Callback<Comment> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentVote(userToken, vote, commentKey)
                     .subscribeOn(Schedulers.io())
@@ -298,9 +298,9 @@ public class Repository {
         }
     }
 
-    public static void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
-                               final String sendType, final String climbingStyle, final String entityName,
-                               final Callback<Send> callback) {
+    public void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
+                        final String sendType, final String climbingStyle, final String entityName,
+                        final Callback<Send> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle, entityName)
                     .subscribeOn(Schedulers.io())
@@ -336,7 +336,7 @@ public class Repository {
         }
     }
 
-    public static List<Send> getSends(final String entityId, final Callback<List<Send>> updateCallback) {
+    public List<Send> getSends(final String entityId, final Callback<List<Send>> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getSends(entityId)
                     .subscribeOn(Schedulers.io())
@@ -368,8 +368,8 @@ public class Repository {
         return localDatabase.getSends(entityId);
     }
 
-    public static List<Comment> getComments(final String entityId, final String table,
-                                            final Callback<List<Comment>> updateCallback) {
+    public List<Comment> getComments(final String entityId, final String table,
+                                     final Callback<List<Comment>> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getComments(entityId)
                     .subscribeOn(Schedulers.io())
@@ -403,9 +403,9 @@ public class Repository {
 
     }
 
-    public static void addImage(final String captionString,
-                                final String entityKey, final String entityType, final File imageFile,
-                                final String entityName, final Callback<Image> callback) {
+    public void addImage(final String captionString,
+                         final String entityKey, final String entityType, final File imageFile,
+                         final String entityName, final Callback<Image> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
@@ -453,7 +453,7 @@ public class Repository {
         }
     }
 
-    public static List<Image> getImages(final String key, final Callback<List<Image>> updateCallback) {
+    public List<Image> getImages(final String key, final Callback<List<Image>> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getImages(key)
                     .subscribeOn(Schedulers.io())
@@ -483,8 +483,8 @@ public class Repository {
         return localDatabase.getImages(key);
     }
 
-    public static void replyToComment(String userToken, final String comment, final String entityKey,
-                                      final String table, final String parentId, final int depth, final Callback<Comment> callback) {
+    public void replyToComment(String userToken, final String comment, final String entityKey,
+                               final String table, final String parentId, final int depth, final Callback<Comment> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentReply(userToken, comment, entityKey, table, parentId, depth)
                     .subscribeOn(Schedulers.io())
@@ -515,8 +515,8 @@ public class Repository {
     }
 
 
-    public static void addComment(final String userToken, final String comment, final String entityKey,
-                                  final String table, final Callback<Comment> callback) {
+    public void addComment(final String userToken, final String comment, final String entityKey,
+                           final String table, final Callback<Comment> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postComment(userToken, comment, entityKey, table)
                     .subscribeOn(Schedulers.io())
@@ -542,8 +542,8 @@ public class Repository {
         }
     }
 
-    public static void editComment(final String userToken, final String comment, final String commentKey,
-                                   final Callback<Comment> callback) {
+    public void editComment(final String userToken, final String comment, final String commentKey,
+                            final Callback<Comment> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postCommentEdit(userToken, comment, commentKey)
                     .subscribeOn(Schedulers.io())
@@ -569,8 +569,8 @@ public class Repository {
         }
     }
 
-    public static void addRating(final String userToken, final int stars, final int yds, final String entityKey,
-                                 final String entityName, final Callback<Rating> callback) {
+    public void addRating(final String userToken, final int stars, final int yds, final String entityKey,
+                          final String entityName, final Callback<Rating> callback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.postRating(userToken, stars, yds, entityKey, entityName)
                     .subscribeOn(Schedulers.io())
@@ -602,7 +602,7 @@ public class Repository {
         }
     }
 
-    public static List<Rating> getRatings(final String entityKey, final Callback<List<Rating>> updateCallback) {
+    public List<Rating> getRatings(final String entityKey, final Callback<List<Rating>> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
@@ -634,7 +634,7 @@ public class Repository {
         return localDatabase.getRatings(entityKey);
     }
 
-    public static Area getArea(String areaKey, final Callback<Area> updateCallback) {
+    public Area getArea(String areaKey, final Callback<Area> updateCallback) {
         if (areaKey == null || areaKey.isEmpty()) {
             return null;
         }
@@ -667,7 +667,7 @@ public class Repository {
         return localDatabase.getArea(areaKey);
     }
 
-    public static Route getRoute(String entityKey, final Callback<Route> updateCallback) {
+    public Route getRoute(String entityKey, final Callback<Route> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
@@ -700,8 +700,8 @@ public class Repository {
         return localDatabase.getRoute(entityKey);
     }
 
-    public static List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,
-                                                  final Callback<List<Datable>> updateCallback) {
+    public List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,
+                                           final Callback<List<Datable>> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
@@ -744,11 +744,11 @@ public class Repository {
                 (routeIds != null && !routeIds.isEmpty()) ? routeIds.toArray(new String[routeIds.size()]) : null);
     }
 
-    public static List<Datable> getRecentActivity(String entityKey, Callback<List<Datable>> updateCallback) {
+    public List<Datable> getRecentActivity(String entityKey, Callback<List<Datable>> updateCallback) {
         return getRecentActivity(entityKey, null, null, updateCallback);
     }
 
-    public static Area getAreaByName(final String areaName, final Callback<Area> updateCallback) {
+    public Area getAreaByName(final String areaName, final Callback<Area> updateCallback) {
         if (areaName == null || areaName.isEmpty()) {
             return null;
         }
@@ -781,7 +781,7 @@ public class Repository {
         return localDatabase.getAreaByName(areaName);
     }
 
-    public static List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
+    public List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getRoutes(routeIds)
                     .subscribeOn(Schedulers.io())
@@ -812,7 +812,7 @@ public class Repository {
         return localDatabase.getRoutes(routeIds);
     }
 
-    public static List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
+    public List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
         if (NetworkUtil.isConnected(applicationContext)) {
             networkApi.getAreas(areaIds)
                     .subscribeOn(Schedulers.io())
