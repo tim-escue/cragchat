@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Datable;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
@@ -28,10 +29,10 @@ public class RecentActivityFragmentPresenter {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    public RecentActivityFragmentPresenter(CragChatActivity activity, View parent, Area area) {
+    public RecentActivityFragmentPresenter(CragChatActivity activity, View parent, Area area, Repository repository) {
         ButterKnife.bind(this, parent);
         recyclerView.setHasFixedSize(true);
-        adapter = new RecentActivityRecyclerAdapter(activity, area.getKey(), null);
+        adapter = new RecentActivityRecyclerAdapter(activity, area.getKey(), null, repository);
 
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
     }

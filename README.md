@@ -1,2 +1,4 @@
-A mobile application for Android.
-Not to be used, modified, or redistributed.
+(http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com/static/screenie4.png)(http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com/static/screenie2.png)(http://ec2-54-148-84-77.us-west-2.compute.amazonaws.com/static/screenie1.png)
+
+Dependencies
+-------------

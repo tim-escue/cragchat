@@ -2,7 +2,6 @@ package com.cragchat.mobile.ui.view.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.realm.RealmArea;
 import com.cragchat.mobile.ui.view.adapters.recycler.AreaListRecyclerAdapter;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
@@ -22,7 +20,7 @@ import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import static android.view.View.GONE;
 
 
-public class AreaListFragment extends Fragment {
+public class AreaListFragment extends BaseFragment {
 
     private static final String IDS_String = "routeIds";
     private static final String AREA_String = "areaKey";
@@ -49,7 +47,7 @@ public class AreaListFragment extends Fragment {
 
         areaIds = getArguments().getStringArray(IDS_String);
 
-        Repository.getAreas(areaIds, null);
+        repository.getAreas(areaIds, null);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),

@@ -47,8 +47,11 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.subcomment_with_more)
     View subcommentWithMore;
 
-    public CommentRecyclerViewHolder(View itemView) {
+    Authentication mAuthentication;
+
+    public CommentRecyclerViewHolder(View itemView, Authentication authentication) {
         super(itemView);
+        this.mAuthentication = authentication;
         ButterKnife.bind(this, itemView);
     }
 
@@ -101,8 +104,8 @@ public class CommentRecyclerViewHolder extends RecyclerView.ViewHolder {
         }
         text5.setText(points);
 
-        if (Authentication.isLoggedIn(itemView.getContext()) &&
-                Authentication.getAuthenticatedUser(itemView.getContext())
+        if (mAuthentication.isLoggedIn(itemView.getContext()) &&
+                mAuthentication.getAuthenticatedUser(itemView.getContext())
                         .getName().equals(comment.getAuthorName())) {
             text6.setVisibility(View.VISIBLE);
         } else {

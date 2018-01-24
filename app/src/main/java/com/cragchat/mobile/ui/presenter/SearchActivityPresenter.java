@@ -38,9 +38,9 @@ public class SearchActivityPresenter {
         activity.getSupportActionBar().setTitle("Results");
     }
 
-    public void present(String query) {
+    public void present(String query, Repository repository) {
         activity.getSupportActionBar().setSubtitle("\"" + query + "\"");
-        List queryResults = Repository.getQueryMatches(query, null);
+        List queryResults = repository.getQueryMatches(query, null);
         RecyclerUtils.setAdapterAndManager(resultsRecycler,
                 new SearchResultsRecyclerAdapter(activity, queryResults),
                 LinearLayoutManager.VERTICAL);

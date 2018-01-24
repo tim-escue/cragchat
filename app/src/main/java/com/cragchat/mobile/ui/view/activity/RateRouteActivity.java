@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.NavigationUtil;
 
 public class RateRouteActivity extends CragChatActivity {
@@ -22,7 +20,7 @@ public class RateRouteActivity extends CragChatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_rate_route);
         entityKey = getIntent().getStringExtra("entityKey");
-        entityName = Repository.getRoute(entityKey, null).getName();
+        entityName = repository.getRoute(entityKey, null).getName();
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_rate_yds);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -70,8 +68,8 @@ public class RateRouteActivity extends CragChatActivity {
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
         int yds = ydsSpinner.getSelectedItemPosition();
 
-        Repository.addRating(
-                Authentication.getAuthenticatedUser(this).getToken(),
+        repository.addRating(
+                authentication.getAuthenticatedUser(this).getToken(),
                 stars,
                 yds,
                 entityKey,
@@ -79,7 +77,7 @@ public class RateRouteActivity extends CragChatActivity {
                 null
         );
 
-        NavigationUtil.launch(this, Repository.getRoute(entityKey, null));
+        NavigationUtil.launch(this, repository.getRoute(entityKey, null));
     }
 
 

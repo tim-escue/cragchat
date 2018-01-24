@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ozone" />
+            android:src="@drawable/ozone3" />
 
         <TextView
             android:id="@+id/crag_name"

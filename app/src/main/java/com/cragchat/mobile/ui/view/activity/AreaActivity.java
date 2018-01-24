@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.presenter.AreaActivityPresenter;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
@@ -24,12 +23,12 @@ public class AreaActivity extends SearchableActivity {
         setContentView(R.layout.activity_displayable_new);
         area = getIntent().getParcelableExtra(NavigationUtil.ENTITY);
         presenter = new AreaActivityPresenter(this, area);
-        presenter.present(area);
+        presenter.present(area, repository);
 
-        Repository.getArea(area.getKey(), new Callback<Area>() {
+        repository.getArea(area.getKey(), new Callback<Area>() {
             @Override
             public void onSuccess(Area object) {
-                presenter.present(object);
+                presenter.present(object, repository);
                 area = object;
             }
 
@@ -86,7 +85,7 @@ public class AreaActivity extends SearchableActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Area parent = Repository.getArea(area.getParent(), null);
+            Area parent = repository.getArea(area.getParent(), null);
             if (parent != null) {
                 NavigationUtil.launch(this, parent);
             } else {

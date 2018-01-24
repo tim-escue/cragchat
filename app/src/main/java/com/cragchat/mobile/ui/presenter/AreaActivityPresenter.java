@@ -68,11 +68,11 @@ public class AreaActivityPresenter implements AppBarLayout.OnOffsetChangedListen
         tabLayout.setupWithViewPager(pager);
     }
 
-    public void present(Area area) {
+    public void present(Area area, Repository repository) {
         areaActivity.getSupportActionBar().setTitle(area.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = Repository.getArea(area.getParent(), null);
+        Area current = repository.getArea(area.getParent(), null);
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -80,7 +80,7 @@ public class AreaActivityPresenter implements AppBarLayout.OnOffsetChangedListen
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = Repository.getArea(current.getParent(), null);
+            current = repository.getArea(current.getParent(), null);
         }
         String subTitleString = subTitle.toString();
         if (!subTitleString.isEmpty()) {

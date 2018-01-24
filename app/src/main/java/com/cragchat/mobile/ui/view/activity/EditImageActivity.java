@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Image;
 import com.cragchat.mobile.ui.model.realm.RealmArea;
 import com.cragchat.mobile.ui.model.realm.RealmRoute;
@@ -255,7 +254,7 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                 } else {
                     entityKey = ((RealmArea) entity).getKey();
                 }
-                Repository.addImage(captionString, entityKey, entityType, newFile,
+                repository.addImage(captionString, entityKey, entityType, newFile,
                         entityName, new Callback<Image>() {
                             @Override
                             public void onSuccess(Image object) {

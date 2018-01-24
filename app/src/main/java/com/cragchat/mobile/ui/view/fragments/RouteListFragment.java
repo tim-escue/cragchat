@@ -2,7 +2,6 @@ package com.cragchat.mobile.ui.view.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -18,14 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.realm.RealmRoute;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.ui.view.adapters.recycler.RouteListRecyclerAdapter;
 
 
-public class RouteListFragment extends Fragment {
+public class RouteListFragment extends BaseFragment {
 
     private static final String IDS_String = "routeIds";
     private static final String AREA_String = "areaKey";
@@ -69,7 +67,7 @@ public class RouteListFragment extends Fragment {
             not  necessary because the RouteListRecycleAdapter automagically handles displaying
             changesnin data when it detects a change in Realm database.
          */
-        Repository.getRoutes(routeIds, null);
+        repository.getRoutes(routeIds, null);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),

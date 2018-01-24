@@ -12,7 +12,7 @@ public class RegisterActivity extends CragChatActivity {
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_register);
-        RegisterActivityPresenter presenter = new RegisterActivityPresenter(this);
+        RegisterActivityPresenter presenter = new RegisterActivityPresenter(this, authentication);
     }
 
     @Override

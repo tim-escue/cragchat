@@ -16,7 +16,7 @@ public class ViewImageActivity extends CragChatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_view_image);
 
-        presenter = new ViewImageActivityPresenter(this, (Image) getIntent().getParcelableExtra(NavigationUtil.IMAGE));
+        presenter = new ViewImageActivityPresenter(this, (Image) getIntent().getParcelableExtra(NavigationUtil.IMAGE), repository);
     }
 
     @Override

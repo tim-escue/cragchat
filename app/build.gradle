@@ -8,16 +8,22 @@ android {
         applicationId 'com.cragchat.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 5
+        versionName "1.0.5"
         resConfigs "auto"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled true
+            shrinkResources true
+        }
     }
+
     dexOptions {
         javaMaxHeapSize "2g"
     }
@@ -35,10 +41,6 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
-}
-
-realm {
-    syncEnabled = true;
 }
 
 dependencies {
@@ -76,8 +78,8 @@ dependencies {
 
     compile 'io.realm:android-adapters:2.1.0'
 
+    compile 'com.github.QuadFlask:colorpicker:0.0.13'
 
-    compile project(':library-release')
 }
 repositories {
     mavenCentral()

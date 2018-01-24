@@ -1,7 +1,6 @@
 package com.cragchat.mobile.ui.view.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,20 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.ui.model.realm.RealmArea;
-import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.adapters.recycler.CragsFragmentRecyclerAdapter;
-
-import io.realm.Realm;
 
 /**
  * Created by timde on 9/9/2017.
  */
 
-public class CragsFragment extends Fragment {
-
-    private Realm realm;
+public class CragsFragment extends BaseFragment {
 
     public static CragsFragment newInstance() {
         return new CragsFragment();
@@ -40,13 +32,9 @@ public class CragsFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        realm = Realm.getDefaultInstance();
-
-        CragsFragmentRecyclerAdapter adapter = new CragsFragmentRecyclerAdapter(
-                realm.where(RealmArea.class).equalTo(RealmArea.FIELD_NAME, "Ozone").findAll(),
-                true,
-                (CragChatActivity) getActivity());
+        CragsFragmentRecyclerAdapter adapter = CragsFragmentRecyclerAdapter.create("Ozone", getActivity());
         recList.setAdapter(adapter);
+        getLifecycle().addObserver(adapter);
 
         /*
             RecyclerView uses a RealmAdapter which depends on realm-specific api so Repository
@@ -54,17 +42,11 @@ public class CragsFragment extends Fragment {
             so that local database is updated from network. RealmAdapter will auto-update
             when the local database (Realm) is updated.
          */
-        Repository.getAreaByName("Ozone", null);
+        repository.getAreaByName("Ozone", null);
 
 
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!realm.isClosed()) {
-            realm.close();
-        }
-    }
+
 }

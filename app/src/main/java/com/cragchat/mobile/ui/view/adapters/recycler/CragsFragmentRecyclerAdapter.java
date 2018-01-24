@@ -1,5 +1,9 @@
 package com.cragchat.mobile.ui.view.adapters.recycler;
 
+import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,15 +19,34 @@ import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.util.NavigationUtil;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
-public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea, CragsFragmentRecyclerAdapter.ViewHolder> {
+public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea, CragsFragmentRecyclerAdapter.ViewHolder> implements LifecycleObserver {
 
     private CragChatActivity activity;
+    private Realm realm;
 
-    public CragsFragmentRecyclerAdapter(@Nullable OrderedRealmCollection<RealmArea> data, boolean autoUpdate, CragChatActivity activity) {
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void onDestroy() {
+        if (!realm.isClosed()) {
+            realm.close();
+        }
+    }
+
+    private CragsFragmentRecyclerAdapter(@Nullable OrderedRealmCollection<RealmArea> data, boolean autoUpdate, CragChatActivity activity, Realm realm) {
         super(data, autoUpdate);
         this.activity = activity;
+        this.realm = realm;
+    }
+
+    public static CragsFragmentRecyclerAdapter create(String cragName, Activity activity) {
+        Realm realm = Realm.getDefaultInstance();
+        return new CragsFragmentRecyclerAdapter(
+                realm.where(RealmArea.class).equalTo(RealmArea.FIELD_NAME, cragName).findAll(),
+                true,
+                (CragChatActivity) activity,
+                realm);
     }
 
     @Override

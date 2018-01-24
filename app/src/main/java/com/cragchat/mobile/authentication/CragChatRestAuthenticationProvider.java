@@ -3,8 +3,8 @@ package com.cragchat.mobile.authentication;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.cragchat.mobile.repository.remote.CragChatRestApi;
 import com.cragchat.mobile.repository.remote.EntityRequestObserver;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.util.NetworkUtil;
 import com.google.gson.Gson;
 
@@ -21,15 +21,17 @@ import okhttp3.ResponseBody;
 public class CragChatRestAuthenticationProvider implements AuthenticationProvider {
 
     private Context context;
+    private CragChatRestApi mCragChatRestApi;
 
-    public CragChatRestAuthenticationProvider(Context context) {
+    public CragChatRestAuthenticationProvider(Context context, CragChatRestApi cragChatRestApi) {
         this.context = context;
+        this.mCragChatRestApi = cragChatRestApi;
     }
 
     @Override
     public void logIn(final String name, final String password, final AuthenticationCallback callback) {
         if (NetworkUtil.isConnected(context)) {
-            RetroFitRestApi.getInstance().login(name, password)
+            mCragChatRestApi.login(name, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<AuthenticatedUser>() {
@@ -57,7 +59,7 @@ public class CragChatRestAuthenticationProvider implements AuthenticationProvide
 
     @Override
     public void register(String username, String password, String email, final AuthenticationCallback callback) {
-        RetroFitRestApi.getInstance().register(username, password, email)
+        mCragChatRestApi.register(username, password, email)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new EntityRequestObserver<ResponseBody>() {

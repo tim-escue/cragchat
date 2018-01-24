@@ -11,8 +11,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.util.NavigationUtil;
 
 public class SubmitSendActivity extends CragChatActivity {
@@ -24,7 +22,7 @@ public class SubmitSendActivity extends CragChatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_submit_send);
         entityKey = getIntent().getStringExtra("entityKey");
-        entityName = Repository.getRoute(entityKey, null).getName();
+        entityName = repository.getRoute(entityKey, null).getName();
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_select_style);
         ArrayAdapter adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -88,7 +86,7 @@ public class SubmitSendActivity extends CragChatActivity {
             return;
         }
 
-        Repository.addSend(Authentication.getAuthenticatedUser(this).getToken(),
+        repository.addSend(authentication.getAuthenticatedUser(this).getToken(),
                 entityKey,
                 pitches,
                 attempts,
@@ -98,7 +96,7 @@ public class SubmitSendActivity extends CragChatActivity {
                 null);
 
 
-        NavigationUtil.launch(this, Repository.getRoute(entityKey, null));
+        NavigationUtil.launch(this, repository.getRoute(entityKey, null));
     }
 
 

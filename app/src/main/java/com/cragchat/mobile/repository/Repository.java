@@ -9,7 +9,6 @@ import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
 import com.cragchat.mobile.repository.remote.CragChatRestApi;
 import com.cragchat.mobile.repository.remote.EntityRequestObserver;
-import com.cragchat.mobile.repository.remote.RetroFitRestApi;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
@@ -57,44 +56,47 @@ import okhttp3.ResponseBody;
 
 public class Repository {
 
-    private static CragChatDatabase localDatabase;
-    private static CragChatRestApi networkApi;
-    private static Context applicationContext;
+    private CragChatDatabase mLocalDatabase;
+    private CragChatRestApi mRestApi;
+    private Context mApplicationContext;
+    private Authentication mAuthentication;
 
     @Inject
-    public Repository(@ApplicationContext Context context, CragChatDatabase cragChatDatabase) {
-        applicationContext = context;
-        localDatabase = cragChatDatabase;
-        networkApi = RetroFitRestApi.getInstance();
+    public Repository(@ApplicationContext Context context, CragChatDatabase cragChatDatabase,
+                      CragChatRestApi restApi, Authentication authentication) {
+        mApplicationContext = context;
+        mLocalDatabase = cragChatDatabase;
+        mRestApi = restApi;
+        mAuthentication = authentication;
     }
 
-    private static void showQueueMessage(String queuedObjectType) {
+    private void showQueueMessage(String queuedObjectType) {
         StringBuilder message = new StringBuilder();
         message.append(queuedObjectType);
-        if (!NetworkUtil.isConnected(applicationContext)) {
+        if (!NetworkUtil.isConnected(mApplicationContext)) {
             message.append(" cannot be added while offline.");
         } else {
             message.append(" could not be added, there was a network error.");
         }
         message.append("Adding to queue to retry when " +
                 "connection is reestablished or app is restarted.");
-        Toast.makeText(applicationContext, message.toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(mApplicationContext, message.toString(), Toast.LENGTH_LONG).show();
     }
 
-    private static void showGetFailure(String getRequest) {
-        Toast.makeText(applicationContext, "Could not get " + getRequest + ".",
+    private void showGetFailure(String getRequest) {
+        Toast.makeText(mApplicationContext, "Could not get " + getRequest + ".",
                 Toast.LENGTH_LONG).show();
     }
 
-    private static void showSentQueuedSent(String type) {
-        Toast.makeText(applicationContext, "Queued " + type + " successfully added",
+    private void showSentQueuedSent(String type) {
+        Toast.makeText(mApplicationContext, "Queued " + type + " successfully added",
                 Toast.LENGTH_LONG).show();
     }
 
-    public static void sendQueuedRequests() {
-        String userToken = Authentication.getAuthenticatedUser(applicationContext).getToken();
+    public void sendQueuedRequests() {
+        String userToken = mAuthentication.getAuthenticatedUser(mApplicationContext).getToken();
 
-        for (NewSendRequest req : localDatabase.getNewSendRequests()) {
+        for (NewSendRequest req : mLocalDatabase.getNewSendRequests()) {
             addSend(userToken, req.getEntityKey(), req.getPitches(), req.getAttempts(),
                     req.getSendType(), req.getClimbingStyle(), req.getEntityName(), new Callback<Send>() {
                         @Override
@@ -109,7 +111,7 @@ public class Repository {
                     });
         }
 
-        for (NewRatingRequest req : localDatabase.getNewRatingRequests()) {
+        for (NewRatingRequest req : mLocalDatabase.getNewRatingRequests()) {
             addRating(userToken, req.getStars(), req.getYds(), req.getEntityKey(), req.getEntityName(),
                     new Callback<Rating>() {
                         @Override
@@ -124,7 +126,7 @@ public class Repository {
                     });
         }
 
-        for (NewCommentRequest req : localDatabase.getNewCommentRequests()) {
+        for (NewCommentRequest req : mLocalDatabase.getNewCommentRequests()) {
             addComment(userToken, req.getComment(), req.getEntityKey(), req.getTable(),
                     new Callback<Comment>() {
                         @Override
@@ -139,7 +141,7 @@ public class Repository {
                     });
         }
 
-        for (NewCommentReplyRequest req : localDatabase.getNewCommentReplyRequests()) {
+        for (NewCommentReplyRequest req : mLocalDatabase.getNewCommentReplyRequests()) {
             replyToComment(userToken, req.getComment(), req.getEntityKey(), req.getTable(),
                     req.getParentId(), req.getDepth(), new Callback<Comment>() {
                         @Override
@@ -154,7 +156,7 @@ public class Repository {
                     });
         }
 
-        for (NewCommentEditRequest req : localDatabase.getNewCommentEditRequests()) {
+        for (NewCommentEditRequest req : mLocalDatabase.getNewCommentEditRequests()) {
             editComment(userToken, req.getComment(), req.getCommentKey(), new Callback<Comment>() {
                 @Override
                 public void onSuccess(Comment object) {
@@ -168,7 +170,7 @@ public class Repository {
             });
         }
 
-        for (NewCommentVoteRequest req : localDatabase.getNewCommentVoteRequests()) {
+        for (NewCommentVoteRequest req : mLocalDatabase.getNewCommentVoteRequests()) {
             addCommentVote(userToken, req.getVote(), req.getCommentKey(), new Callback<Comment>() {
                 @Override
                 public void onSuccess(Comment object) {
@@ -182,7 +184,7 @@ public class Repository {
             });
         }
 
-        for (NewImageRequest req : localDatabase.getNewImageRequsts()) {
+        for (NewImageRequest req : mLocalDatabase.getNewImageRequsts()) {
             try {
                 final File file = new File(req.getFilePath());
                 addImage(req.getCaptionString(), req.getEntityKey(), req.getEntityType(), file,
@@ -203,16 +205,16 @@ public class Repository {
                 /*
                     The image to be uploaded no longer exists. NewImageRequest is not queued to resend.
                  */
-                Toast.makeText(applicationContext, "Queued image could not be uploaded",
+                Toast.makeText(mApplicationContext, "Queued image could not be uploaded",
                         Toast.LENGTH_LONG).show();
             }
         }
 
     }
 
-    public static List getQueryMatches(final String query, final Callback<List> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getAreasContaining(query)
+    public List getQueryMatches(final String query, final Callback<List> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getAreasContaining(query)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<ResponseBody>() {
@@ -230,11 +232,11 @@ public class Repository {
                                     String result = array.getString(i);
                                     if (result.contains("routes")) {
                                         PojoArea area = gson.fromJson(result, areaType);
-                                        localDatabase.update(area);
+                                        mLocalDatabase.update(area);
                                         objs.add(area);
                                     } else {
                                         PojoRoute route = gson.fromJson(result, routeType);
-                                        localDatabase.update(route);
+                                        mLocalDatabase.update(route);
                                         objs.add(route);
                                     }
 
@@ -263,20 +265,20 @@ public class Repository {
             }
         }
 
-        return localDatabase.getQueryMatches(query);
+        return mLocalDatabase.getQueryMatches(query);
     }
 
-    public static void addCommentVote(String userToken, final String vote, final String commentKey,
-                                      final Callback<Comment> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postCommentVote(userToken, vote, commentKey)
+    public void addCommentVote(String userToken, final String vote, final String commentKey,
+                               final Callback<Comment> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postCommentVote(userToken, vote, commentKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new EntityRequestObserver<PojoComment>() {
                                 @Override
                                 public void onNext(PojoComment object) {
-                                    localDatabase.update(object);
+                                    mLocalDatabase.update(object);
                                     if (callback != null) {
                                         callback.onSuccess(object);
                                     }
@@ -285,7 +287,7 @@ public class Repository {
                                 @Override
                                 public void onError(Throwable throwable) {
                                     showQueueMessage("Comment vote");
-                                    localDatabase.addNewCommentVoteRequest(vote, commentKey);
+                                    mLocalDatabase.addNewCommentVoteRequest(vote, commentKey);
                                     if (callback != null) {
                                         callback.onFailure();
                                     }
@@ -294,22 +296,22 @@ public class Repository {
                     );
         } else {
             showQueueMessage("Comment vote");
-            localDatabase.addNewCommentVoteRequest(vote, commentKey);
+            mLocalDatabase.addNewCommentVoteRequest(vote, commentKey);
         }
     }
 
-    public static void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
-                               final String sendType, final String climbingStyle, final String entityName,
-                               final Callback<Send> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle, entityName)
+    public void addSend(String userToken, final String entityKey, final int pitches, final int attempts,
+                        final String sendType, final String climbingStyle, final String entityName,
+                        final Callback<Send> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postSend(userToken, entityKey, pitches, attempts, sendType, climbingStyle, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new EntityRequestObserver<PojoSend>() {
                                 @Override
                                 public void onNext(PojoSend send) {
-                                    localDatabase.update(send);
+                                    mLocalDatabase.update(send);
                                     if (callback != null) {
                                         callback.onSuccess(send);
                                     }
@@ -317,7 +319,7 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
-                                    localDatabase.addNewSendRequest(entityKey, pitches, attempts,
+                                    mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
                                             sendType, climbingStyle, entityName);
                                     showQueueMessage("send");
                                     if (callback != null) {
@@ -327,7 +329,7 @@ public class Repository {
                             }
                     );
         } else {
-            localDatabase.addNewSendRequest(entityKey, pitches, attempts,
+            mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
                     sendType, climbingStyle, entityName);
             showQueueMessage("send");
             if (callback != null) {
@@ -336,18 +338,18 @@ public class Repository {
         }
     }
 
-    public static List<Send> getSends(final String entityId, final Callback<List<Send>> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getSends(entityId)
+    public List<Send> getSends(final String entityId, final Callback<List<Send>> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getSends(entityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new EntityRequestObserver<List<PojoSend>>() {
                                 @Override
                                 public void onNext(List<PojoSend> sends) {
-                                    localDatabase.updateSends(sends);
+                                    mLocalDatabase.updateSends(sends);
                                     if (updateCallback != null) {
-                                        updateCallback.onSuccess(localDatabase.getSends(entityId));
+                                        updateCallback.onSuccess(mLocalDatabase.getSends(entityId));
                                     }
                                 }
 
@@ -365,22 +367,22 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getSends(entityId);
+        return mLocalDatabase.getSends(entityId);
     }
 
-    public static List<Comment> getComments(final String entityId, final String table,
-                                            final Callback<List<Comment>> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getComments(entityId)
+    public List<Comment> getComments(final String entityId, final String table,
+                                     final Callback<List<Comment>> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getComments(entityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new EntityRequestObserver<List<PojoComment>>() {
                                 @Override
                                 public void onNext(List<PojoComment> comments) {
-                                    localDatabase.updateComments(comments);
+                                    mLocalDatabase.updateComments(comments);
                                     if (updateCallback != null) {
-                                        updateCallback.onSuccess(localDatabase.getComments(entityId, table));
+                                        updateCallback.onSuccess(mLocalDatabase.getComments(entityId, table));
                                     }
                                 }
 
@@ -399,14 +401,14 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getComments(entityId, table);
+        return mLocalDatabase.getComments(entityId, table);
 
     }
 
-    public static void addImage(final String captionString,
-                                final String entityKey, final String entityType, final File imageFile,
-                                final String entityName, final Callback<Image> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
+    public void addImage(final String captionString,
+                         final String entityKey, final String entityType, final File imageFile,
+                         final String entityName, final Callback<Image> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
                     imageFile.getName(), reqFile);
@@ -414,15 +416,15 @@ public class Repository {
             RequestBody entityTypeRequest = RequestBody.create(MediaType.parse("text/plain"), entityType);
             RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
             RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"),
-                    Authentication.getAuthenticatedUser(applicationContext).getToken());
+                    mAuthentication.getAuthenticatedUser(mApplicationContext).getToken());
             RequestBody entityNameRequest = RequestBody.create(MediaType.parse("text/plain"), entityName);
-            networkApi.postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest, entityNameRequest)
+            mRestApi.postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest, entityNameRequest)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoImage>() {
                         @Override
                         public void onNext(PojoImage image1) {
-                            localDatabase.update(image1);
+                            mLocalDatabase.update(image1);
                             if (callback != null) {
                                 callback.onSuccess(image1);
                             }
@@ -432,10 +434,10 @@ public class Repository {
                         public void onError(Throwable throwable) {
                             throwable.printStackTrace();
                             if (throwable instanceof FileNotFoundException) {
-                                Toast.makeText(applicationContext, "Image could no longer be found" +
+                                Toast.makeText(mApplicationContext, "Image could no longer be found" +
                                         " to be uploaded", Toast.LENGTH_LONG).show();
                             } else {
-                                localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
+                                mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
                                 showQueueMessage("image");
                             }
                             if (callback != null) {
@@ -446,24 +448,24 @@ public class Repository {
 
         } else {
             showQueueMessage("image");
-            localDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
+            mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
             if (callback != null) {
                 callback.onFailure();
             }
         }
     }
 
-    public static List<Image> getImages(final String key, final Callback<List<Image>> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getImages(key)
+    public List<Image> getImages(final String key, final Callback<List<Image>> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getImages(key)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<PojoImage>>() {
                         @Override
                         public void onNext(List<PojoImage> images) {
-                            localDatabase.updateImages(images);
+                            mLocalDatabase.updateImages(images);
                             if (updateCallback != null) {
-                                updateCallback.onSuccess(localDatabase.getImages(key));
+                                updateCallback.onSuccess(mLocalDatabase.getImages(key));
                             }
                         }
 
@@ -480,20 +482,20 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getImages(key);
+        return mLocalDatabase.getImages(key);
     }
 
-    public static void replyToComment(String userToken, final String comment, final String entityKey,
-                                      final String table, final String parentId, final int depth, final Callback<Comment> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postCommentReply(userToken, comment, entityKey, table, parentId, depth)
+    public void replyToComment(String userToken, final String comment, final String entityKey,
+                               final String table, final String parentId, final int depth, final Callback<Comment> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postCommentReply(userToken, comment, entityKey, table, parentId, depth)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             new EntityRequestObserver<PojoComment>() {
                                 @Override
                                 public void onNext(PojoComment comment1) {
-                                    localDatabase.update(comment1);
+                                    mLocalDatabase.update(comment1);
                                     if (callback != null) {
                                         callback.onSuccess(comment1);
                                     }
@@ -501,30 +503,30 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
-                                    localDatabase.addNewCommentReplyRequest(comment, entityKey, table,
+                                    mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
                                             parentId, depth);
                                     showQueueMessage("comment reply");
                                 }
                             }
                     );
         } else {
-            localDatabase.addNewCommentReplyRequest(comment, entityKey, table,
+            mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
                     parentId, depth);
             showQueueMessage("comment reply");
         }
     }
 
 
-    public static void addComment(final String userToken, final String comment, final String entityKey,
-                                  final String table, final Callback<Comment> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postComment(userToken, comment, entityKey, table)
+    public void addComment(final String userToken, final String comment, final String entityKey,
+                           final String table, final Callback<Comment> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postComment(userToken, comment, entityKey, table)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoComment>() {
                         @Override
                         public void onNext(PojoComment object) {
-                            localDatabase.update(object);
+                            mLocalDatabase.update(object);
                             if (callback != null) {
                                 callback.onSuccess(object);
                             }
@@ -532,26 +534,26 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            localDatabase.addNewCommentRequest(comment, entityKey, table);
+                            mLocalDatabase.addNewCommentRequest(comment, entityKey, table);
                             showQueueMessage("Comment");
                         }
                     });
         } else {
-            localDatabase.addNewCommentRequest(comment, entityKey, table);
+            mLocalDatabase.addNewCommentRequest(comment, entityKey, table);
             showQueueMessage("Comment");
         }
     }
 
-    public static void editComment(final String userToken, final String comment, final String commentKey,
-                                   final Callback<Comment> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postCommentEdit(userToken, comment, commentKey)
+    public void editComment(final String userToken, final String comment, final String commentKey,
+                            final Callback<Comment> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postCommentEdit(userToken, comment, commentKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoComment>() {
                         @Override
                         public void onNext(PojoComment object) {
-                            localDatabase.update(object);
+                            mLocalDatabase.update(object);
                             if (callback != null) {
                                 callback.onSuccess(object);
                             }
@@ -559,26 +561,26 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            localDatabase.addNewCommentEditRequest(comment, commentKey);
+                            mLocalDatabase.addNewCommentEditRequest(comment, commentKey);
                             showQueueMessage("Comment edit");
                         }
                     });
         } else {
-            localDatabase.addNewCommentEditRequest(comment, commentKey);
+            mLocalDatabase.addNewCommentEditRequest(comment, commentKey);
             showQueueMessage("Comment edit");
         }
     }
 
-    public static void addRating(final String userToken, final int stars, final int yds, final String entityKey,
-                                 final String entityName, final Callback<Rating> callback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.postRating(userToken, stars, yds, entityKey, entityName)
+    public void addRating(final String userToken, final int stars, final int yds, final String entityKey,
+                          final String entityName, final Callback<Rating> callback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.postRating(userToken, stars, yds, entityKey, entityName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoRating>() {
                         @Override
                         public void onNext(PojoRating object) {
-                            localDatabase.update(object);
+                            mLocalDatabase.update(object);
                             if (callback != null) {
                                 callback.onSuccess(object);
                             }
@@ -586,7 +588,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
+                            mLocalDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
                             showQueueMessage("Rating");
                             if (callback != null) {
                                 callback.onFailure();
@@ -594,7 +596,7 @@ public class Repository {
                         }
                     });
         } else {
-            localDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
+            mLocalDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
             showQueueMessage("Rating");
             if (callback != null) {
                 callback.onFailure();
@@ -602,19 +604,19 @@ public class Repository {
         }
     }
 
-    public static List<Rating> getRatings(final String entityKey, final Callback<List<Rating>> updateCallback) {
+    public List<Rating> getRatings(final String entityKey, final Callback<List<Rating>> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getRatings(entityKey).subscribeOn(Schedulers.io())
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getRatings(entityKey).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<PojoRating>>() {
                         @Override
                         public void onNext(List<PojoRating> object) {
-                            localDatabase.updateRatings(object);
+                            mLocalDatabase.updateRatings(object);
                             if (updateCallback != null) {
-                                updateCallback.onSuccess(localDatabase.getRatings(entityKey));
+                                updateCallback.onSuccess(mLocalDatabase.getRatings(entityKey));
                             }
                         }
 
@@ -631,21 +633,21 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getRatings(entityKey);
+        return mLocalDatabase.getRatings(entityKey);
     }
 
-    public static Area getArea(String areaKey, final Callback<Area> updateCallback) {
+    public Area getArea(String areaKey, final Callback<Area> updateCallback) {
         if (areaKey == null || areaKey.isEmpty()) {
             return null;
         }
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getArea(areaKey, null)
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getArea(areaKey, null)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoArea>() {
                         @Override
                         public void onNext(PojoArea areas) {
-                            localDatabase.update(areas);
+                            mLocalDatabase.update(areas);
                             if (updateCallback != null) {
                                 updateCallback.onSuccess(areas);
                             }
@@ -664,21 +666,21 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getArea(areaKey);
+        return mLocalDatabase.getArea(areaKey);
     }
 
-    public static Route getRoute(String entityKey, final Callback<Route> updateCallback) {
+    public Route getRoute(String entityKey, final Callback<Route> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getRoute(entityKey)
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getRoute(entityKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoRoute>() {
                         @Override
                         public void onNext(PojoRoute routes) {
-                            localDatabase.update(routes);
+                            mLocalDatabase.update(routes);
                             if (updateCallback != null) {
                                 updateCallback.onSuccess(routes);
                             }
@@ -697,11 +699,11 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getRoute(entityKey);
+        return mLocalDatabase.getRoute(entityKey);
     }
 
-    public static List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,
-                                                  final Callback<List<Datable>> updateCallback) {
+    public List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,
+                                           final Callback<List<Datable>> updateCallback) {
         if (entityKey == null || entityKey.isEmpty()) {
             return null;
         }
@@ -713,14 +715,14 @@ public class Repository {
         if (routeList != null) {
             routeList.addAll(routeIds);
         }
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getRecentActivity(entityKey, areaList, routeList)
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getRecentActivity(entityKey, areaList, routeList)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<Datable>>() {
                         @Override
                         public void onNext(List<Datable> objects) {
-                            localDatabase.updateDatables(objects);
+                            mLocalDatabase.updateDatables(objects);
                             if (updateCallback != null) {
                                 updateCallback.onSuccess(objects);
                             }
@@ -739,27 +741,27 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getRecentActivity(entityKey,
+        return mLocalDatabase.getRecentActivity(entityKey,
                 (areaIds != null && !areaIds.isEmpty()) ? areaIds.toArray(new String[areaIds.size()]) : null,
                 (routeIds != null && !routeIds.isEmpty()) ? routeIds.toArray(new String[routeIds.size()]) : null);
     }
 
-    public static List<Datable> getRecentActivity(String entityKey, Callback<List<Datable>> updateCallback) {
+    public List<Datable> getRecentActivity(String entityKey, Callback<List<Datable>> updateCallback) {
         return getRecentActivity(entityKey, null, null, updateCallback);
     }
 
-    public static Area getAreaByName(final String areaName, final Callback<Area> updateCallback) {
+    public Area getAreaByName(final String areaName, final Callback<Area> updateCallback) {
         if (areaName == null || areaName.isEmpty()) {
             return null;
         }
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getArea(null, areaName)
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getArea(null, areaName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<PojoArea>() {
                         @Override
                         public void onNext(PojoArea area) {
-                            localDatabase.update(area);
+                            mLocalDatabase.update(area);
                             if (updateCallback != null) {
                                 updateCallback.onSuccess(area);
                             }
@@ -778,20 +780,20 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getAreaByName(areaName);
+        return mLocalDatabase.getAreaByName(areaName);
     }
 
-    public static List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getRoutes(routeIds)
+    public List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getRoutes(routeIds)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<PojoRoute>>() {
                         @Override
                         public void onNext(List<PojoRoute> routes) {
-                            localDatabase.updateRoutes(routes);
+                            mLocalDatabase.updateRoutes(routes);
                             if (updateCallback != null) {
-                                updateCallback.onSuccess(localDatabase.getRoutes(routeIds));
+                                updateCallback.onSuccess(mLocalDatabase.getRoutes(routeIds));
                             }
                         }
 
@@ -809,20 +811,20 @@ public class Repository {
             }
         }
 
-        return localDatabase.getRoutes(routeIds);
+        return mLocalDatabase.getRoutes(routeIds);
     }
 
-    public static List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
-        if (NetworkUtil.isConnected(applicationContext)) {
-            networkApi.getAreas(areaIds)
+    public List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
+        if (NetworkUtil.isConnected(mApplicationContext)) {
+            mRestApi.getAreas(areaIds)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new EntityRequestObserver<List<PojoArea>>() {
                         @Override
                         public void onNext(List<PojoArea> areas) {
-                            localDatabase.updateAreas(areas);
+                            mLocalDatabase.updateAreas(areas);
                             if (updateCallback != null) {
-                                updateCallback.onSuccess(localDatabase.getAreas(areaIds));
+                                updateCallback.onSuccess(mLocalDatabase.getAreas(areaIds));
                             }
                         }
 
@@ -839,7 +841,7 @@ public class Repository {
                 updateCallback.onFailure();
             }
         }
-        return localDatabase.getAreas(areaIds);
+        return mLocalDatabase.getAreas(areaIds);
     }
 
 
