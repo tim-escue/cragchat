@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.cragchat.mobile.authentication.Authentication;
-import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
 import com.cragchat.mobile.repository.remote.CragChatRestApi;
 import com.cragchat.mobile.repository.remote.EntityRequestObserver;
@@ -62,7 +61,7 @@ public class Repository {
     private Authentication mAuthentication;
 
     @Inject
-    public Repository(@ApplicationContext Context context, CragChatDatabase cragChatDatabase,
+    public Repository(Context context, CragChatDatabase cragChatDatabase,
                       CragChatRestApi restApi, Authentication authentication) {
         mApplicationContext = context;
         mLocalDatabase = cragChatDatabase;

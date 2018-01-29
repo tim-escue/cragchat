@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.cragchat.mobile.di.ApplicationContext;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
@@ -55,7 +54,7 @@ public class RealmDatabase implements CragChatDatabase {
 
     private Realm mRealm;
 
-    public RealmDatabase(@ApplicationContext Context context) {
+    public RealmDatabase(Context context) {
         Realm.init(context);
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(1)
@@ -261,16 +260,12 @@ public class RealmDatabase implements CragChatDatabase {
             public void execute(Realm realm) {
                 for (Datable i : datables) {
                     if (i instanceof PojoRating) {
-                        Log.d("Datable", "RATING:" + ((PojoRating) i).toString());
                         realm.insertOrUpdate(RealmRating.from((PojoRating) i));
                     } else if (i instanceof PojoComment) {
-                        Log.d("Datable", "COMMENT:" + ((PojoComment) i).toString());
                         realm.insertOrUpdate(RealmComment.from((PojoComment) i));
                     } else if (i instanceof PojoImage) {
-                        Log.d("Datable", "IMAGE:" + ((PojoImage) i).toString());
                         realm.insertOrUpdate(RealmImage.from((PojoImage) i));
                     } else {
-                        Log.d("Datable", "SEND:" + ((PojoSend) i).toString());
                         realm.insertOrUpdate(RealmSend.from((PojoSend) i));
                     }
                 }

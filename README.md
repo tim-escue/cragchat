@@ -14,6 +14,7 @@ Dependencies
 * Glide - Image caching and displaying
 * Gson - Json to native object conversion
 * QuadFlask colorpicker - Selecting colors for image manipulation
+* PhotoView - Zooomable image view
 
 Screenshots
 --------------
