@@ -38,10 +38,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -699,6 +701,35 @@ public class Repository {
             }
         }
         return mLocalDatabase.getRoute(entityKey);
+    }
+
+    public Observable<List<Datable>> recentActivity(String entityKey, List<String> areaIds, List<String> routeIds) {
+        return Observable.create(observableEmitter -> {
+            if (NetworkUtil.isConnected(mApplicationContext)) {
+                observableEmitter.onNext(mLocalDatabase.getRecentActivity(entityKey,
+                        (areaIds != null && !areaIds.isEmpty()) ? areaIds.toArray(new String[areaIds.size()]) : null,
+                        (routeIds != null && !routeIds.isEmpty()) ? routeIds.toArray(new String[routeIds.size()]) : null));
+                mRestApi.getRecentActivity(entityKey,
+                        areaIds != null ? areaIds : Collections.emptyList(),
+                        routeIds != null ? routeIds : Collections.emptyList())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new EntityRequestObserver<List<Datable>>() {
+                            @Override
+                            public void onNext(List<Datable> objects) {
+                                mLocalDatabase.updateDatables(objects);
+                                observableEmitter.onNext(objects);
+                                observableEmitter.onComplete();
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                showGetFailure("Recent activity");
+                                observableEmitter.onError(throwable);
+                            }
+                        });
+            }
+        });
     }
 
     public List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,

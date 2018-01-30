@@ -1,5 +1,6 @@
 package com.cragchat.mobile.ui.view.adapters.recycler;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.cragchat.mobile.ui.view.adapters.recycler.viewholder.RecentActivityCo
 import com.cragchat.mobile.util.NavigationUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,19 +39,15 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_SEND = 1;
     private static final int TYPE_RATING = 2;
     private static final int TYPE_IMAGE = 3;
-    private CragChatActivity activity;
+    private Context context;
     private List<Datable> data;
     private String entityKey;
     private Repository mRepository;
 
-    public RecentActivityRecyclerAdapter(CragChatActivity activity, String entityKey, List<Datable> data, Repository repository) {
-        this.activity = activity;
+    public RecentActivityRecyclerAdapter(Context activity, String entityKey, Repository repository) {
+        this.context = activity;
         this.entityKey = entityKey;
-        if (data != null) {
-            this.data = data;
-        } else {
-            this.data = new ArrayList<>();
-        }
+        this.data = Collections.EMPTY_LIST;
         this.mRepository = repository;
     }
 
@@ -72,6 +70,8 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
     public void update(List<Datable> newData) {
         data = newData;
+        Collections.sort(data,
+                (Datable one, Datable two) -> two.getDate().compareTo(one.getDate()));
         notifyDataSetChanged();
     }
 
@@ -105,7 +105,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
         } else if (holder instanceof RatingRecyclerAdapter.ViewHolder) {
             RatingRecyclerAdapter.ViewHolder vh = (RatingRecyclerAdapter.ViewHolder) holder;
             final Rating rating = (Rating) data.get(position);
-            vh.bind(rating, activity, true);
+            vh.bind(rating, context, true);
             vh.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -115,18 +115,18 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
         } else if (holder instanceof ImageRecyclerViewHolder) {
             ImageRecyclerViewHolder vh = (ImageRecyclerViewHolder) holder;
             final Image image = (Image) data.get(position);
-            vh.bind(image, activity);
+            vh.bind(image, context);
             vh.imageCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(activity, ViewImageActivity.class);
-                    if (activity instanceof RouteActivity) {
+                    Intent intent = new Intent(context, ViewImageActivity.class);
+                    if (context instanceof RouteActivity) {
                         intent.putExtra(EditImageActivity.ENTITY_TYPE, EditImageActivity.TYPE_ROUTE);
-                    } else if (activity instanceof AreaActivity) {
+                    } else if (context instanceof AreaActivity) {
                         intent.putExtra(EditImageActivity.ENTITY_TYPE, EditImageActivity.TYPE_AREA);
                     }
                     intent.putExtra(NavigationUtil.IMAGE, image);
-                    activity.startActivity(intent);
+                    context.startActivity(intent);
 
                 }
             });
@@ -137,12 +137,12 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
             vh.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (activity instanceof RouteActivity) {
+                    if (context instanceof RouteActivity) {
                         launchOrSwitchTab(comment.getEntityId(),
-                                ((RouteActivity) activity).getTabForCommentTable(comment.getTable()));
-                    } else if (activity instanceof AreaActivity) {
+                                ((RouteActivity) context).getTabForCommentTable(comment.getTable()));
+                    } else if (context instanceof AreaActivity) {
                         launchOrSwitchTab(comment.getEntityId(),
-                                ((AreaActivity) activity).getTabForCommentTable(comment.getTable()));
+                                ((AreaActivity) context).getTabForCommentTable(comment.getTable()));
                     }
                 }
             });
@@ -152,11 +152,11 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
     private void launchOrSwitchTab(String entityKey, int tab) {
         if (entityKey.equals(this.entityKey)) {
-            if (activity instanceof RouteActivity) {
-                RouteActivity routeActivity = (RouteActivity) activity;
+            if (context instanceof RouteActivity) {
+                RouteActivity routeActivity = (RouteActivity) context;
                 routeActivity.switchTab(tab);
-            } else if (activity instanceof AreaActivity) {
-                AreaActivity areaActivity = (AreaActivity) activity;
+            } else if (context instanceof AreaActivity) {
+                AreaActivity areaActivity = (AreaActivity) context;
                 areaActivity.switchTab(tab);
             }
         } else {
@@ -168,13 +168,13 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private void launchArea(String entityKey, int tab) {
         Area a = mRepository.getArea(entityKey,
                 null);
-        NavigationUtil.launch(activity, a, tab);
+        NavigationUtil.launch(context, a, tab);
     }
 
     private void launch(String entityKey, int tab) {
         Route r = mRepository.getRoute(entityKey, null);
         if (r != null) {
-            NavigationUtil.launch(activity, r, tab);
+            NavigationUtil.launch(context, r, tab);
         } else {
             launchArea(entityKey, tab);
         }

@@ -1,5 +1,6 @@
 package com.cragchat.mobile.ui.presenter;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.view.RecentActivityView;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecentActivityRecyclerAdapter;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
@@ -18,42 +20,64 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class RecentActivityFragmentPresenter {
 
-    RecentActivityRecyclerAdapter adapter;
-    @BindView(R.id.empty_text)
-    TextView empty;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    private RecentActivityView mView;
+    private Area mArea;
+    private Repository mRepository;
 
-    public RecentActivityFragmentPresenter(CragChatActivity activity, View parent, Area area, Repository repository) {
-        ButterKnife.bind(this, parent);
-        recyclerView.setHasFixedSize(true);
-        adapter = new RecentActivityRecyclerAdapter(activity, area.getKey(), null, repository);
-
-        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
+    @Inject
+    public RecentActivityFragmentPresenter(Repository repository, Area area) {
+        this.mRepository = repository;
+        this.mArea = area;
     }
 
-    public void present(List<Datable> recentActivity) {
-        Collections.sort(recentActivity, new Comparator<Datable>() {
+    public void setView(RecentActivityView view) {
+        this.mView = view;
+    }
+
+    public void loadRecentActivity() {
+        mRepository.recentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(recentActivityObserver());
+    }
+
+    private Observer<List<Datable>> recentActivityObserver() {
+        return new Observer<List<Datable>>() {
             @Override
-            public int compare(Datable datable, Datable t1) {
-                return t1.getDate().compareTo(datable.getDate());
+            public void onSubscribe(Disposable disposable) {
+
             }
-        });
-        Resources resources = recyclerView.getContext().getResources();
-        if (recentActivity.isEmpty()) {
-            empty.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-            recyclerView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
-        } else {
-            adapter.update(recentActivity);
-            empty.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            recyclerView.setBackgroundColor(resources.getColor(R.color.material_background));
-        }
+
+            @Override
+            public void onNext(List<Datable> datables) {
+                if (datables.isEmpty()) {
+                    mView.hideList();
+                } else {
+                    mView.showList(datables);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                mView.hideProgressBar();
+            }
+        };
     }
 }
