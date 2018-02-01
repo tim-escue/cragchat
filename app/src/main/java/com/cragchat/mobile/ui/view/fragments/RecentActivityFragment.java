@@ -55,7 +55,6 @@ public class RecentActivityFragment extends BaseFragment implements RecentActivi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        DaggerRecentActivityComponent component = DaggerRecentActivityComponent.builder();
         View view = inflater.inflate(R.layout.fragment_recent_activity, container, false);
         ButterKnife.bind(this, view);
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
@@ -69,7 +68,6 @@ public class RecentActivityFragment extends BaseFragment implements RecentActivi
             mPresenter.loadRecentActivity();
         }
     }
-
 
     @Override
     public void showList(List<Datable> recentActivity) {

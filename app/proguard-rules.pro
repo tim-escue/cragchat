@@ -16,3 +16,4 @@
 #   public *;
 #}
 -ignorewarnings
+-dontwarn com.google.errorprone.annotations.**

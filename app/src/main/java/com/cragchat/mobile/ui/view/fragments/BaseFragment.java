@@ -1,5 +1,6 @@
 package com.cragchat.mobile.ui.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,9 @@ import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
+
 /**
  * Created by timde on 1/24/2018.
  */
@@ -25,10 +29,15 @@ public class BaseFragment extends Fragment {
     @Inject
     public Authentication mAuthentication;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((CragChatActivity) getActivity()).getRepositoryComponent().inject(this);
+//        AndroidSupportInjection.inject(this);
         View view = super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }

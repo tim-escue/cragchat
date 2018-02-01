@@ -3,6 +3,8 @@ package com.cragchat.mobile.di.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.repository.local.CragChatDatabase;
 import com.cragchat.mobile.repository.local.RealmDatabase;
 import com.cragchat.mobile.repository.remote.CragChatRestApi;
@@ -16,28 +18,16 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    private final Application mApplication;
-
-    public ApplicationModule(Application app) {
-        mApplication = app;
+    @Provides
+    @Singleton
+    Context provideContext(Application application) {
+        return application;
     }
 
     @Singleton
     @Provides
-    Context provideContext() {
-        return mApplication;
-    }
-
-    @Singleton
-    @Provides
-    Application provideApplication() {
-        return mApplication;
-    }
-
-    @Singleton
-    @Provides
-    CragChatDatabase provideCragChatDatabase() {
-        return new RealmDatabase(mApplication);
+    CragChatDatabase provideCragChatDatabase(Application application) {
+        return new RealmDatabase(application);
     }
 
     @Singleton
@@ -45,4 +35,26 @@ public class ApplicationModule {
     CragChatRestApi provideCragChatRestApi() {
         return new RetroFitRestApi();
     }
+
+    @Singleton
+    @Provides
+    Authentication provideAuthentication(Context context, CragChatRestApi cragChatRestApi) {
+        return new Authentication(context, cragChatRestApi);
+    }
+
+    @Singleton
+    @Provides
+    Repository provideRepository(Context context, CragChatDatabase database,
+                                 CragChatRestApi restApi, Authentication authentication) {
+        return new Repository(context, database, restApi, authentication);
+    }
 }
+
+/*
+    @Singleton
+    @Provides
+    Application provideApplication() {
+        return mApplication;
+    }
+*/
+

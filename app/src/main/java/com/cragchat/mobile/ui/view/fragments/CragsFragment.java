@@ -3,18 +3,30 @@ package com.cragchat.mobile.ui.view.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.view.adapters.recycler.CragsFragmentRecyclerAdapter;
+import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
+
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 
 /**
  * Created by timde on 9/9/2017.
  */
 
-public class CragsFragment extends BaseFragment {
+public class CragsFragment extends DaggerFragment {
+
+    @Inject
+    Repository repository;
+
+    private static final String OZONE = "OZONE";
 
     public static CragsFragment newInstance() {
         return new CragsFragment();
@@ -27,14 +39,11 @@ public class CragsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_crags, container, false);
 
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.crags_recycler);
-        recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
 
-        CragsFragmentRecyclerAdapter adapter = CragsFragmentRecyclerAdapter.create("Ozone", getActivity());
-        recList.setAdapter(adapter);
+        CragsFragmentRecyclerAdapter adapter = CragsFragmentRecyclerAdapter.create(OZONE, getActivity());
         getLifecycle().addObserver(adapter);
+
+        RecyclerUtils.setAdapterAndManager(recList, adapter, LinearLayoutManager.VERTICAL);
 
         /*
             RecyclerView uses a RealmAdapter which depends on realm-specific api so Repository
