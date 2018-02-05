@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.ui.model.Area;
-import com.cragchat.mobile.ui.view.fragments.AreaListFragment;
+import com.cragchat.mobile.features.area.AreaListFragment;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
 import com.cragchat.mobile.ui.view.fragments.ImageFragment;
 import com.cragchat.mobile.ui.view.fragments.LocationFragment;
@@ -16,7 +16,7 @@ import com.cragchat.mobile.ui.view.fragments.RouteListFragment;
 
 public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
-    public AreaActivityPagerAdapter(Context context, FragmentManager fragmentManager,
+    public AreaActivityPagerAdapter(Context context, AreaListFragment areaFragment, FragmentManager fragmentManager,
                                     AppBarLayout appBarLayout, Area area,
                                     FloatingActionButton floatingActionButton) {
         super(fragmentManager, appBarLayout, floatingActionButton);
@@ -32,8 +32,6 @@ public class AreaActivityPagerAdapter extends TabPagerAdapter {
                 false);
 
         if (area.getSubAreas().size() > 0) {
-            AreaListFragment areaFragment = AreaListFragment.newInstance(area.getKey(),
-                    area.getSubAreas().toArray(new String[area.getSubAreas().size()]));
             addFragment(context.getString(R.string.title_areas),
                     areaFragment,
                     false,

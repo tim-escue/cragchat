@@ -59,7 +59,7 @@ public class RouteActivity extends SearchableActivity {
     }
 
     @Override
-    int getToolbarColor() {
+    public int getToolbarColor() {
         return Color.TRANSPARENT;
     }
 

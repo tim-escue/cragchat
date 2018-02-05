@@ -8,9 +8,12 @@ import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.cragchat.mobile.CragChatApplication;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.model.Area;
 
 import javax.inject.Inject;
 
@@ -37,12 +40,6 @@ public class CragChatActivity extends DaggerAppCompatActivity {
             return true;
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("create", repository.getAreaByName("Ozone", null).getKey());
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

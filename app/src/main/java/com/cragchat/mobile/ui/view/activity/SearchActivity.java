@@ -31,7 +31,7 @@ public class SearchActivity extends SearchableActivity {
     }
 
     @Override
-    int getToolbarColor() {
+    public int getToolbarColor() {
         return ContextCompat.getColor(this, R.color.primary);
     }
 

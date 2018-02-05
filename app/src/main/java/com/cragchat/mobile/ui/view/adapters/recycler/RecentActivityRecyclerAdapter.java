@@ -15,8 +15,7 @@ import com.cragchat.mobile.ui.model.Image;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.model.Route;
 import com.cragchat.mobile.ui.model.Send;
-import com.cragchat.mobile.ui.view.activity.AreaActivity;
-import com.cragchat.mobile.ui.view.activity.CragChatActivity;
+import com.cragchat.mobile.features.area.AreaActivity;
 import com.cragchat.mobile.ui.view.activity.EditImageActivity;
 import com.cragchat.mobile.ui.view.activity.RouteActivity;
 import com.cragchat.mobile.ui.view.activity.ViewImageActivity;
@@ -25,7 +24,6 @@ import com.cragchat.mobile.ui.view.adapters.recycler.viewholder.ImageRecyclerVie
 import com.cragchat.mobile.ui.view.adapters.recycler.viewholder.RecentActivityCommentViewHolder;
 import com.cragchat.mobile.util.NavigationUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

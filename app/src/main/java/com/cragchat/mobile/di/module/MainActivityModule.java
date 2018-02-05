@@ -19,10 +19,4 @@ public abstract class MainActivityModule {
     @ContributesAndroidInjector
     abstract CragsFragment cragsFragment();
 
-    @Provides
-    static String provideMessage() {
-        return "ABLJEEFECEExxxx";
-    }
-
-
 }

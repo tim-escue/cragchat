@@ -30,7 +30,7 @@ public class MapActivity extends SearchableActivity implements OnMapReadyCallbac
     }
 
     @Override
-    int getToolbarColor() {
+    public int getToolbarColor() {
         return ContextCompat.getColor(this, R.color.primary);
     }
 

@@ -1,11 +1,12 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <fragment
-        android:id="@+id/fragment_crags"
-        android:name="com.cragchat.mobile.ui.view.fragments.CragsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+<RelativeLayout
+    android:id="@+id/fragment_container"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+</RelativeLayout>
 
 
 </merge>

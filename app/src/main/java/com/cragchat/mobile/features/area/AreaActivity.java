@@ -1,4 +1,4 @@
-package com.cragchat.mobile.ui.view.activity;
+package com.cragchat.mobile.features.area;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,19 +10,27 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.presenter.AreaActivityPresenter;
+import com.cragchat.mobile.ui.view.activity.MainActivity;
+import com.cragchat.mobile.ui.view.activity.SearchableActivity;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
 import com.cragchat.mobile.util.NavigationUtil;
 
+import javax.inject.Inject;
+
 public class AreaActivity extends SearchableActivity {
 
-    private Area area;
+    @Inject
+    Area area;
+
     private AreaActivityPresenter presenter;
+
+    @Inject
+    AreaListFragment areaListFragment;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_displayable_new);
-        area = getIntent().getParcelableExtra(NavigationUtil.ENTITY);
-        presenter = new AreaActivityPresenter(this, area);
+        presenter = new AreaActivityPresenter(this, areaListFragment, area);
         presenter.present(area, repository);
 
         repository.getArea(area.getKey(), new Callback<Area>() {
@@ -62,18 +70,18 @@ public class AreaActivity extends SearchableActivity {
     }
 
     @Override
-    int getToolbarColor() {
-        return Color.TRANSPARENT;
-    }
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
     public int getInitialTabIndex() {
         return getIntent().getIntExtra("TAB", 0);
+    }
+
+    @Override
+    public int getToolbarColor() {
+        return Color.TRANSPARENT;
+
     }
 
     @Override

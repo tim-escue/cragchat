@@ -1,4 +1,4 @@
-package com.cragchat.mobile.ui.view.fragments;
+package com.cragchat.mobile.features.area;
 
 
 import android.os.Bundle;
@@ -13,30 +13,37 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.di.InjectionNames;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.realm.RealmArea;
 import com.cragchat.mobile.ui.view.adapters.recycler.AreaListRecyclerAdapter;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import dagger.android.support.DaggerFragment;
+
 import static android.view.View.GONE;
 
 
-public class AreaListFragment extends BaseFragment {
+public class AreaListFragment extends DaggerFragment {
 
-    private static final String IDS_String = "routeIds";
-    private static final String AREA_String = "areaKey";
+    @Inject
+    Repository repository;
 
-    private String[] areaIds;
-    private String areaKey;
+    @Inject
+    @Named(InjectionNames.ENTITY_KEY)
+    String areaKey;
+
+    @Inject
+    @Named(InjectionNames.AREA_IDS)
+    String[] areaIds;
 
     private AreaListRecyclerAdapter adap;
 
-    public static AreaListFragment newInstance(String areaKey, String[] areaIds) {
-        AreaListFragment f = new AreaListFragment();
-        Bundle b = new Bundle();
-        b.putStringArray(IDS_String, areaIds);
-        b.putString(AREA_String, areaKey);
-        f.setArguments(b);
-        return f;
+    @Inject
+    public AreaListFragment() {
     }
 
     @Override
@@ -45,7 +52,6 @@ public class AreaListFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
-        areaIds = getArguments().getStringArray(IDS_String);
 
         repository.getAreas(areaIds, null);
 

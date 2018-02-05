@@ -13,9 +13,10 @@ import android.widget.TextView;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
-import com.cragchat.mobile.ui.view.activity.AreaActivity;
+import com.cragchat.mobile.features.area.AreaActivity;
 import com.cragchat.mobile.ui.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.ui.view.adapters.pager.TabPagerAdapter;
+import com.cragchat.mobile.features.area.AreaListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +50,7 @@ public class AreaActivityPresenter implements AppBarLayout.OnOffsetChangedListen
 
     private AreaActivity areaActivity;
 
-    public AreaActivityPresenter(AreaActivity activity, Area area) {
+    public AreaActivityPresenter(AreaActivity activity, AreaListFragment areaFragment, Area area) {
         this.areaActivity = activity;
         ButterKnife.bind(this, activity);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -57,7 +58,7 @@ public class AreaActivityPresenter implements AppBarLayout.OnOffsetChangedListen
         areaActivity.setSupportActionBar(toolbar);
         areaActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(areaActivity,
+        AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(areaActivity, areaFragment,
                 areaActivity.getSupportFragmentManager(), appBarLayout, area, floatingActionButton);
 
         pager.setAdapter(pageAdapter);

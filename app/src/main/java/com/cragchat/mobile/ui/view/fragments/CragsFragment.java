@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.view.adapters.recycler.CragsFragmentRecyclerAdapter;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 
@@ -26,10 +28,10 @@ public class CragsFragment extends DaggerFragment {
     @Inject
     Repository repository;
 
-    private static final String OZONE = "OZONE";
+    private static final String OZONE = "Ozone";
 
-    public static CragsFragment newInstance() {
-        return new CragsFragment();
+    @Inject
+    public CragsFragment() {
     }
 
     @Override
