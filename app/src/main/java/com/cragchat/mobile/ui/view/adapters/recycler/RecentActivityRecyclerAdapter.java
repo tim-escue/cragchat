@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Repository;
@@ -43,6 +45,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private List<Datable> data;
     private String entityKey;
     private Repository mRepository;
+    private int lastPosition = -1;
 
     public RecentActivityRecyclerAdapter(Context activity, String entityKey, Repository repository) {
         this.context = activity;
@@ -147,7 +150,21 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 }
             });
         }
+        setAnimation(holder, position);
+    }
 
+    private void setAnimation(RecyclerView.ViewHolder viewHolder, int position) {
+        if ( position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_up);
+            viewHolder.itemView.startAnimation(animation);
+        }
+        lastPosition = position;
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(final RecyclerView.ViewHolder holder) {
+        holder.itemView.clearAnimation();
     }
 
     private void launchOrSwitchTab(String entityKey, int tab) {

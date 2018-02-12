@@ -79,8 +79,8 @@ public class Repository {
         } else {
             message.append(" could not be added, there was a network error.");
         }
-        message.append("Adding to queue to retry when " +
-                "connection is reestablished or app is restarted.");
+        message.append(" Adding to queue to retry when " +
+                "connection is re-established or app is restarted.");
         Toast.makeText(mApplicationContext, message.toString(), Toast.LENGTH_LONG).show();
     }
 
@@ -102,7 +102,7 @@ public class Repository {
                     req.getSendType(), req.getClimbingStyle(), req.getEntityName(), new Callback<Send>() {
                         @Override
                         public void onSuccess(Send object) {
-                            showSentQueuedSent("send");
+                            showSentQueuedSent("Send");
                         }
 
                         @Override
@@ -117,7 +117,7 @@ public class Repository {
                     new Callback<Rating>() {
                         @Override
                         public void onSuccess(Rating object) {
-                            showSentQueuedSent("rating");
+                            showSentQueuedSent("Rating");
                         }
 
                         @Override
@@ -132,7 +132,7 @@ public class Repository {
                     new Callback<Comment>() {
                         @Override
                         public void onSuccess(Comment object) {
-                            showSentQueuedSent("comment");
+                            showSentQueuedSent("Comment");
                         }
 
                         @Override
@@ -147,7 +147,7 @@ public class Repository {
                     req.getParentId(), req.getDepth(), new Callback<Comment>() {
                         @Override
                         public void onSuccess(Comment object) {
-                            showSentQueuedSent("comment reply");
+                            showSentQueuedSent("Comment reply");
                         }
 
                         @Override
@@ -161,7 +161,7 @@ public class Repository {
             editComment(userToken, req.getComment(), req.getCommentKey(), new Callback<Comment>() {
                 @Override
                 public void onSuccess(Comment object) {
-                    showSentQueuedSent("comment edit");
+                    showSentQueuedSent("Comment edit");
                 }
 
                 @Override
@@ -175,7 +175,7 @@ public class Repository {
             addCommentVote(userToken, req.getVote(), req.getCommentKey(), new Callback<Comment>() {
                 @Override
                 public void onSuccess(Comment object) {
-                    showSentQueuedSent("comment vote");
+                    showSentQueuedSent("Comment vote");
                 }
 
                 @Override
@@ -193,7 +193,7 @@ public class Repository {
                             @Override
                             public void onSuccess(Image object) {
                                 file.delete();
-                                showSentQueuedSent("image");
+                                showSentQueuedSent("Image");
                             }
 
                             @Override
@@ -206,7 +206,7 @@ public class Repository {
                 /*
                     The image to be uploaded no longer exists. NewImageRequest is not queued to resend.
                  */
-                Toast.makeText(mApplicationContext, "Queued image could not be uploaded",
+                Toast.makeText(mApplicationContext, "Queued image no longer exists and could not be uploaded",
                         Toast.LENGTH_LONG).show();
             }
         }
@@ -254,7 +254,6 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("query matches for: " + query);
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -322,7 +321,7 @@ public class Repository {
                                 public void onError(Throwable throwable) {
                                     mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
                                             sendType, climbingStyle, entityName);
-                                    showQueueMessage("send");
+                                    showQueueMessage("Send");
                                     if (callback != null) {
                                         callback.onFailure();
                                     }
@@ -332,7 +331,7 @@ public class Repository {
         } else {
             mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
                     sendType, climbingStyle, entityName);
-            showQueueMessage("send");
+            showQueueMessage("Send");
             if (callback != null) {
                 callback.onFailure();
             }
@@ -439,7 +438,7 @@ public class Repository {
                                         " to be uploaded", Toast.LENGTH_LONG).show();
                             } else {
                                 mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
-                                showQueueMessage("image");
+                                showQueueMessage("Image");
                             }
                             if (callback != null) {
                                 callback.onFailure();
@@ -448,7 +447,7 @@ public class Repository {
                     });
 
         } else {
-            showQueueMessage("image");
+            showQueueMessage("Image");
             mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
             if (callback != null) {
                 callback.onFailure();
@@ -506,14 +505,14 @@ public class Repository {
                                 public void onError(Throwable throwable) {
                                     mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
                                             parentId, depth);
-                                    showQueueMessage("comment reply");
+                                    showQueueMessage("Comment reply");
                                 }
                             }
                     );
         } else {
             mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
                     parentId, depth);
-            showQueueMessage("comment reply");
+            showQueueMessage("Comment reply");
         }
     }
 
@@ -626,7 +625,7 @@ public class Repository {
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
-                            showGetFailure("Ratings");
+                            showGetFailure("ratings");
                         }
                     });
         } else {
@@ -656,7 +655,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("Area");
+                            showGetFailure("area");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -689,7 +688,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("Route");
+                            showGetFailure("route");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -724,7 +723,7 @@ public class Repository {
 
                             @Override
                             public void onError(Throwable throwable) {
-                                showGetFailure("Recent activity");
+                                showGetFailure("recent activity");
                                 observableEmitter.onError(throwable);
                             }
                         });
@@ -760,7 +759,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("Recent activity");
+                            showGetFailure("recent activity");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -799,7 +798,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("Area by name \"" + areaName + "\"");
+                            showGetFailure("area by name \"" + areaName + "\"");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -829,7 +828,7 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            showGetFailure("Routes");
+                            showGetFailure("routes");
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
@@ -863,7 +862,7 @@ public class Repository {
                             if (updateCallback != null) {
                                 updateCallback.onFailure();
                             }
-                            showGetFailure("Areas");
+                            showGetFailure("areas");
                         }
                     });
         } else {

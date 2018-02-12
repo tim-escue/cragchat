@@ -2,6 +2,7 @@ package com.cragchat.mobile.ui.view.fragments;
 
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.repository.Callback;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Datable;
 import com.cragchat.mobile.ui.presenter.RecentActivityFragmentPresenter;
@@ -23,15 +26,15 @@ import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.DaggerFragment;
 
-import static com.cragchat.mobile.util.NavigationUtil.ENTITY_KEY;
 
-public class RecentActivityFragment extends BaseFragment implements RecentActivityView {
+public class RecentActivityFragment extends DaggerFragment implements RecentActivityView {
 
     @BindView(R.id.progressBar1)
     ProgressBar progressBar;
@@ -40,23 +43,28 @@ public class RecentActivityFragment extends BaseFragment implements RecentActivi
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    @Inject RecentActivityFragmentPresenter mPresenter;
+    RecentActivityFragmentPresenter mPresenter;
 
-    @Inject RecentActivityRecyclerAdapter adapter;
+    @Inject
+    Area area;
 
-    public static RecentActivityFragment newInstance(Area area) {
-        RecentActivityFragment f = new RecentActivityFragment();
-        Bundle b = new Bundle();
-        b.putParcelable(ENTITY_KEY, area);
-        f.setArguments(b);
-        return f;
+    @Inject
+    Repository repository;
+
+    RecentActivityRecyclerAdapter adapter;
+
+    @Inject
+    public RecentActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        AndroidSupportInjection.inject(this);
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_recent_activity, container, false);
         ButterKnife.bind(this, view);
+        mPresenter = new RecentActivityFragmentPresenter(repository, area);
+        adapter = new RecentActivityRecyclerAdapter(getContext(), area.getKey(), repository);
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
         return view;
     }

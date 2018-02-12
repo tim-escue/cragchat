@@ -46,7 +46,7 @@
     <string name="string_submissions">Submissions </string>
     <string name="pick_edit_option">Select type</string>
     <string name="cd_crag_image">Crag Image</string>
-    <string name="empty">Empty</string>
+    <string name="empty">No Submissions</string>
     <string name="no_recent_activity">No Recent Activity</string>
     <string name="login">Login</string>
     <string name="register">Register</string>

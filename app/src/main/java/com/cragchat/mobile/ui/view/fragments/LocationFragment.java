@@ -8,30 +8,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.ui.presenter.LocationFragmentPresenter;
 
-public class LocationFragment extends Fragment implements View.OnClickListener {
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    private CommentSectionFragment commentFragment;
+import dagger.android.support.DaggerFragment;
+
+public class LocationFragment extends DaggerFragment implements View.OnClickListener {
+
+    @Inject
+    CommentSectionFragment commentFragment;
+
     public static String ROUTE_KEY = "ROUTE_KEY";
 
-    public static LocationFragment newInstance(String routeId) {
-        LocationFragment f = new LocationFragment();
-        Bundle b = new Bundle();
-        b.putString(ROUTE_KEY, routeId);
-        f.setArguments(b);
-        return f;
+
+    @Inject
+    public LocationFragment(){
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-        String entityId = getArguments().getString(ROUTE_KEY);
 
-        commentFragment = CommentSectionFragment.newInstance(entityId, CommentSectionFragment.TABLE_LOCATION);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_location, commentFragment);
-        transaction.commit();
+        if (savedInstanceState == null) {
+            commentFragment.setTable(CommentSectionFragment.TABLE_LOCATION);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.add(R.id.fragment_location, commentFragment, "comment_table");
+            transaction.commit();
+        }
 
         LocationFragmentPresenter presenter = new LocationFragmentPresenter(view);
 

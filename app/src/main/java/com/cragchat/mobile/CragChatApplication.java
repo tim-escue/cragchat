@@ -34,6 +34,16 @@ public class CragChatApplication extends DaggerApplication {
         return  DaggerApplicationComponent.builder().application(this).build();
     }
 
+    public Repository getRepository() {
+        return repository;
+    }
+
+    public Authentication authentication() {
+        return authentication;
+    }
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.repository.Callback;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Image;
 import com.cragchat.mobile.ui.presenter.ImageFragmentPresenter;
 import com.cragchat.mobile.ui.view.activity.EditImageActivity;
@@ -22,32 +25,41 @@ import com.cragchat.mobile.util.PermissionUtil;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import dagger.android.support.DaggerFragment;
+
 import static com.cragchat.mobile.util.NavigationUtil.ENTITY_KEY;
 
 
-public class ImageFragment extends BaseFragment implements View.OnClickListener {
+public class ImageFragment extends DaggerFragment implements View.OnClickListener {
 
     public static final int PICK_IMAGE = 873;
-    private String entityKey;
+
+    @Inject
+    @Named(InjectionNames.ENTITY_KEY)
+    String entityKey;
+
+    @Inject
+    Repository mRepository;
+
+    @Inject
+    Authentication mAuthentication;
+
     private ImageFragmentPresenter presenter;
 
-    public static ImageFragment newInstance(String displayableId) {
-        ImageFragment f = new ImageFragment();
-        Bundle b = new Bundle();
-        b.putString(ENTITY_KEY, displayableId);
-        f.setArguments(b);
-        return f;
+    @Inject
+    public ImageFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_images, container, false);
-
-        entityKey = getArguments().getString(ENTITY_KEY);
-
+        
         presenter = new ImageFragmentPresenter(view, getLifecycle(), entityKey);
-        List<Image> sends = repository.getImages(entityKey, new Callback<List<Image>>() {
+        List<Image> sends = mRepository.getImages(entityKey, new Callback<List<Image>>() {
             @Override
             public void onSuccess(List<Image> object) {
                 presenter.present(object);

@@ -23,7 +23,7 @@ import java.util.List;
 
 public abstract class SearchableActivity extends CragChatActivity {
 
-    abstract int getToolbarColor();
+    public abstract int getToolbarColor();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

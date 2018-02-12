@@ -17,27 +17,28 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.di.InjectionNames;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.realm.RealmRoute;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.ui.view.adapters.recycler.RouteListRecyclerAdapter;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 
-public class RouteListFragment extends BaseFragment {
+import dagger.android.support.DaggerFragment;
 
-    private static final String IDS_String = "routeIds";
-    private static final String AREA_String = "areaKey";
-    boolean filterSport;
-    boolean filterTrad;
-    boolean filterMixed;
-    private String[] routeIds;
-    private String areaKey;
+
+public class RouteListFragment extends DaggerFragment {
+
     private View filterView;
     private RouteListRecyclerAdapter adap;
     private PopupWindow popupWindow;
     private SwitchCompat sportSwitch;
     private SwitchCompat tradSwitch;
     private SwitchCompat mixedSwitch;
+
     private CompoundButton.OnCheckedChangeListener filterListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -45,13 +46,15 @@ public class RouteListFragment extends BaseFragment {
         }
     };
 
-    public static RouteListFragment newInstance(String areaKey, String[] routeIds) {
-        RouteListFragment f = new RouteListFragment();
-        Bundle b = new Bundle();
-        b.putStringArray(IDS_String, routeIds);
-        b.putString(AREA_String, areaKey);
-        f.setArguments(b);
-        return f;
+    @Inject
+    Repository repository;
+
+    @Inject
+    @Named(InjectionNames.ROUTE_IDS)
+    String[] routeIds;
+
+    @Inject
+    public RouteListFragment() {
     }
 
     @Override
@@ -59,8 +62,6 @@ public class RouteListFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
-
-        routeIds = getArguments().getStringArray(IDS_String);
 
         /*
             This call is made so that the local database is updated from the network. A callback is

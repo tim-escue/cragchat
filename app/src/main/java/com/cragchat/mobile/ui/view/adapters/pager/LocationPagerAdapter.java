@@ -11,6 +11,6 @@ public class LocationPagerAdapter extends TabPagerAdapter {
     public LocationPagerAdapter(FragmentManager fm, String entityId, FloatingActionButton button) {
         super(fm, null, button);
         addFragment("Map", CragChatMapFragment.newInstance(), false, false);
-        addFragment("Text Description", CommentSectionFragment.newInstance(entityId, "Location"), false, true);
+        //addFragment("Text Description", CommentSectionFragment.newInstance(entityId, "Location"), false, true);
     }
 }

@@ -6,9 +6,12 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
 
     private CragChatActivity activity;
     private Realm realm;
+    private int lastPosition;
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
@@ -38,6 +42,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
         super(data, autoUpdate);
         this.activity = activity;
         this.realm = realm;
+        lastPosition = -1;
     }
 
     public static CragsFragmentRecyclerAdapter create(String cragName, Activity activity) {
@@ -60,6 +65,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Area crag = getItem(position);
+        Log.d("Binding", crag.getKey());
         holder.name.setText(crag.getName());
         holder.routeNumber.setText(String.valueOf(crag.getRoutes().size()));
         holder.areaNumber.setText(String.valueOf(crag.getSubAreas().size()));
@@ -88,5 +94,20 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
             routeNumber = itemView.findViewById(R.id.number_routes);
             imagesNumber = itemView.findViewById(R.id.number_comments);
         }
+    }
+
+    private void setAnimation(RecyclerView.ViewHolder viewHolder, int position) {
+        if ( position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_up);
+            viewHolder.itemView.startAnimation(animation);
+        }
+        lastPosition = position;
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(final CragsFragmentRecyclerAdapter.ViewHolder holder)
+    {
+        holder.itemView.clearAnimation();
     }
 }
