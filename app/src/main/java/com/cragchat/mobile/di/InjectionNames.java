@@ -7,5 +7,5 @@ package com.cragchat.mobile.di;
 public class InjectionNames {
     public static final String ENTITY_KEY = "ENTITY_KEY";
     public static final String AREA_IDS = "AREA_IDS";
-
+    public static final String ROUTE_IDS = "ROUTE_IDS";
 }

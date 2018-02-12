@@ -1,12 +1,14 @@
 package com.cragchat.mobile.di;
 
 import com.cragchat.mobile.di.module.MainActivityModule;
-import com.cragchat.mobile.di.module.PlaceHolderModule;
-import com.cragchat.mobile.features.area.AreaActivity;
-import com.cragchat.mobile.features.area.AreaModule;
+import com.cragchat.mobile.di.module.RouteModule;
+import com.cragchat.mobile.ui.view.activity.AreaActivity;
+import com.cragchat.mobile.di.module.AreaFragmentsModule;
+import com.cragchat.mobile.di.module.AreaModule;
 import com.cragchat.mobile.ui.view.activity.EditImageActivity;
 import com.cragchat.mobile.ui.view.activity.LoginActivity;
 import com.cragchat.mobile.ui.view.activity.MainActivity;
+import com.cragchat.mobile.ui.view.activity.MapActivity;
 import com.cragchat.mobile.ui.view.activity.ProfileActivity;
 import com.cragchat.mobile.ui.view.activity.RateRouteActivity;
 import com.cragchat.mobile.ui.view.activity.RegisterActivity;
@@ -26,44 +28,46 @@ public abstract class ActivityBinding {
     abstract MainActivity mainActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = AreaModule.class)
+    @ContributesAndroidInjector(modules = {AreaModule.class, AreaFragmentsModule.class})
     abstract AreaActivity areaActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract EditImageActivity editImageActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract LoginActivity loginActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract ProfileActivity profileActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract RateRouteActivity rateRouteActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract RegisterActivity registerActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector(modules = RouteModule.class)
     abstract RouteActivity routeActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract SearchActivity searchActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract SubmitSendActivity submitSendActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = PlaceHolderModule.class)
+    @ContributesAndroidInjector
     abstract ViewImageActivity viewImageActivity();
 
-
+    @ActivityScoped
+    @ContributesAndroidInjector
+    abstract MapActivity mapActivity();
 }

@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Route;
-import com.cragchat.mobile.features.area.AreaActivity;
+import com.cragchat.mobile.ui.view.activity.AreaActivity;
 import com.cragchat.mobile.ui.view.activity.RouteActivity;
 
 /**

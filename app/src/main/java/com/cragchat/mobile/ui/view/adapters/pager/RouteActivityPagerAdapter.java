@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
 import com.cragchat.mobile.ui.view.fragments.ImageFragment;
 import com.cragchat.mobile.ui.view.fragments.LocationFragment;
@@ -19,19 +20,25 @@ public class RouteActivityPagerAdapter extends TabPagerAdapter {
     public static final int TAB_SENDS = 2;
     public static final int TAB_IMAGES = 4;
 
-    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager, AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, String routeKey) {
+    public RouteActivityPagerAdapter(Context context, FragmentManager fragmentManager,
+                                     CommentSectionFragment commentSectionFragment,
+                                     RatingFragment ratingFragment,
+                                     SendsFragment sendsFragment,
+                                     ImageFragment imageFragment,
+                                     LocationFragment locationFragment,
+                                     AppBarLayout appBarLayout, FloatingActionButton floatingActionButton, String routeKey) {
         super(fragmentManager, appBarLayout, floatingActionButton);
 
         addFragment(context.getString(R.string.title_beta),
-                CommentSectionFragment.newInstance(routeKey, CommentSectionFragment.TABLE_BETA), false, true);
+                commentSectionFragment, false, true);
         addFragment(context.getString(R.string.title_ratings),
-                RatingFragment.newInstance(routeKey), false, true);
+                ratingFragment, false, true);
         addFragment(context.getString(R.string.title_sends),
-                SendsFragment.newInstance(routeKey), false, true);
+                sendsFragment, false, true);
         addFragment(context.getString(R.string.title_location),
-                LocationFragment.newInstance(routeKey), false, true);
+                locationFragment, false, true);
         addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(routeKey), false, true);
+                imageFragment, false, true);
     }
 
 }

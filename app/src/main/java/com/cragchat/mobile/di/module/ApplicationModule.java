@@ -50,11 +50,4 @@ public class ApplicationModule {
     }
 }
 
-/*
-    @Singleton
-    @Provides
-    Application provideApplication() {
-        return mApplication;
-    }
-*/
 

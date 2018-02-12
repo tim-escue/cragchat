@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.ui.model.Area;
-import com.cragchat.mobile.features.area.AreaListFragment;
+import com.cragchat.mobile.ui.view.fragments.AreaListFragment;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
 import com.cragchat.mobile.ui.view.fragments.ImageFragment;
 import com.cragchat.mobile.ui.view.fragments.LocationFragment;
@@ -16,36 +16,45 @@ import com.cragchat.mobile.ui.view.fragments.RouteListFragment;
 
 public class AreaActivityPagerAdapter extends TabPagerAdapter {
 
-    public AreaActivityPagerAdapter(Context context, AreaListFragment areaFragment, FragmentManager fragmentManager,
+    public AreaActivityPagerAdapter(Context context, AreaListFragment areaFragment,
+                                    RecentActivityFragment recentActivityFragment,
+                                    CommentSectionFragment commentSectionFragment,
+                                    ImageFragment imageFragment,
+                                    RouteListFragment routeListFragment,
+                                    LocationFragment locationFragment,
+                                    FragmentManager fragmentManager,
                                     AppBarLayout appBarLayout, Area area,
                                     FloatingActionButton floatingActionButton) {
         super(fragmentManager, appBarLayout, floatingActionButton);
+        if (recentActivityFragment != null)
+            addFragment(context.getString(R.string.title_recent_activity),
+                    recentActivityFragment, false, false);
 
-        addFragment(context.getString(R.string.title_recent_activity),
-                RecentActivityFragment.newInstance(area), false, false);
-
-        RouteListFragment routeList = RouteListFragment.newInstance(area.getKey(),
-                area.getRoutes().toArray(new String[area.getRoutes().size()]));
-        addFragment(context.getString(R.string.title_routes),
-                routeList,
-                false,
-                false);
-
-        if (area.getSubAreas().size() > 0) {
-            addFragment(context.getString(R.string.title_areas),
-                    areaFragment,
+        if (routeListFragment != null)
+            addFragment(context.getString(R.string.title_routes),
+                    routeListFragment,
                     false,
                     false);
-        }
 
-        addFragment(context.getString(R.string.title_discussion),
-                CommentSectionFragment.newInstance(area.getKey(), CommentSectionFragment.TABLE_DISCUSSION), false, true);
+        if (areaFragment != null)
+            if (area.getSubAreas().size() > 0) {
+                addFragment(context.getString(R.string.title_areas),
+                        areaFragment,
+                        false,
+                        false);
+            }
 
+        if (commentSectionFragment != null)
+            addFragment(context.getString(R.string.title_discussion),
+                    commentSectionFragment, false, true);
+
+        if (locationFragment != null)
         addFragment(context.getString(R.string.title_location),
-                LocationFragment.newInstance(area.getKey()), false, true);
+                locationFragment, false, true);
 
-        addFragment(context.getString(R.string.title_images),
-                ImageFragment.newInstance(area.getKey()), false, true);
+        if (imageFragment != null)
+            addFragment(context.getString(R.string.title_images),
+                    imageFragment, false, true);
     }
 
 }

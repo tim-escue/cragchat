@@ -16,7 +16,7 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class MainActivityModule {
 
     @FragmentScoped
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector()
     abstract CragsFragment cragsFragment();
 
 }

@@ -49,12 +49,15 @@ public class RecentActivityFragmentPresenter {
     public void loadRecentActivity() {
         mRepository.recentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(recentActivityObserver());
     }
 
     private Observer<List<Datable>> recentActivityObserver() {
         return new Observer<List<Datable>>() {
+
+            boolean displayed;
+
             @Override
             public void onSubscribe(Disposable disposable) {
 
@@ -62,10 +65,9 @@ public class RecentActivityFragmentPresenter {
 
             @Override
             public void onNext(List<Datable> datables) {
-                if (datables.isEmpty()) {
-                    mView.hideList();
-                } else {
+                if (!datables.isEmpty()) {
                     mView.showList(datables);
+                    displayed = true;
                 }
             }
 
@@ -77,6 +79,9 @@ public class RecentActivityFragmentPresenter {
             @Override
             public void onComplete() {
                 mView.hideProgressBar();
+                if (!displayed) {
+                    mView.hideList();
+                }
             }
         };
     }

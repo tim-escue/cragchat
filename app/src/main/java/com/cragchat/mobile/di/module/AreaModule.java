@@ -1,7 +1,7 @@
-package com.cragchat.mobile.features.area;
+package com.cragchat.mobile.di.module;
 
-import com.cragchat.mobile.di.ActivityScoped;
 import com.cragchat.mobile.di.InjectionNames;
+import com.cragchat.mobile.ui.view.activity.AreaActivity;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.util.NavigationUtil;
 
@@ -17,7 +17,6 @@ import dagger.Provides;
 @Module
 public class AreaModule {
 
-    @ActivityScoped
     @Provides
     Area provideArea(AreaActivity activity) {
         return activity.getIntent().getParcelableExtra(NavigationUtil.ENTITY);
@@ -33,6 +32,12 @@ public class AreaModule {
     @Named(InjectionNames.AREA_IDS)
     String[] areaIds(Area area) {
         return area.getSubAreas().toArray(new String[area.getSubAreas().size()]);
+    }
+
+    @Provides
+    @Named(InjectionNames.ROUTE_IDS)
+    String[] routeIds(Area area) {
+        return area.getRoutes().toArray(new String[area.getRoutes().size()]);
     }
 
 }

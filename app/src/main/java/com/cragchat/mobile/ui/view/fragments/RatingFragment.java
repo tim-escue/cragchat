@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.repository.Callback;
+import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.view.activity.CragChatActivity;
 import com.cragchat.mobile.ui.view.activity.RateRouteActivity;
@@ -23,21 +26,30 @@ import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerFragment;
 
 
-public class RatingFragment extends BaseFragment implements View.OnClickListener {
+public class RatingFragment extends DaggerFragment implements View.OnClickListener {
 
     private RatingFragmentPresenter presenter;
-    private String entityKey;
 
-    public static RatingFragment newInstance(String displayableId) {
-        RatingFragment f = new RatingFragment();
-        Bundle b = new Bundle();
-        b.putString("entityKey", displayableId);
-        f.setArguments(b);
-        return f;
+    @Inject
+    @Named(InjectionNames.ENTITY_KEY)
+    String entityKey;
+
+    @Inject
+    Repository mRepository;
+
+    @Inject
+    Authentication mAuthentication;
+
+    @Inject
+    public RatingFragment() {
     }
 
     @Override
@@ -45,7 +57,6 @@ public class RatingFragment extends BaseFragment implements View.OnClickListener
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
-        entityKey = getArguments().getString("entityKey");
 
         /*
             Called only to update ratings. The return value is not used because RatingRecyclerAdapter
@@ -53,7 +64,7 @@ public class RatingFragment extends BaseFragment implements View.OnClickListener
             in order to preserve CLEAN architecture.
          */
         presenter = new RatingFragmentPresenter(view, getLifecycle());
-        List<Rating> ratings = repository.getRatings(entityKey, new Callback<List<Rating>>() {
+        List<Rating> ratings = mRepository.getRatings(entityKey, new Callback<List<Rating>>() {
             @Override
             public void onSuccess(List<Rating> object) {
                 presenter.present(object);

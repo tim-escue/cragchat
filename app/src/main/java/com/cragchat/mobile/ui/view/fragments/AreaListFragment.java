@@ -1,4 +1,4 @@
-package com.cragchat.mobile.features.area;
+package com.cragchat.mobile.ui.view.fragments;
 
 
 import android.os.Bundle;
@@ -31,10 +31,6 @@ public class AreaListFragment extends DaggerFragment {
 
     @Inject
     Repository repository;
-
-    @Inject
-    @Named(InjectionNames.ENTITY_KEY)
-    String areaKey;
 
     @Inject
     @Named(InjectionNames.AREA_IDS)

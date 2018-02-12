@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".features.area.AreaActivity"
+            android:name=".ui.view.activity.AreaActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.default_searchable"
