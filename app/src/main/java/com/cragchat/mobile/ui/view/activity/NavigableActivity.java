@@ -26,6 +26,19 @@ public class NavigableActivity extends SearchableActivity {
     private LinearLayout mRootView;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    /*
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
+    @BindView(R.id.navigation_view_title)
+    TextView navigationTitle;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.layout_root)
+    LinearLayout mRootView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+     */
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigable);

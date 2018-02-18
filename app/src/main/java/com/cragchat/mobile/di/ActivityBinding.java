@@ -2,6 +2,8 @@ package com.cragchat.mobile.di;
 
 import com.cragchat.mobile.di.module.MainActivityModule;
 import com.cragchat.mobile.di.module.RouteModule;
+import com.cragchat.mobile.di.module.SearchModule;
+import com.cragchat.mobile.ui.contract.SearchContract;
 import com.cragchat.mobile.ui.view.activity.AreaActivity;
 import com.cragchat.mobile.di.module.AreaFragmentsModule;
 import com.cragchat.mobile.di.module.AreaModule;
@@ -56,7 +58,7 @@ public abstract class ActivityBinding {
     abstract RouteActivity routeActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = SearchModule.class)
     abstract SearchActivity searchActivity();
 
     @ActivityScoped

@@ -267,9 +267,9 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                             }
                         });
                 if (entity instanceof RealmRoute) {
-                    NavigationUtil.launch(this, (RealmRoute) entity);
+                    NavigationUtil.launch(this, ((RealmRoute) entity).getKey());
                 } else {
-                    NavigationUtil.launch(this, (RealmArea) entity);
+                    NavigationUtil.launch(this, ((RealmArea) entity).getKey());
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -117,7 +117,7 @@ public class AreaListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmArea,
             rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NavigationUtil.launch(activity, area);
+                    NavigationUtil.launch(activity, area.getKey());
                 }
             });
         }

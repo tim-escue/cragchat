@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.DaggerFragment;
+import io.realm.Sort;
 
 
 public class RouteListFragment extends DaggerFragment {
@@ -81,11 +82,11 @@ public class RouteListFragment extends DaggerFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String[] sortOptions = getContext().getResources().getStringArray(R.array.route_sort_array);
                 if (sortOptions[i].equals("Yds")) {
-                    adap.sort(RealmRoute.FIELD_YDS);
+                    adap.sort(RealmRoute.FIELD_YDS, Sort.DESCENDING);
                 } else if (sortOptions[i].equals("Type")) {
-                    adap.sort(RealmRoute.FIELD_TYPE);
+                    adap.sort(RealmRoute.FIELD_TYPE, Sort. ASCENDING);
                 } else {
-                    adap.sort(RealmRoute.FIELD_NAME);
+                    adap.sort(RealmRoute.FIELD_NAME, Sort.ASCENDING);
                 }
             }
 

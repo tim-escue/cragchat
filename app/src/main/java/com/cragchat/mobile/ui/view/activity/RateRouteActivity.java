@@ -64,7 +64,7 @@ public class RateRouteActivity extends CragChatActivity {
     }
 
     public void rate(View v) {
-        Spinner ydsSpinner = ((Spinner) findViewById(R.id.spinner_rate_yds));
+        Spinner ydsSpinner = findViewById(R.id.spinner_rate_yds);
         int stars = Integer.parseInt(((Spinner) findViewById(R.id.spinner_rate_stars)).getSelectedItem().toString());
         int yds = ydsSpinner.getSelectedItemPosition();
 

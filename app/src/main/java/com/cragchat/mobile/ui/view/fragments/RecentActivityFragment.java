@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,15 +67,9 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
         mPresenter = new RecentActivityFragmentPresenter(repository, area);
         adapter = new RecentActivityRecyclerAdapter(getContext(), area.getKey(), repository);
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
-        return view;
-    }
-
-    @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mPresenter.setView(this);
-        if (savedInstanceState == null) {
-            mPresenter.loadRecentActivity();
-        }
+        mPresenter.loadRecentActivity();
+        return view;
     }
 
     @Override

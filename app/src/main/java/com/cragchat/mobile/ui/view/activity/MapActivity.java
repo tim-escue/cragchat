@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.util.ActivityUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 public class MapActivity extends SearchableActivity implements OnMapReadyCallback {
 
+    private static final String MAP_FRAG = "map_frag";
+
     private MapFragment mMapFragment;
 
     @Override
@@ -22,11 +25,10 @@ public class MapActivity extends SearchableActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction =
-                getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, mMapFragment);
-        fragmentTransaction.commit();
+        if (getSupportFragmentManager().findFragmentByTag(MAP_FRAG) == null) {
+            ActivityUtil.addFragmentToActivity(getFragmentManager(), MapFragment.newInstance(),
+                    R.id.container, MAP_FRAG);
+        }
     }
 
     @Override

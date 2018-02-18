@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.repository.Callback;
+import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.contract.SendsContract;
 import com.cragchat.mobile.ui.model.Send;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.ui.view.adapters.recycler.SendRecyclerAdapter;
@@ -19,28 +22,26 @@ import butterknife.ButterKnife;
 
 public class SendFragmentPresenter {
 
-    @BindView(R.id.list_sends)
-    RecyclerView recyclerView;
-    @BindView(R.id.list_empty)
-    TextView empty;
+    private SendsContract.SendView mView;
+    private Repository mRepository;
 
-    public SendFragmentPresenter(View parent, Lifecycle lifecycle, String entityKey) {
-        ButterKnife.bind(this, parent);
-        SendRecyclerAdapter adapter = SendRecyclerAdapter.create(entityKey);
-        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
-        lifecycle.addObserver(adapter);
+    public SendFragmentPresenter(SendsContract.SendView view, Repository repository) {
+        this.mView = view;
+        this.mRepository = repository;
     }
 
-    public void present(List<Send> sends) {
-        Resources resources = recyclerView.getContext().getResources();
-        if (sends.isEmpty()) {
-            empty.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-            recyclerView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
-        } else {
-            empty.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            recyclerView.setBackgroundColor(resources.getColor(R.color.material_background));
-        }
+    public void loadSends(String entityKey) {
+        List<Send> sends = mRepository.getSends(entityKey, new Callback<List<Send>>() {
+            @Override
+            public void onSuccess(List<Send> object) {
+                mView.show(object);
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+        mView.show(sends);
     }
 }

@@ -8,15 +8,15 @@ android {
         applicationId 'com.cragchat.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 5
+        versionCode 7
         versionName "1.0.5"
         resConfigs "auto"
 
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {

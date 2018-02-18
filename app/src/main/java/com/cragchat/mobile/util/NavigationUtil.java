@@ -20,13 +20,17 @@ public class NavigationUtil {
     public static final String TAB = "TAB";
     public static final String IMAGE = "IMAGE";
 
-    public static void launch(Context context, Area area) {
-        launch(context, area, 0);
+    public static void launch(Context context, String areaKey) {
+        launch(context, areaKey, 0);
     }
 
-    public static void launch(Context context, Area area, int tab) {
+    public static void launch(Context context, Class<?> clazz) {
+        context.startActivity(new Intent(context, clazz));
+    }
+
+    public static void launch(Context context, String areaKey, int tab) {
         Intent intent = new Intent(context, AreaActivity.class);
-        intent.putExtra(ENTITY, area);
+        intent.putExtra(ENTITY_KEY, areaKey);
         intent.putExtra(TAB, tab);
         context.startActivity(intent);
     }

@@ -6,7 +6,6 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
         super(data, autoUpdate);
         this.activity = activity;
         this.realm = realm;
-        lastPosition = -1;
+        this.lastPosition = -1;
     }
 
     public static CragsFragmentRecyclerAdapter create(String cragName, Activity activity) {
@@ -64,18 +63,13 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Area crag = getItem(position);
-        Log.d("Binding", crag.getKey());
+        Area crag = getItem(position);
         holder.name.setText(crag.getName());
         holder.routeNumber.setText(String.valueOf(crag.getRoutes().size()));
         holder.areaNumber.setText(String.valueOf(crag.getSubAreas().size()));
         holder.imagesNumber.setText(String.valueOf(crag.getImages().size()));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavigationUtil.launch(activity, crag);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> NavigationUtil.launch(activity, crag.getKey()));
+        setAnimation(holder, position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -97,7 +91,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
     }
 
     private void setAnimation(RecyclerView.ViewHolder viewHolder, int position) {
-        if ( position > lastPosition) {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_up);
             viewHolder.itemView.startAnimation(animation);
         }
@@ -106,8 +100,7 @@ public class CragsFragmentRecyclerAdapter extends RealmRecyclerViewAdapter<Realm
     }
 
     @Override
-    public void onViewDetachedFromWindow(final CragsFragmentRecyclerAdapter.ViewHolder holder)
-    {
+    public void onViewDetachedFromWindow(final CragsFragmentRecyclerAdapter.ViewHolder holder) {
         holder.itemView.clearAnimation();
     }
 }

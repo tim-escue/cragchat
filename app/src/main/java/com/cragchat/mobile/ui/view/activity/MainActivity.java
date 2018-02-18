@@ -12,21 +12,22 @@ import dagger.android.AndroidInjection;
 
 public class MainActivity extends NavigableActivity {
 
+    private static final String CRAG_FRAGMENT_TAG = "CRAG_FRAGMENT";
+
     @Inject
     CragsFragment mCragsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         addContent(R.layout.activity_main);
 
         CragsFragment fragment = (CragsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
+                .findFragmentByTag(CRAG_FRAGMENT_TAG);
         if (fragment == null) {
             fragment = mCragsFragment;
             ActivityUtil.addFragmentToActivity(getSupportFragmentManager(),
-                    fragment, R.id.fragment_container);
+                    fragment, R.id.fragment_container, CRAG_FRAGMENT_TAG);
         }
     }
 

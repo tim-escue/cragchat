@@ -1,5 +1,6 @@
 package com.cragchat.mobile.ui.view.fragments;
 
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,9 +22,6 @@ public class LocationFragment extends DaggerFragment implements View.OnClickList
     @Inject
     CommentSectionFragment commentFragment;
 
-    public static String ROUTE_KEY = "ROUTE_KEY";
-
-
     @Inject
     public LocationFragment(){
     }
@@ -32,9 +30,9 @@ public class LocationFragment extends DaggerFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
-        if (savedInstanceState == null) {
+        if (getChildFragmentManager().findFragmentByTag("comment_table")==null) {
             commentFragment.setTable(CommentSectionFragment.TABLE_LOCATION);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_location, commentFragment, "comment_table");
             transaction.commit();
         }

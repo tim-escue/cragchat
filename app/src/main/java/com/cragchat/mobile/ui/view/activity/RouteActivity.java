@@ -118,10 +118,12 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
 
         tabs.setupWithViewPager(pager);
 
+        present(route);
+
         repository.getRoute(route.getKey(), new Callback<Route>() {
             @Override
             public void onSuccess(Route object) {
-                present(object, repository);
+                present(object);
                 route = object;
             }
 
@@ -157,12 +159,12 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            NavigationUtil.launch(this, repository.getArea(route.getParent(), null));
+            NavigationUtil.launch(this, route.getParent());
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void present(Route route, Repository repository) {
+    public void present(Route route) {
         if (!route.getRatings().equalsIgnoreCase("0")) {
             yds.setText(FormatUtil.getYdsString(yds.getContext(), route.getYds()));
         } else {
