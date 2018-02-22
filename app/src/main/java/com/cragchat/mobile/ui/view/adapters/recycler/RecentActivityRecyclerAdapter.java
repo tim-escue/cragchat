@@ -45,13 +45,16 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     private List<Datable> data;
     private String entityKey;
     private Repository mRepository;
-    private int lastPosition = -1;
+    private int lastPosition;
+    private int lastSize;
 
     public RecentActivityRecyclerAdapter(Context activity, String entityKey, Repository repository) {
         this.context = activity;
         this.entityKey = entityKey;
         this.data = Collections.EMPTY_LIST;
         this.mRepository = repository;
+        this.lastPosition = -1;
+        this.lastSize = 0;
     }
 
     @Override
@@ -73,9 +76,13 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
     public void update(List<Datable> newData) {
         data = newData;
-        Collections.sort(data,
-                (Datable one, Datable two) -> two.getDate().compareTo(one.getDate()));
-        notifyDataSetChanged();
+        int newSize = newData.size();
+        if (newSize > lastSize) {
+            Collections.sort(data,
+                    (Datable one, Datable two) -> two.getDate().compareTo(one.getDate()));
+            notifyItemRangeInserted(0, newSize - lastSize);
+            lastSize = newSize;
+        }
     }
 
     @Override
@@ -183,9 +190,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
 
     private void launchArea(String entityKey, int tab) {
-        Area a = mRepository.getArea(entityKey,
-                null);
-        NavigationUtil.launch(context, a, tab);
+        NavigationUtil.launch(context, entityKey, tab);
     }
 
     private void launch(String entityKey, int tab) {

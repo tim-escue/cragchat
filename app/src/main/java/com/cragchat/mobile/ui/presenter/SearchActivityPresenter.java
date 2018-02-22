@@ -6,11 +6,14 @@ import android.support.v7.widget.Toolbar;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.contract.SearchContract;
 import com.cragchat.mobile.ui.view.activity.SearchActivity;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
 import com.cragchat.mobile.ui.view.adapters.recycler.SearchResultsRecyclerAdapter;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,30 +22,20 @@ import butterknife.ButterKnife;
  * Created by timde on 1/6/2018.
  */
 
-public class SearchActivityPresenter {
+public class SearchActivityPresenter implements SearchContract.SearchPresenter {
 
-    @BindView(R.id.results_recycler_view)
-    RecyclerView resultsRecycler;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private SearchContract.SearchView activity;
+    private Repository repository;
 
-    private SearchActivity activity;
-
-    public SearchActivityPresenter(SearchActivity activity) {
+    @Inject
+    public SearchActivityPresenter(SearchContract.SearchView activity, Repository repository) {
         this.activity = activity;
-        ButterKnife.bind(this, activity);
-
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setHomeButtonEnabled(true);
-        activity.getSupportActionBar().setTitle("Results");
+        this.repository = repository;
     }
 
-    public void present(String query, Repository repository) {
-        activity.getSupportActionBar().setSubtitle("\"" + query + "\"");
-        List queryResults = repository.getQueryMatches(query, null);
-        RecyclerUtils.setAdapterAndManager(resultsRecycler,
-                new SearchResultsRecyclerAdapter(activity, queryResults),
-                LinearLayoutManager.VERTICAL);
+
+    @Override
+    public void loadSearchResults(String query) {
+        activity.show(repository.getQueryMatches(query, null));
     }
 }

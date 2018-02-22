@@ -31,7 +31,7 @@ public class CragChatApplication extends DaggerApplication {
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-        return  DaggerApplicationComponent.builder().application(this).build();
+        return DaggerApplicationComponent.builder().application(this).build();
     }
 
     public Repository getRepository() {
@@ -41,8 +41,6 @@ public class CragChatApplication extends DaggerApplication {
     public Authentication authentication() {
         return authentication;
     }
-
-
 
     @Override
     public void onCreate() {

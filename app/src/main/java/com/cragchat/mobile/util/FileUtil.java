@@ -20,10 +20,6 @@ import com.cragchat.mobile.GlideRequests;
 
 import java.io.File;
 
-/**
- * Created by timde on 11/10/2017.
- */
-
 public class FileUtil {
 
     public static final File ALBUM = FileUtil.getAlbumStorageDir("routedb");
@@ -32,7 +28,7 @@ public class FileUtil {
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), albumName);
         if (!file.mkdirs()) {
-            Log.e("FileUtil", "Directory not created");
+            Log.e("FileUtil", "Directory already exists.");
         }
         return file;
     }

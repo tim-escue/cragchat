@@ -2,30 +2,44 @@ package com.cragchat.mobile.ui.view.fragments;
 
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.authentication.Authentication;
 import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.contract.SendsContract;
 import com.cragchat.mobile.ui.model.Send;
 import com.cragchat.mobile.ui.presenter.SendFragmentPresenter;
 import com.cragchat.mobile.ui.view.activity.SubmitSendActivity;
+import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
+import com.cragchat.mobile.ui.view.adapters.recycler.SendRecyclerAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
 
 
-public class SendsFragment extends DaggerFragment implements View.OnClickListener {
+public class SendsFragment extends DaggerFragment implements View.OnClickListener, SendsContract.SendView {
+
+    @BindView(R.id.list_sends)
+    RecyclerView recyclerView;
+    @BindView(R.id.list_empty)
+    TextView empty;
 
     @Inject
     Repository repository;
@@ -49,26 +63,28 @@ public class SendsFragment extends DaggerFragment implements View.OnClickListene
 
         View view = inflater.inflate(R.layout.fragment_sends, container, false);
 
-        /*
-            Called only to update sends. The return value is not used because SendRecyclerAdapter
-            relies upon an instance of Realm and repository.can not expose Realm API in order to
-            preserve CLEAN architecture.
-         */
-        presenter = new SendFragmentPresenter(view, getLifecycle(), mEntityKey);
-        List<Send> sends = repository.getSends(mEntityKey, new Callback<List<Send>>() {
-            @Override
-            public void onSuccess(List<Send> object) {
-                presenter.present(object);
-            }
+        ButterKnife.bind(this, view);
+        SendRecyclerAdapter adapter = SendRecyclerAdapter.create(mEntityKey);
+        RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
+        getLifecycle().addObserver(adapter);
 
-            @Override
-            public void onFailure() {
-
-            }
-        });
-        presenter.present(sends);
+        presenter = new SendFragmentPresenter(this, repository);
+        presenter.loadSends(mEntityKey);
 
         return view;
+    }
+
+    public void show(List<Send> sends) {
+        Resources resources = recyclerView.getContext().getResources();
+        if (sends.isEmpty()) {
+            empty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            recyclerView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+        } else {
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setBackgroundColor(resources.getColor(R.color.material_background));
+        }
     }
 
     @Override

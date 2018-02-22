@@ -87,7 +87,7 @@ public class DisplayableRecyclerAdapter extends RecyclerView.Adapter<Displayable
             holder.rect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NavigationUtil.launch(activity, (Area) displayable);
+                    NavigationUtil.launch(activity, ((Area) displayable).getKey());
                 }
 
             });

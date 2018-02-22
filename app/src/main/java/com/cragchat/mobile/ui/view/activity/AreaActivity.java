@@ -1,6 +1,5 @@
 package com.cragchat.mobile.ui.view.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -16,16 +15,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.ui.view.fragments.AreaListFragment;
-import com.cragchat.mobile.ui.view.fragments.ImageFragment;
-import com.cragchat.mobile.ui.view.fragments.LocationFragment;
-import com.cragchat.mobile.ui.view.fragments.RecentActivityFragment;
-import com.cragchat.mobile.repository.Callback;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.contract.AreaContract;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.ui.view.adapters.pager.TabPagerAdapter;
+import com.cragchat.mobile.ui.view.fragments.AreaListFragment;
 import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
+import com.cragchat.mobile.ui.view.fragments.ImageFragment;
+import com.cragchat.mobile.ui.view.fragments.LocationFragment;
+import com.cragchat.mobile.ui.view.fragments.RecentActivityFragment;
 import com.cragchat.mobile.ui.view.fragments.RouteListFragment;
 import com.cragchat.mobile.util.NavigationUtil;
 
@@ -34,7 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AreaActivity extends SearchableActivity implements AppBarLayout.OnOffsetChangedListener {
+public class AreaActivity extends SearchableActivity implements AreaContract.AreaView, AppBarLayout.OnOffsetChangedListener {
 
     @BindView(R.id.header)
     View header;
@@ -58,34 +57,29 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
     Toolbar toolbar;
 
     @Inject
-    Area area;
-
-    @Inject
     AreaListFragment areaListFragment;
-
     @Inject
     RecentActivityFragment recentActivityFragment;
-
     @Inject
     Repository repository;
-
     @Inject
     CommentSectionFragment commentSectionFragment;
-
     @Inject
     LocationFragment locationFragment;
-
     @Inject
     ImageFragment imageFragment;
-
     @Inject
     RouteListFragment routeListFragment;
+    @Inject
+    AreaContract.AreaPresenter presenter;
+    @Inject
+    Area area;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_displayable_new);
-
         ButterKnife.bind(this);
+
         collapsingToolbarLayout.setTitleEnabled(false);
         appBarLayout.addOnOffsetChangedListener(this);
         this.setSupportActionBar(toolbar);
@@ -103,20 +97,8 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
 
         tabLayout.setupWithViewPager(pager);
 
-        present(area, repository);
-
-        repository.getArea(area.getKey(), new Callback<Area>() {
-            @Override
-            public void onSuccess(Area object) {
-                present(object, repository);
-                area = object;
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
+        present(area);
+        presenter.updateArea(area.getKey());
     }
 
     public int getTabForCommentTable(String commentTable) {
@@ -160,18 +142,15 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Area parent = repository.getArea(area.getParent(), null);
-            if (parent != null) {
-                NavigationUtil.launch(this, parent);
-            } else {
-                startActivity(new Intent(this, MainActivity.class));
-            }
+        if (!area.getParent().isEmpty() && item.getItemId() == android.R.id.home) {
+            NavigationUtil.launch(this, area.getParent());
+        } else {
+            NavigationUtil.launch(this, MainActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void present(Area area, Repository repository) {
+    public void present(Area area) {
         getSupportActionBar().setTitle(area.getName());
 
         StringBuilder subTitle = new StringBuilder();
@@ -196,16 +175,14 @@ public class AreaActivity extends SearchableActivity implements AppBarLayout.OnO
     }
 
     public void setAddButtonPagerAndAdapter(final ViewPager pager, final TabPagerAdapter pageAdapter) {
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = pageAdapter.getItem(pager.getCurrentItem());
-                if (fragment instanceof View.OnClickListener) {
-                    View.OnClickListener clickListener = (View.OnClickListener) fragment;
-                    clickListener.onClick(view);
+        floatingActionButton.setOnClickListener(view -> {
+                    Fragment fragment = pageAdapter.getItem(pager.getCurrentItem());
+                    if (fragment instanceof View.OnClickListener) {
+                        View.OnClickListener clickListener = (View.OnClickListener) fragment;
+                        clickListener.onClick(view);
+                    }
                 }
-            }
-        });
+        );
     }
 
     public void switchTab(int tab) {

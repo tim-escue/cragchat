@@ -90,10 +90,10 @@ public class RouteListRecyclerAdapter extends RealmRecyclerViewAdapter<RealmRout
         updateData(routeQuery.findAll());
     }
 
-    public void sort(String field) {
+    public void sort(String field, Sort sort) {
         OrderedRealmCollection<RealmRoute> data = getData();
         if (data != null) {
-            updateData(data.sort(field, Sort.ASCENDING));
+            updateData(data.sort(field, sort));
         }
     }
 

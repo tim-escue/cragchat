@@ -13,11 +13,20 @@ public class ActivityUtil {
 
 
         public static void addFragmentToActivity (@NonNull FragmentManager fragmentManager,
-                                                  @NonNull Fragment fragment, int frameId) {
+                                                  @NonNull Fragment fragment, int frameId,
+                                                  String tag) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(frameId, fragment);
+            transaction.add(frameId, fragment, tag);
             transaction.commit();
         }
+
+    public static void addFragmentToActivity (@NonNull android.app.FragmentManager fragmentManager,
+                                              @NonNull android.app.Fragment fragment, int frameId,
+                                              String tag) {
+        android.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(frameId, fragment, tag);
+        transaction.commit();
+    }
 
 
 }
