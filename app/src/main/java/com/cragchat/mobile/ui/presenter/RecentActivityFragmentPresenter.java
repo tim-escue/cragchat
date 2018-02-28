@@ -32,8 +32,6 @@ public class RecentActivityFragmentPresenter {
 
     public void loadRecentActivity() {
         mRepository.recentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(recentActivityObserver);
     }
 

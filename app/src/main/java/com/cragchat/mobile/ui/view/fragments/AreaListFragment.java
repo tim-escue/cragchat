@@ -15,14 +15,22 @@ import android.widget.Spinner;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.di.InjectionNames;
 import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.realm.RealmArea;
 import com.cragchat.mobile.ui.view.adapters.recycler.AreaListRecyclerAdapter;
 import com.cragchat.mobile.ui.view.adapters.recycler.RecyclerUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.DaggerFragment;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.view.View.GONE;
 
@@ -36,8 +44,6 @@ public class AreaListFragment extends DaggerFragment {
     @Named(InjectionNames.AREA_IDS)
     String[] areaIds;
 
-    private AreaListRecyclerAdapter adap;
-
     @Inject
     public AreaListFragment() {
     }
@@ -49,7 +55,7 @@ public class AreaListFragment extends DaggerFragment {
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
 
-        repository.getAreas(areaIds, null);
+        repository.observeAreas(areaIds).subscribe();
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -59,6 +65,8 @@ public class AreaListFragment extends DaggerFragment {
 
         View filterView = view.findViewById(R.id.filter_button);
         filterView.setVisibility(GONE);
+
+        final AreaListRecyclerAdapter adap = AreaListRecyclerAdapter.create(getActivity(), areaIds);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -77,7 +85,6 @@ public class AreaListFragment extends DaggerFragment {
             }
         });
 
-        adap = AreaListRecyclerAdapter.create(getActivity(), areaIds);
         RecyclerView recList = (RecyclerView) view.findViewById(R.id.comment_section_list);
         recList.setItemAnimator(new DefaultItemAnimator());
         RecyclerUtils.setAdapterAndManager(recList, adap, LinearLayoutManager.VERTICAL);
