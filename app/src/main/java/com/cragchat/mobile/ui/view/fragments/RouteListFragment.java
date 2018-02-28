@@ -64,12 +64,8 @@ public class RouteListFragment extends DaggerFragment {
 
         View view = inflater.inflate(R.layout.fragment_displayable_list, container, false);
 
-        /*
-            This call is made so that the local database is updated from the network. A callback is
-            not  necessary because the RouteListRecycleAdapter automagically handles displaying
-            changesnin data when it detects a change in Realm database.
-         */
-        repository.getRoutes(routeIds, null);
+        //Called to update local from remote for realm adapter to use.
+        repository.observeRoutes(routeIds).subscribe();
 
         Spinner spinner = (Spinner) view.findViewById(R.id.route_sort_spinner);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getActivity(),

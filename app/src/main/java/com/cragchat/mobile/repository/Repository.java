@@ -2,6 +2,7 @@ package com.cragchat.mobile.repository;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.cragchat.mobile.authentication.Authentication;
@@ -723,63 +724,14 @@ public class Repository {
 
                             @Override
                             public void onError(Throwable throwable) {
+                                Log.d("thread", Thread.currentThread().getName());
                                 showGetFailure("recent activity");
                                 observableEmitter.onError(throwable);
                                 throwable.printStackTrace();
                             }
                         });
-            } else {
-
             }
         });
-    }
-
-    public List<Datable> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds,
-                                           final Callback<List<Datable>> updateCallback) {
-        if (entityKey == null || entityKey.isEmpty()) {
-            return null;
-        }
-        List<String> areaList = (areaIds != null && !areaIds.isEmpty()) ? new ArrayList<String>() : null;
-        List<String> routeList = (routeIds != null && !routeIds.isEmpty()) ? new ArrayList<String>() : null;
-        if (areaList != null) {
-            areaList.addAll(areaIds);
-        }
-        if (routeList != null) {
-            routeList.addAll(routeIds);
-        }
-        if (NetworkUtil.isConnected(mApplicationContext)) {
-            mRestApi.getRecentActivity(entityKey, areaList, routeList)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new EntityRequestObserver<List<Datable>>() {
-                        @Override
-                        public void onNext(List<Datable> objects) {
-                            mLocalDatabase.updateDatables(objects);
-                            if (updateCallback != null) {
-                                updateCallback.onSuccess(objects);
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            showGetFailure("recent activity");
-                            if (updateCallback != null) {
-                                updateCallback.onFailure();
-                            }
-                        }
-                    });
-        } else {
-            if (updateCallback != null) {
-                updateCallback.onFailure();
-            }
-        }
-        return mLocalDatabase.getRecentActivity(entityKey,
-                (areaIds != null && !areaIds.isEmpty()) ? areaIds.toArray(new String[areaIds.size()]) : null,
-                (routeIds != null && !routeIds.isEmpty()) ? routeIds.toArray(new String[routeIds.size()]) : null);
-    }
-
-    public List<Datable> getRecentActivity(String entityKey, Callback<List<Datable>> updateCallback) {
-        return getRecentActivity(entityKey, null, null, updateCallback);
     }
 
     public Area getAreaByName(final String areaName, final Callback<Area> updateCallback) {
@@ -815,40 +767,35 @@ public class Repository {
         return mLocalDatabase.getAreaByName(areaName);
     }
 
-    public List<Route> getRoutes(final String[] routeIds, final Callback<List<Route>> updateCallback) {
-        if (NetworkUtil.isConnected(mApplicationContext)) {
-            mRestApi.getRoutes(routeIds)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new EntityRequestObserver<List<PojoRoute>>() {
-                        @Override
-                        public void onNext(List<PojoRoute> routes) {
-                            mLocalDatabase.updateRoutes(routes);
-                            if (updateCallback != null) {
-                                updateCallback.onSuccess(mLocalDatabase.getRoutes(routeIds));
-                            }
-                        }
+    public Observable<List<? extends Route>> observeRoutes(final String[] routeIds) {
+        return Observable.create(emitter -> {
+            emitter.onNext(mLocalDatabase.getRoutes(routeIds));
+                    if (NetworkUtil.isConnected(mApplicationContext)) {
+                        mRestApi.getRoutes(routeIds)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new EntityRequestObserver<List<PojoRoute>>() {
+                                    @Override
+                                    public void onNext(List<PojoRoute> routes) {
+                                        mLocalDatabase.updateRoutes(routes);
+                                        emitter.onNext(routes);
+                                        emitter.onComplete();
+                                    }
 
-                        @Override
-                        public void onError(Throwable throwable) {
-                            showGetFailure("routes");
-                            if (updateCallback != null) {
-                                updateCallback.onFailure();
-                            }
-                        }
-                    });
-        } else {
-            if (updateCallback != null) {
-                updateCallback.onFailure();
-            }
-        }
-
-        return mLocalDatabase.getRoutes(routeIds);
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        showGetFailure("routes");
+                                        emitter.onError(throwable);
+                                    }
+                                });
+                    }
+                }
+        );
     }
 
     public Observable<Area> observeArea(final String areaId) {
         return Observable.create(emitter -> {
-                emitter.onNext(mLocalDatabase.getArea(areaId));
+                    emitter.onNext(mLocalDatabase.getArea(areaId));
                     if (NetworkUtil.isConnected(mApplicationContext)) {
                         mRestApi.getArea(areaId, null)
                                 .subscribeOn(Schedulers.io())
@@ -872,34 +819,29 @@ public class Repository {
         );
     }
 
-    public List<Area> getAreas(final String[] areaIds, final Callback<List<Area>> updateCallback) {
-        if (NetworkUtil.isConnected(mApplicationContext)) {
-            mRestApi.getAreas(areaIds)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new EntityRequestObserver<List<PojoArea>>() {
-                        @Override
-                        public void onNext(List<PojoArea> areas) {
-                            mLocalDatabase.updateAreas(areas);
-                            if (updateCallback != null) {
-                                updateCallback.onSuccess(mLocalDatabase.getAreas(areaIds));
+    public Observable<List<? extends Area>> observeAreas(final String[] areaIds) {
+        return Observable.create(emitter -> {
+            if (NetworkUtil.isConnected(mApplicationContext)) {
+                emitter.onNext(mLocalDatabase.getAreas(areaIds));
+                mRestApi.getAreas(areaIds)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new EntityRequestObserver<List<PojoArea>>() {
+                            @Override
+                            public void onNext(List<PojoArea> areas) {
+                                mLocalDatabase.updateAreas(areas);
+                                emitter.onNext(areas);
+                                emitter.onComplete();
                             }
-                        }
 
-                        @Override
-                        public void onError(Throwable throwable) {
-                            if (updateCallback != null) {
-                                updateCallback.onFailure();
+                            @Override
+                            public void onError(Throwable throwable) {
+                                showGetFailure("areas");
+                                emitter.onError(throwable);
                             }
-                            showGetFailure("areas");
-                        }
-                    });
-        } else {
-            if (updateCallback != null) {
-                updateCallback.onFailure();
+                        });
             }
-        }
-        return mLocalDatabase.getAreas(areaIds);
+        });
     }
 
 

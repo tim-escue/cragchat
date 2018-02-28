@@ -60,7 +60,6 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AndroidSupportInjection.inject(this);
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_recent_activity, container, false);
         ButterKnife.bind(this, view);

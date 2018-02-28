@@ -255,6 +255,7 @@ public class RealmDatabase implements CragChatDatabase {
 
     @Override
     public void updateDatables(final List<Datable> datables) {
+        String t = Thread.currentThread().getName();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
