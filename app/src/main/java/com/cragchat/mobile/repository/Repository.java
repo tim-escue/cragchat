@@ -848,6 +848,7 @@ public class Repository {
 
     public Observable<Area> observeArea(final String areaId) {
         return Observable.create(emitter -> {
+                emitter.onNext(mLocalDatabase.getArea(areaId));
                     if (NetworkUtil.isConnected(mApplicationContext)) {
                         mRestApi.getArea(areaId, null)
                                 .subscribeOn(Schedulers.io())
