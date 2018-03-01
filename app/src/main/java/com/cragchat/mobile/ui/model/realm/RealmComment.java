@@ -42,7 +42,7 @@ public class RealmComment extends RealmObject implements Comment, Datable {
     private String table;
     private String entityName;
 
-    public static RealmComment from(PojoComment comment) {
+    public static RealmComment from(Comment comment) {
         RealmComment realmComment = new RealmComment();
         realmComment.setKey(comment.getKey());
         realmComment.setEntityId(comment.getEntityId());

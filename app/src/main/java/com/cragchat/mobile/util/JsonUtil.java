@@ -10,7 +10,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
@@ -19,24 +18,26 @@ import java.lang.reflect.Type;
  */
 
 public class JsonUtil {
-    private static final JsonDeserializer<Datable> datableDeserializer = new JsonDeserializer<Datable>() {
-        @Override
-        public Datable deserialize(JsonElement arg0, Type arg1,
-                                   JsonDeserializationContext arg2) throws JsonParseException {
-            Gson g = new Gson();
-            Datable datable;
-            if (arg0.getAsJsonObject().has("comment")) {
-                datable = (PojoComment) g.fromJson(arg0, PojoComment.class);
-            } else if (arg0.getAsJsonObject().has("attempts")) {
-                datable = (PojoSend) g.fromJson(arg0, PojoSend.class);
-            } else if (arg0.getAsJsonObject().has("filename")) {
-                datable = (PojoImage) g.fromJson(arg0, PojoImage.class);
-            } else {
-                datable = (PojoRating) g.fromJson(arg0, PojoRating.class);
-            }
-            return datable;
-        }
-    };
+
+    private static Gson gson = new Gson();
+
+    private static final JsonDeserializer<Datable> datableDeserializer =
+            (JsonElement json, Type typeOfT, JsonDeserializationContext context) -> {
+                if (json.getAsJsonObject().has("comment")) {
+                    return gson.fromJson(json, PojoComment.class);
+                } else if (json.getAsJsonObject().has("attempts")) {
+                    return gson.fromJson(json, PojoSend.class);
+                } else if (json.getAsJsonObject().has("filename")) {
+                    return gson.fromJson(json, PojoImage.class);
+                } else {
+                    return gson.fromJson(json, PojoRating.class);
+                }
+            };
+
+
+    public static final <T> JsonDeserializer<T> getDeserializer(Class<T> clazz) {
+        return (JsonElement json, Type typeOfT, JsonDeserializationContext context) -> gson.fromJson(json, clazz);
+    }
 
     public static String stringArrayToJSon(String[] array) {
         JsonArray jsonStringArray = new JsonArray();

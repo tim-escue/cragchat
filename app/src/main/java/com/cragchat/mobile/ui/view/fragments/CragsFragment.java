@@ -53,7 +53,7 @@ public class CragsFragment extends DaggerFragment {
             so that local database is updated from network. RealmAdapter will auto-update
             when the local database (Realm) is updated.
          */
-        repository.getAreaByName("Ozone", null);
+        repository.observeAreaByName("Ozone").subscribe();
 
 
         return view;

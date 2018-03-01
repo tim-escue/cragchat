@@ -9,18 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cragchat.mobile.R;
+import com.cragchat.mobile.ui.model.Route;
 import com.cragchat.mobile.util.NavigationUtil;
 
 public class RateRouteActivity extends CragChatActivity {
 
     private String entityKey;
-    private String entityName;
+    private Route entity;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_rate_route);
         entityKey = getIntent().getStringExtra("entityKey");
-        entityName = repository.getRoute(entityKey, null).getName();
+        entity = repository.getRoute(entityKey);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_rate_yds);
         ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(this,
@@ -73,11 +74,11 @@ public class RateRouteActivity extends CragChatActivity {
                 stars,
                 yds,
                 entityKey,
-                entityName,
+                entity.getName(),
                 null
         );
 
-        NavigationUtil.launch(this, repository.getRoute(entityKey, null));
+        NavigationUtil.launch(this, entity);
     }
 
 

@@ -3,7 +3,13 @@ package com.cragchat.mobile.repository.remote;
 import android.util.Log;
 
 import com.cragchat.mobile.authentication.AuthenticatedUser;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
+import com.cragchat.mobile.ui.model.Image;
+import com.cragchat.mobile.ui.model.Rating;
+import com.cragchat.mobile.ui.model.Route;
+import com.cragchat.mobile.ui.model.Send;
 import com.cragchat.mobile.ui.model.pojo.PojoArea;
 import com.cragchat.mobile.ui.model.pojo.PojoComment;
 import com.cragchat.mobile.ui.model.pojo.PojoImage;
@@ -39,6 +45,12 @@ public class RetroFitRestApi implements CragChatRestApi {
 
     public RetroFitRestApi() {
         Gson gson = new GsonBuilder().registerTypeAdapter(Datable.class, JsonUtil.getDatableDeserializer())
+                .registerTypeAdapter(Send.class, JsonUtil.getDeserializer(PojoSend.class))
+                .registerTypeAdapter(Comment.class, JsonUtil.getDeserializer(PojoComment.class))
+                .registerTypeAdapter(Area.class, JsonUtil.getDeserializer(PojoArea.class))
+                .registerTypeAdapter(Route.class, JsonUtil.getDeserializer(PojoRoute.class))
+                .registerTypeAdapter(Rating.class, JsonUtil.getDeserializer(PojoRating.class))
+                .registerTypeAdapter(Image.class, JsonUtil.getDeserializer(PojoImage.class))
                 .create();
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(
@@ -76,19 +88,19 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<List<PojoSend>> getSends(String entityKey) {
+    public Observable<List<Send>> getSends(String entityKey) {
         return api.getSends(entityKey);
     }
 
     @Override
-    public Observable<PojoSend> postSend(String user_token, String entityKey, int pitches,
-                                         int attempts, String sendType, String climbingStyle,
-                                         String entityName) {
+    public Observable<Send> postSend(String user_token, String entityKey, int pitches,
+                                     int attempts, String sendType, String climbingStyle,
+                                     String entityName) {
         return api.postSend(user_token, entityKey, pitches, attempts, sendType, climbingStyle, entityName);
     }
 
     @Override
-    public Observable<PojoComment> postCommentVote(String userToken, String vote, String commentKey) {
+    public Observable<Comment> postCommentVote(String userToken, String vote, String commentKey) {
         return api.postCommentVote(userToken, vote, commentKey);
     }
 
@@ -103,46 +115,46 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<PojoComment> postCommentReply(String userToken, String comment, String entityKey,
-                                                    String table, String parentId, int depth) {
+    public Observable<Comment> postCommentReply(String userToken, String comment, String entityKey,
+                                                String table, String parentId, int depth) {
         return api.postCommentReply(userToken, comment, entityKey, table, parentId, depth);
     }
 
     @Override
-    public Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken,
-                                           RequestBody caption, RequestBody entityKey,
-                                           RequestBody entityType, RequestBody entityName) {
+    public Observable<Image> postImage(MultipartBody.Part image, RequestBody userToken,
+                                       RequestBody caption, RequestBody entityKey,
+                                       RequestBody entityType, RequestBody entityName) {
         return api.postImage(image, userToken, caption, entityKey, entityType, entityName);
     }
 
     @Override
-    public Observable<List<PojoImage>> getImages(String entityKey) {
+    public Observable<List<Image>> getImages(String entityKey) {
         return api.getImages(entityKey);
     }
 
     @Override
-    public Observable<PojoComment> postCommentEdit(String userToken, String comment, String commentKey) {
+    public Observable<Comment> postCommentEdit(String userToken, String comment, String commentKey) {
         return api.postCommentEdit(userToken, comment, commentKey);
     }
 
     @Override
-    public Observable<List<PojoComment>> getComments(String entityId) {
+    public Observable<List<Comment>> getComments(String entityId) {
         return api.getComments(entityId);
     }
 
     @Override
-    public Observable<List<PojoRating>> getRatings(String entityKey) {
+    public Observable<List<Rating>> getRatings(String entityKey) {
         return api.getRatings(entityKey);
     }
 
     @Override
-    public Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey,
+    public Observable<Rating> postRating(String userToken, int stars, int yds, String entityKey,
                                              String entityName) {
         return api.postRating(userToken, stars, yds, entityKey, entityName);
     }
 
     @Override
-    public Observable<PojoComment> postComment(String userToken, String comment, String entityKey, String table) {
+    public Observable<Comment> postComment(String userToken, String comment, String entityKey, String table) {
         return api.postComment(userToken, comment, entityKey, table);
     }
 
@@ -152,22 +164,22 @@ public class RetroFitRestApi implements CragChatRestApi {
     }
 
     @Override
-    public Observable<PojoArea> getArea(String areaKey, String areaName) {
+    public Observable<Area> getArea(String areaKey, String areaName) {
         return api.getArea(areaKey, areaName);
     }
 
     @Override
-    public Observable<List<PojoRoute>> getRoutes(String[] routeIds) {
+    public Observable<List<Route>> getRoutes(String[] routeIds) {
         return api.getRoutes(JsonUtil.stringArrayToJSon(routeIds));
     }
 
     @Override
-    public Observable<List<PojoArea>> getAreas(String[] areaIds) {
+    public Observable<List<Area>> getAreas(String[] areaIds) {
         return api.getAreas(JsonUtil.stringArrayToJSon(areaIds));
     }
 
     @Override
-    public Observable<PojoRoute> getRoute(String routeKey) {
+    public Observable<Route> getRoute(String routeKey) {
         return api.getRoute(routeKey);
     }
 

@@ -59,19 +59,8 @@ public class ImageFragment extends DaggerFragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_images, container, false);
         
         presenter = new ImageFragmentPresenter(view, getLifecycle(), entityKey);
-        List<Image> sends = mRepository.getImages(entityKey, new Callback<List<Image>>() {
-            @Override
-            public void onSuccess(List<Image> object) {
-                presenter.present(object);
-            }
 
-            @Override
-            public void onFailure() {
-
-            }
-        });
-        presenter.present(sends);
-
+        mRepository.observeImages(entityKey).subscribe(images -> presenter.present(images));
         return view;
     }
 

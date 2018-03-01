@@ -14,12 +14,6 @@ import com.cragchat.mobile.ui.model.NewSendRequest;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.model.Route;
 import com.cragchat.mobile.ui.model.Send;
-import com.cragchat.mobile.ui.model.pojo.PojoArea;
-import com.cragchat.mobile.ui.model.pojo.PojoComment;
-import com.cragchat.mobile.ui.model.pojo.PojoImage;
-import com.cragchat.mobile.ui.model.pojo.PojoRating;
-import com.cragchat.mobile.ui.model.pojo.PojoRoute;
-import com.cragchat.mobile.ui.model.pojo.PojoSend;
 
 import java.util.List;
 
@@ -63,31 +57,33 @@ public interface CragChatDatabase {
 
     List<NewRatingRequest> getNewRatingRequests();
 
-    void update(final PojoSend send);
+    void update(Object value);
 
-    void updateSends(final List<PojoSend> sends);
+    void update(final Send send);
 
-    void update(PojoImage image);
+    void updateSends(final List<Send> sends);
 
-    void update(PojoArea area);
+    void update(Image image);
 
-    void update(PojoRating rating);
+    void update(Area area);
 
-    void update(PojoComment comment);
+    void update(Rating rating);
+
+    void update(Comment comment);
 
     void updateDatables(List<Datable> image);
 
-    void updateImages(List<PojoImage> image);
+    void updateImages(List<Image> image);
 
-    void updateRatings(List<PojoRating> ratings);
+    void updateRatings(List<Rating> ratings);
 
-    void updateComments(List<PojoComment> comments);
+    void updateComments(List<Comment> comments);
 
-    void updateAreas(List<PojoArea> areas);
+    void updateAreas(List<Area> areas);
 
-    void updateRoutes(List<PojoRoute> routes);
+    void updateRoutes(List<Route> routes);
 
-    void update(final PojoRoute route);
+    void update(final Route route);
 
     void addNewCommentRequest(String comment, String entityKey, String table);
 

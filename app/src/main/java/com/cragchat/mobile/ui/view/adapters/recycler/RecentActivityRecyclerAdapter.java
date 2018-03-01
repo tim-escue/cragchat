@@ -194,7 +194,7 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private void launch(String entityKey, int tab) {
-        Route r = mRepository.getRoute(entityKey, null);
+        Route r = mRepository.getRoute(entityKey);
         if (r != null) {
             NavigationUtil.launch(context, r, tab);
         } else {

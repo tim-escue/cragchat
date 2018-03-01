@@ -18,12 +18,6 @@ import com.cragchat.mobile.ui.model.NewSendRequest;
 import com.cragchat.mobile.ui.model.Rating;
 import com.cragchat.mobile.ui.model.Route;
 import com.cragchat.mobile.ui.model.Send;
-import com.cragchat.mobile.ui.model.pojo.PojoArea;
-import com.cragchat.mobile.ui.model.pojo.PojoComment;
-import com.cragchat.mobile.ui.model.pojo.PojoImage;
-import com.cragchat.mobile.ui.model.pojo.PojoRating;
-import com.cragchat.mobile.ui.model.pojo.PojoRoute;
-import com.cragchat.mobile.ui.model.pojo.PojoSend;
 import com.cragchat.mobile.ui.model.realm.RealmArea;
 import com.cragchat.mobile.ui.model.realm.RealmComment;
 import com.cragchat.mobile.ui.model.realm.RealmImage;
@@ -232,21 +226,60 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void update(final PojoImage image) {
+    public void update(Object value) {
+        if (value instanceof Send) {
+            update((Send) value);
+        } else if (value instanceof Image) {
+            update((Image) value);
+        }else if (value instanceof Area) {
+            update((Area) value);
+        }else if (value instanceof Rating) {
+            update((Rating) value);
+        }else if (value instanceof Comment) {
+            update((Comment) value);
+        }else if (value instanceof Route) {
+            update((Route) value);
+        } else if (value instanceof List) {
+            List list = (List) value;
+            if (list.size() > 0) {
+                Object obj = list.get(0);
+                if (obj instanceof Send) {
+                    updateSends((List<Send>) list);
+                } else if (obj instanceof Image) {
+                    updateImages((List<Image>) list);
+                }else if (obj instanceof Area) {
+                    updateAreas((List<Area>) list);
+                }else if (obj instanceof Rating) {
+                    updateRatings((List<Rating>) list);
+                }else if (obj instanceof Comment) {
+                    updateComments((List<Comment>) list);
+                }else if (obj instanceof Route) {
+                    updateRoutes((List<Route>) list);
+                } else {
+                    System.exit(487639);
+                }
+            }
+        } else {
+            System.exit(488639);
+        }
+    }
+
+    @Override
+    public void update(final Image image) {
         insertOrUpdate(RealmImage.from(image));
     }
 
     @Override
-    public void update(final PojoSend send) {
+    public void update(final Send send) {
         insertOrUpdate(RealmSend.from(send));
     }
 
     @Override
-    public void updateImages(final List<PojoImage> image) {
+    public void updateImages(final List<Image> image) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoImage comment : image) {
+                for (Image comment : image) {
                     realm.insertOrUpdate(RealmImage.from(comment));
                 }
             }
@@ -260,14 +293,14 @@ public class RealmDatabase implements CragChatDatabase {
             @Override
             public void execute(Realm realm) {
                 for (Datable i : datables) {
-                    if (i instanceof PojoRating) {
-                        realm.insertOrUpdate(RealmRating.from((PojoRating) i));
-                    } else if (i instanceof PojoComment) {
-                        realm.insertOrUpdate(RealmComment.from((PojoComment) i));
-                    } else if (i instanceof PojoImage) {
-                        realm.insertOrUpdate(RealmImage.from((PojoImage) i));
+                    if (i instanceof Rating) {
+                        realm.insertOrUpdate(RealmRating.from((Rating) i));
+                    } else if (i instanceof Comment) {
+                        realm.insertOrUpdate(RealmComment.from((Comment) i));
+                    } else if (i instanceof Image) {
+                        realm.insertOrUpdate(RealmImage.from((Image) i));
                     } else {
-                        realm.insertOrUpdate(RealmSend.from((PojoSend) i));
+                        realm.insertOrUpdate(RealmSend.from((Send) i));
                     }
                 }
             }
@@ -275,11 +308,11 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void updateSends(final List<PojoSend> sends) {
+    public void updateSends(final List<Send> sends) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoSend i : sends) {
+                for (Send i : sends) {
                     realm.insertOrUpdate(RealmSend.from(i));
                 }
             }
@@ -297,7 +330,7 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void update(final PojoRoute route) {
+    public void update(final Route route) {
         insertOrUpdate(RealmRoute.from(route));
     }
 
@@ -403,11 +436,11 @@ public class RealmDatabase implements CragChatDatabase {
 
 
     @Override
-    public void updateComments(final List<PojoComment> comments) {
+    public void updateComments(final List<Comment> comments) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoComment comment : comments) {
+                for (Comment comment : comments) {
                     realm.insertOrUpdate(RealmComment.from(comment));
                 }
             }
@@ -416,11 +449,11 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void updateRoutes(final List<PojoRoute> routes) {
+    public void updateRoutes(final List<Route> routes) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoRoute route : routes) {
+                for (Route route : routes) {
                     realm.insertOrUpdate(RealmRoute.from(route));
                 }
             }
@@ -428,26 +461,26 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void update(final PojoArea area) {
+    public void update(final Area area) {
         insertOrUpdate(RealmArea.from(area));
     }
 
     @Override
-    public void update(final PojoRating rating) {
+    public void update(final Rating rating) {
         insertOrUpdate(RealmRating.from(rating));
     }
 
     @Override
-    public void update(PojoComment comment) {
+    public void update(Comment comment) {
         insertOrUpdate(RealmComment.from(comment));
     }
 
     @Override
-    public void updateRatings(final List<PojoRating> ratings) {
+    public void updateRatings(final List<Rating> ratings) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoRating rating : ratings) {
+                for (Rating rating : ratings) {
                     Log.d("Rating", rating.toString() + " REALM:" + RealmRating.from(rating).toString());
                     realm.insertOrUpdate(RealmRating.from(rating));
                 }
@@ -456,11 +489,11 @@ public class RealmDatabase implements CragChatDatabase {
     }
 
     @Override
-    public void updateAreas(final List<PojoArea> areas) {
+    public void updateAreas(final List<Area> areas) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (PojoArea i : areas) {
+                for (Area i : areas) {
                     realm.insertOrUpdate(RealmArea.from(i));
                 }
             }

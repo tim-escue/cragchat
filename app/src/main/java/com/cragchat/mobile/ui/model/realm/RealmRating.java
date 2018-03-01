@@ -33,7 +33,7 @@ public class RealmRating extends RealmObject implements Rating, Datable {
     private String entityName;
 
 
-    public static RealmRating from(PojoRating pojo) {
+    public static RealmRating from(Rating pojo) {
         RealmRating rating = new RealmRating();
         rating.setEntityKey(pojo.getEntityKey());
         rating.setKey(pojo.getKey());
