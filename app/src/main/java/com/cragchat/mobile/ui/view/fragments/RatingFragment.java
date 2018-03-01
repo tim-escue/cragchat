@@ -58,24 +58,8 @@ public class RatingFragment extends DaggerFragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
 
-        /*
-            Called only to update ratings. The return value is not used because RatingRecyclerAdapter
-            relies upon an instance of Realm and Reposity can not expose Realm API
-            in order to preserve CLEAN architecture.
-         */
         presenter = new RatingFragmentPresenter(view, getLifecycle());
-        List<Rating> ratings = mRepository.getRatings(entityKey, new Callback<List<Rating>>() {
-            @Override
-            public void onSuccess(List<Rating> object) {
-                presenter.present(object);
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
-        presenter.present(ratings);
+        mRepository.observeRatings(entityKey).subscribe(ratings -> presenter.present(ratings));
 
         return view;
     }

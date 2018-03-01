@@ -31,17 +31,6 @@ public class SendFragmentPresenter {
     }
 
     public void loadSends(String entityKey) {
-        List<Send> sends = mRepository.getSends(entityKey, new Callback<List<Send>>() {
-            @Override
-            public void onSuccess(List<Send> object) {
-                mView.show(object);
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
-        mView.show(sends);
+        mRepository.observeSends(entityKey).subscribe(sends -> mView.show(sends));
     }
 }

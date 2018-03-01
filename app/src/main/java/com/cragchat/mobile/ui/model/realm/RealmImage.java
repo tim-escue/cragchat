@@ -34,7 +34,7 @@ public class RealmImage extends RealmObject implements Image, Datable {
     private String authorName;
     private String entityName;
 
-    public static RealmImage from(PojoImage pojoImage) {
+    public static RealmImage from(Image pojoImage) {
         RealmImage image = new RealmImage();
         image.setAuthorName(pojoImage.getAuthorName());
         image.setCaption(pojoImage.getCaption());

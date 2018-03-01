@@ -56,7 +56,7 @@ public class RealmArea extends RealmObject implements Area {
         this.setImages(images);
     }
 
-    public static RealmArea from(PojoArea area) {
+    public static RealmArea from(Area area) {
 
         return new RealmArea(area.getName(), area.getKey(),
                 area.getLatitude(), area.getLongitude(),

@@ -154,7 +154,7 @@ public class AreaActivity extends SearchableActivity implements AreaContract.Are
         getSupportActionBar().setTitle(area.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = repository.getArea(area.getParent(), null);
+        Area current = repository.getArea(area.getParent());
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -162,7 +162,7 @@ public class AreaActivity extends SearchableActivity implements AreaContract.Are
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = repository.getArea(current.getParent(), null);
+            current = repository.getArea(current.getParent());
         }
         String subTitleString = subTitle.toString();
         if (!subTitleString.isEmpty()) {

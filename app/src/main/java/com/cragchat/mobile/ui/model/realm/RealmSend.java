@@ -36,7 +36,7 @@ public class RealmSend extends RealmObject implements Send, Datable {
     private String username;
     private String entityName;
 
-    public static RealmSend from(PojoSend send) {
+    public static RealmSend from(Send send) {
         RealmSend s = new RealmSend();
         s.setAttempts(send.getAttempts());
         s.setKey(send.getKey());

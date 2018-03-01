@@ -1,13 +1,13 @@
 package com.cragchat.mobile.repository.remote;
 
 import com.cragchat.mobile.authentication.AuthenticatedUser;
+import com.cragchat.mobile.ui.model.Area;
+import com.cragchat.mobile.ui.model.Comment;
 import com.cragchat.mobile.ui.model.Datable;
-import com.cragchat.mobile.ui.model.pojo.PojoArea;
-import com.cragchat.mobile.ui.model.pojo.PojoComment;
-import com.cragchat.mobile.ui.model.pojo.PojoImage;
-import com.cragchat.mobile.ui.model.pojo.PojoRating;
-import com.cragchat.mobile.ui.model.pojo.PojoRoute;
-import com.cragchat.mobile.ui.model.pojo.PojoSend;
+import com.cragchat.mobile.ui.model.Image;
+import com.cragchat.mobile.ui.model.Rating;
+import com.cragchat.mobile.ui.model.Route;
+import com.cragchat.mobile.ui.model.Send;
 
 import java.util.List;
 
@@ -24,45 +24,45 @@ public interface CragChatRestApi {
 
     Observable<List<Datable>> getRecentActivity(String entityKey, List<String> areaIds, List<String> routeIds);
 
-    Observable<List<PojoSend>> getSends(String entityKey);
+    Observable<List<Send>> getSends(String entityKey);
 
-    Observable<PojoSend> postSend(String user_token, String entityKey, int pitches,
+    Observable<Send> postSend(String user_token, String entityKey, int pitches,
                                   int attempts, String sendType, String climbingStyle,
                                   String entityName);
 
-    Observable<PojoComment> postCommentVote(String userToken, String vote, String commentKey);
+    Observable<Comment> postCommentVote(String userToken, String vote, String commentKey);
 
     Observable<AuthenticatedUser> login(String userName, String password);
 
     Observable<ResponseBody> register(String userName, String password, String email);
 
-    Observable<PojoComment> postCommentReply(String userToken, String comment, String entityKey,
-                                             String table, String parentId, int depth);
+    Observable<Comment> postCommentReply(String userToken, String comment, String entityKey,
+                                         String table, String parentId, int depth);
 
-    Observable<PojoImage> postImage(MultipartBody.Part image, RequestBody userToken,
-                                    RequestBody caption, RequestBody entityKey,
-                                    RequestBody entityType, RequestBody entityName);
+    Observable<Image> postImage(MultipartBody.Part image, RequestBody userToken,
+                                RequestBody caption, RequestBody entityKey,
+                                RequestBody entityType, RequestBody entityName);
 
-    Observable<List<PojoImage>> getImages(String entityKey);
+    Observable<List<Image>> getImages(String entityKey);
 
-    Observable<PojoComment> postCommentEdit(String userToken, String comment, String entityKey);
+    Observable<Comment> postCommentEdit(String userToken, String comment, String entityKey);
 
-    Observable<List<PojoComment>> getComments(String entityId);
+    Observable<List<Comment>> getComments(String entityId);
 
-    Observable<List<PojoRating>> getRatings(String entityKey);
+    Observable<List<Rating>> getRatings(String entityKey);
 
-    Observable<PojoRating> postRating(String userToken, int stars, int yds, String entityKey,
+    Observable<Rating> postRating(String userToken, int stars, int yds, String entityKey,
                                       String entityName);
 
-    Observable<PojoComment> postComment(String userToken, String comment, String entityKey, String table);
+    Observable<Comment> postComment(String userToken, String comment, String entityKey, String table);
 
     Observable<ResponseBody> getAreasContaining(String query);
 
-    Observable<PojoArea> getArea(String areaKey, String areaName);
+    Observable<Area> getArea(String areaKey, String areaName);
 
-    Observable<List<PojoRoute>> getRoutes(String[] routeIds);
+    Observable<List<Route>> getRoutes(String[] routeIds);
 
-    Observable<List<PojoArea>> getAreas(String[] areaIds);
+    Observable<List<Area>> getAreas(String[] areaIds);
 
-    Observable<PojoRoute> getRoute(String routeKey);
+    Observable<Route> getRoute(String routeKey);
 }

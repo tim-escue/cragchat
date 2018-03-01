@@ -97,18 +97,7 @@ public class CommentSectionFragment extends DaggerFragment implements View.OnCli
             }
         });
 
-        List<Comment> comments = mRepository.getComments(mEntityKey, table, new Callback<List<Comment>>() {
-            @Override
-            public void onSuccess(List<Comment> object) {
-                present(object);
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
-        present(comments);
+        mRepository.observeComment(mEntityKey, table).subscribe(this::present);
 
         return view;
     }

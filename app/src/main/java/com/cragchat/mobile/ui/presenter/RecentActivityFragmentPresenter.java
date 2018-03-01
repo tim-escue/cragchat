@@ -31,7 +31,7 @@ public class RecentActivityFragmentPresenter {
     }
 
     public void loadRecentActivity() {
-        mRepository.recentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
+        mRepository.observeRecentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
                 .subscribe(recentActivityObserver);
     }
 

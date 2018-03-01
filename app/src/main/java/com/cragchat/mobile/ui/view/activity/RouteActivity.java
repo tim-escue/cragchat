@@ -120,18 +120,14 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
 
         present(route);
 
-        repository.getRoute(route.getKey(), new Callback<Route>() {
-            @Override
-            public void onSuccess(Route object) {
-                present(object);
-                route = object;
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
+        repository.observeRoute(route.getKey()).subscribe(route -> {
+            present(route);
+            this.route = route;
         });
+
+
+
+
 
     }
 
@@ -179,7 +175,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
         getSupportActionBar().setTitle(route.getName());
 
         StringBuilder subTitle = new StringBuilder();
-        Area current = repository.getArea(route.getParent(), null);
+        Area current = repository.getArea(route.getParent());
         int count = 0;
         while (current != null) {
             if (count > 0) {
@@ -187,7 +183,7 @@ public class RouteActivity extends SearchableActivity implements AppBarLayout.On
             }
             subTitle.insert(0, current.getName());
             count++;
-            current = repository.getArea(current.getParent(), null);
+            current = repository.getArea(current.getParent());
         }
 
         getSupportActionBar().setSubtitle(subTitle.toString());

@@ -62,7 +62,7 @@ public class RealmRoute extends RealmObject implements Route {
         setImages(images);
     }
 
-    public static RealmRoute from(PojoRoute route) {
+    public static RealmRoute from(Route route) {
         return new RealmRoute(route.getKey(), route.getName(),
                 route.getType(), route.getLatitude(),
                 route.getLongitude(), route.getYds(),

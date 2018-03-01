@@ -48,11 +48,11 @@ public class ViewImageActivity extends CragChatActivity {
 
     @OnClick(R.id.back_button)
     void back(View view) {
-        Area area = repository.getArea(image.getEntityKey(), null);
+        Area area = repository.getArea(image.getEntityKey());
         if (area != null) {
             NavigationUtil.launch(view.getContext(), area.getKey());
         } else {
-            Route route = repository.getRoute(image.getEntityKey(), null);
+            Route route = repository.getRoute(image.getEntityKey());
             if (route != null) {
                 NavigationUtil.launch(view.getContext(), route);
             }
