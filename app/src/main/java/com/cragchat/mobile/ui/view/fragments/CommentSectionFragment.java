@@ -135,17 +135,7 @@ public class CommentSectionFragment extends DaggerFragment implements View.OnCli
         if (view.getId() == R.id.add_button) {
             if (mAuthentication.isLoggedIn(view.getContext())) {
                 Dialog.getAddCommentDialog(mAuthentication, mRepository, null, view.getContext(),
-                        mEntityKey, table, null, new Callback<Comment>() {
-                            @Override
-                            public void onSuccess(Comment object) {
-                                update(object);
-                            }
-
-                            @Override
-                            public void onFailure() {
-
-                            }
-                        }).show();
+                        mEntityKey, table, null, this::update).show();
             } else {
                 DialogFragment df = NotificationDialog.newInstance("Must be logged in to add a comment.");
                 df.show(getActivity().getSupportFragmentManager(), "dialog");

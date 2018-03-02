@@ -6,6 +6,4 @@ package com.cragchat.mobile.repository;
 
 public interface Callback<T> {
     void onSuccess(T object);
-
-    void onFailure();
 }

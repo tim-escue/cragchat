@@ -31,6 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -52,24 +53,12 @@ public class RetroFitRestApi implements CragChatRestApi {
                 .registerTypeAdapter(Rating.class, JsonUtil.getDeserializer(PojoRating.class))
                 .registerTypeAdapter(Image.class, JsonUtil.getDeserializer(PojoImage.class))
                 .create();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(
-                        new Interceptor() {
-                            @Override
-                            public Response intercept(Chain chain) throws IOException {
-                                Response response = chain.proceed(chain.request());
-                                Log.w("RetrofitResponse", response.peekBody(Long.MAX_VALUE).string());
-                                return response;
-                            }
-                        }
-                ).addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Log.w("RetrofitRequest:", chain.request().toString());
 
-                        return chain.proceed(chain.request());
-                    }
-                })
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
                 .connectTimeout(120, TimeUnit.SECONDS)
                 .readTimeout(120, TimeUnit.SECONDS)
                 .build();

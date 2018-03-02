@@ -15,6 +15,16 @@ public class RealmNewImageRequest extends RealmObject implements NewImageRequest
     private String entityType;
     private String filePath;
     private String entityName;
+    private String userToken;
+
+    public RealmNewImageRequest(String captionString, String entityKey, String entityType, String filePath, String entityName, String userToken) {
+        this.captionString = captionString;
+        this.entityKey = entityKey;
+        this.entityType = entityType;
+        this.filePath = filePath;
+        this.entityName = entityName;
+        this.userToken = userToken;
+    }
 
     public String getCaptionString() {
         return captionString;
@@ -54,5 +64,13 @@ public class RealmNewImageRequest extends RealmObject implements NewImageRequest
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

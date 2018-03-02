@@ -76,13 +76,14 @@ public class RecentActivityRecyclerAdapter extends RecyclerView.Adapter<Recycler
 
     public void update(List<Datable> newData) {
         data = newData;
-        int newSize = newData.size();
-        if (newSize > lastSize) {
+       // int newSize = newData.size();
+        //if (newSize > lastSize) {
             Collections.sort(data,
                     (Datable one, Datable two) -> two.getDate().compareTo(one.getDate()));
-            notifyItemRangeInserted(0, newSize - lastSize);
-            lastSize = newSize;
-        }
+        //    notifyItemRangeInserted(0, newSize - lastSize);
+        //    lastSize = newSize;
+        //}
+        notifyDataSetChanged();
     }
 
     @Override

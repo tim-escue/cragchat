@@ -8,6 +8,7 @@ import com.cragchat.mobile.ui.model.Route;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,18 @@ public class FormatUtil {
         return elapsedSeconds + " seconds ago";
     }
 
+    public static <T, K> List<K> transform(List<T> list, Converter<T, K> converter) {
+        List<K> newList = new ArrayList<>();
+        for (T t : list) {
+            newList.add(converter.convert(t));
+        }
+        return newList;
+    }
+
+    public interface Converter<T, K> {
+        K convert(T value);
+    }
+
     public static String getYdsString(Context context, int yds) {
         return yds != -1 ? context.getResources().getStringArray(R.array.yds_options)[yds] : "Not rated";
     }
@@ -98,33 +111,4 @@ public class FormatUtil {
         return areaIds;
     }
 
-    public static String areaListToString(List<? extends Area> list) {
-        StringBuilder builder = new StringBuilder();
-        int index = 0;
-        if (list.size() > 0) {
-            builder.append(list.get(index).getKey());
-            index++;
-        }
-        while (index < list.size()) {
-            builder.append(",");
-            builder.append(list.get(index).getKey());
-            index++;
-        }
-        return builder.toString();
-    }
-
-    public static String routeListToString(List<? extends Route> list) {
-        StringBuilder builder = new StringBuilder();
-        int index = 0;
-        if (list.size() > 0) {
-            builder.append(list.get(index).getKey());
-            index++;
-        }
-        while (index < list.size()) {
-            builder.append(",");
-            builder.append(list.get(index).getKey());
-            index++;
-        }
-        return builder.toString();
-    }
 }

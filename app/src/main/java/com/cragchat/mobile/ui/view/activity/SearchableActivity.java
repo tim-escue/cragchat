@@ -57,11 +57,6 @@ public abstract class SearchableActivity extends CragChatActivity {
                                         adapter.update(object);
                                     }
                                 }
-
-                                @Override
-                                public void onFailure() {
-
-                                }
                             });
                 }
                 adapter.update(data);

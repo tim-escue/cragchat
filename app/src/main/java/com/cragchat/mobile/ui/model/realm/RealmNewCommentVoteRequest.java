@@ -11,6 +11,25 @@ import io.realm.RealmObject;
 public class RealmNewCommentVoteRequest extends RealmObject implements NewCommentVoteRequest {
     private String vote;
     private String commentKey;
+    private String userToken;
+
+    public RealmNewCommentVoteRequest() {
+    }
+
+    public RealmNewCommentVoteRequest(String vote, String commentKey, String userToken) {
+        this.vote = vote;
+        this.commentKey = commentKey;
+        this.userToken = userToken;
+    }
+
+    public String getUserToken() {
+
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 
     public String getVote() {
         return vote;

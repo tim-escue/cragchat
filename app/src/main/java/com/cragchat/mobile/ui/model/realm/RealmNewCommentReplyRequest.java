@@ -16,6 +16,30 @@ public class RealmNewCommentReplyRequest extends RealmObject implements NewComme
     private String parentId;
     private int depth;
 
+    public RealmNewCommentReplyRequest() {
+    }
+
+    public RealmNewCommentReplyRequest(String comment, String entityKey, String table, String parentId, int depth, String userToken) {
+
+        this.comment = comment;
+        this.entityKey = entityKey;
+        this.table = table;
+        this.parentId = parentId;
+        this.depth = depth;
+        this.userToken = userToken;
+    }
+
+    public String getUserToken() {
+
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+
+    private String userToken;
+
     public String getComment() {
         return comment;
     }

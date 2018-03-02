@@ -16,6 +16,19 @@ public class RealmNewSendRequest extends RealmObject implements NewSendRequest {
     private String sendType;
     private String climbingStyle;
     private String entityName;
+    private String userToken;
+
+    public RealmNewSendRequest(){}
+
+    public RealmNewSendRequest(String entityKey, int pitches, int attempts, String sendType, String climbingStyle, String entityName, String userToken) {
+        this.entityKey = entityKey;
+        this.pitches = pitches;
+        this.attempts = attempts;
+        this.sendType = sendType;
+        this.climbingStyle = climbingStyle;
+        this.entityName = entityName;
+        this.userToken = userToken;
+    }
 
     public String getEntityKey() {
         return entityKey;
@@ -64,5 +77,13 @@ public class RealmNewSendRequest extends RealmObject implements NewSendRequest {
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

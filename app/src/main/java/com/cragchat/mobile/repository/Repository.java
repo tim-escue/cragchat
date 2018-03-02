@@ -3,7 +3,6 @@ package com.cragchat.mobile.repository;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.cragchat.mobile.authentication.Authentication;
@@ -68,15 +67,18 @@ public class Repository {
     }
 
     public Observable<List<Image>> observeImages(@NonNull final String key) {
-        return getObserver(mLocalDatabase.getImages(key), mRestApi.getImages(key), "images");
+        return getObserver(mLocalDatabase.getImages(key), mRestApi.getImages(key),
+                images -> mLocalDatabase.updateImages(images), "images");
     }
 
     public Observable<List<Rating>> observeRatings(@NonNull final String entityKey) {
-        return getObserver(mLocalDatabase.getRatings(entityKey), mRestApi.getRatings(entityKey), "ratings");
+        return getObserver(mLocalDatabase.getRatings(entityKey), mRestApi.getRatings(entityKey),
+                ratings -> mLocalDatabase.updateRatings(ratings), "ratings");
     }
 
     public Observable<Route> observeRoute(@NonNull final String entityKey) {
-        return getObserver(mLocalDatabase.getRoute(entityKey), mRestApi.getRoute(entityKey), "route");
+        return getObserver(mLocalDatabase.getRoute(entityKey), mRestApi.getRoute(entityKey),
+                route -> mLocalDatabase.update(route), "route");
     }
 
     public Observable<List<Datable>> observeRecentActivity(@NonNull final String entityKey, List<String> areaIds, List<String> routeIds) {
@@ -86,58 +88,68 @@ public class Repository {
                 mRestApi.getRecentActivity(entityKey,
                         areaIds != null ? areaIds : Collections.emptyList(),
                         routeIds != null ? routeIds : Collections.emptyList()),
+                datables -> mLocalDatabase.updateDatables(datables),
                 "recent activity");
 
     }
 
     public Observable<Area> observeAreaByName(@NonNull final String areaName) {
-        return getObserver(mLocalDatabase.getAreaByName(areaName), mRestApi.getArea(null, areaName), "area by name");
+        return getObserver(mLocalDatabase.getAreaByName(areaName), mRestApi.getArea(null, areaName),
+                area -> mLocalDatabase.update(area), "area by name");
     }
 
     public Observable<List<Route>> observeRoutes(@NonNull final String[] routeIds) {
-        return getObserver(mLocalDatabase.getRoutes(routeIds), mRestApi.getRoutes(routeIds), "routes");
+        return getObserver(mLocalDatabase.getRoutes(routeIds), mRestApi.getRoutes(routeIds),
+                routes -> mLocalDatabase.updateRoutes(routes), "routes");
     }
 
     public Observable<Area> observeArea(@NonNull final String areaId) {
-        return getObserver(mLocalDatabase.getArea(areaId), mRestApi.getArea(areaId, null), "area");
+        return getObserver(mLocalDatabase.getArea(areaId), mRestApi.getArea(areaId, null),
+                area -> mLocalDatabase.update(area), "area");
     }
 
     public Observable<List<Area>> observeAreas(@NonNull final String[] areaKeys) {
-        return getObserver(mLocalDatabase.getAreas(areaKeys), mRestApi.getAreas(areaKeys), "ratings");
+        return getObserver(mLocalDatabase.getAreas(areaKeys), mRestApi.getAreas(areaKeys),
+                areas-> mLocalDatabase.updateAreas(areas), "ratings");
     }
 
     public Observable<List<Send>> observeSends(@NonNull final String entityKey) {
-        return getObserver(mLocalDatabase.getSends(entityKey), mRestApi.getSends(entityKey), "sends");
+        return getObserver(mLocalDatabase.getSends(entityKey), mRestApi.getSends(entityKey),
+                sends -> mLocalDatabase.updateSends(sends), "sends");
     }
-
 
     public Observable<List<Comment>> observeComment(@NonNull final String entityKey, final String table) {
-        return getObserver(mLocalDatabase.getComments(entityKey, table), mRestApi.getComments(entityKey), "comments");
+        return getObserver(mLocalDatabase.getComments(entityKey, table), mRestApi.getComments(entityKey),
+                comments -> mLocalDatabase.updateComments(comments), "comments");
     }
 
-    public <T> Observable<T> getObserver(T localValue, Observable<T> networkObserver, String errorString) {
+    private <T> Observable<T> getObserver(T localValue, Observable<T> networkObserver,
+                                          Callback<T> callback, String errorString) {
         return Observable.create(emitter -> {
-            emitter.onNext(localValue);
+            if (localValue != null) {
+                emitter.onNext(localValue);
+            }
             if (NetworkUtil.isConnected(mApplicationContext)) {
-                networkObserver
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new EntityRequestObserver<T>() {
-                            @Override
-                            public void onNext(T areas) {
-                                mLocalDatabase.update(areas);
-                                emitter.onNext(areas);
-                                emitter.onComplete();
-                            }
+                    networkObserver
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new EntityRequestObserver<T>() {
+                                @Override
+                                public void onNext(T areas) {
+                                    callback.onSuccess(areas);
+                                    emitter.onNext(areas);
+                                    emitter.onComplete();
+                                }
 
-                            @Override
-                            public void onError(Throwable throwable) {
-                                showGetFailure(errorString);
-                                throwable.printStackTrace();
-                                emitter.onError(throwable);
-                            }
-                        });
-            } });
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    showGetFailure(errorString);
+                                    throwable.printStackTrace();
+                                    emitter.onError(throwable);
+                                }
+                            });
+            }
+        });
     }
 
     public Area getArea(@NonNull final String areaKey) {
@@ -174,118 +186,80 @@ public class Repository {
     public void sendQueuedRequests() {
         String userToken = mAuthentication.getAuthenticatedUser(mApplicationContext).getToken();
 
+        Callback<Send> sendCallback = new RequestCallback<>("Send");
         for (NewSendRequest req : mLocalDatabase.getNewSendRequests()) {
             addSend(userToken, req.getEntityKey(), req.getPitches(), req.getAttempts(),
-                    req.getSendType(), req.getClimbingStyle(), req.getEntityName(), new Callback<Send>() {
-                        @Override
-                        public void onSuccess(Send object) {
-                            showSentQueuedSent("Send");
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
+                    req.getSendType(), req.getClimbingStyle(), req.getEntityName(), sendCallback);
         }
 
+        Callback<Rating> ratingCallback = new RequestCallback<>("Rating");
         for (NewRatingRequest req : mLocalDatabase.getNewRatingRequests()) {
-            addRating(userToken, req.getStars(), req.getYds(), req.getEntityKey(), req.getEntityName(),
-                    new Callback<Rating>() {
-                        @Override
-                        public void onSuccess(Rating object) {
-                            showSentQueuedSent("Rating");
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
+            addRating(userToken, req.getStars(), req.getYds(), req.getEntityKey(),
+                    req.getEntityName(), ratingCallback);
         }
 
+        Callback<Comment> commentCallback = new RequestCallback<>("Comment");
         for (NewCommentRequest req : mLocalDatabase.getNewCommentRequests()) {
-            addComment(userToken, req.getComment(), req.getEntityKey(), req.getTable(),
-                    new Callback<Comment>() {
-                        @Override
-                        public void onSuccess(Comment object) {
-                            showSentQueuedSent("Comment");
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
+            addComment(userToken, req.getComment(), req.getEntityKey(), req.getTable(), commentCallback);
         }
 
+        Callback<Comment> commentReplyCallback = new RequestCallback<>("Comment reply");
         for (NewCommentReplyRequest req : mLocalDatabase.getNewCommentReplyRequests()) {
             replyToComment(userToken, req.getComment(), req.getEntityKey(), req.getTable(),
-                    req.getParentId(), req.getDepth(), new Callback<Comment>() {
-                        @Override
-                        public void onSuccess(Comment object) {
-                            showSentQueuedSent("Comment reply");
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
+                    req.getParentId(), req.getDepth(), commentReplyCallback);
         }
 
+        Callback<Comment> commentEditCallback = new RequestCallback<>("Comment edit");
         for (NewCommentEditRequest req : mLocalDatabase.getNewCommentEditRequests()) {
-            editComment(userToken, req.getComment(), req.getCommentKey(), new Callback<Comment>() {
-                @Override
-                public void onSuccess(Comment object) {
-                    showSentQueuedSent("Comment edit");
-                }
-
-                @Override
-                public void onFailure() {
-
-                }
-            });
+            editComment(userToken, req.getComment(), req.getCommentKey(), commentEditCallback);
         }
 
+        Callback<Comment> commentVoteCallback = new RequestCallback<>("Comment vote");
         for (NewCommentVoteRequest req : mLocalDatabase.getNewCommentVoteRequests()) {
-            addCommentVote(userToken, req.getVote(), req.getCommentKey(), new Callback<Comment>() {
-                @Override
-                public void onSuccess(Comment object) {
-                    showSentQueuedSent("Comment vote");
-                }
-
-                @Override
-                public void onFailure() {
-
-                }
-            });
+            addCommentVote(userToken, req.getVote(), req.getCommentKey(), commentVoteCallback);
         }
 
         for (NewImageRequest req : mLocalDatabase.getNewImageRequsts()) {
             try {
                 final File file = new File(req.getFilePath());
                 addImage(req.getCaptionString(), req.getEntityKey(), req.getEntityType(), file,
-                        req.getEntityName(), new Callback<Image>() {
-                            @Override
-                            public void onSuccess(Image object) {
-                                file.delete();
-                                showSentQueuedSent("Image");
-                            }
-
-                            @Override
-                            public void onFailure() {
-
-                            }
-                        });
+                        req.getEntityName(), new ImageCallback(file));
             } catch (Exception e) {
-                e.printStackTrace();
-                /*
-                    The image to be uploaded no longer exists. NewImageRequest is not queued to resend.
-                 */
+                //The image to be uploaded no longer exists. NewImageRequest is not queued to resend.
                 Toast.makeText(mApplicationContext, "Queued image no longer exists and could not be uploaded",
                         Toast.LENGTH_LONG).show();
             }
+        }
+
+    }
+
+    private class RequestCallback<T> implements Callback<T> {
+
+        private String message;
+
+            private RequestCallback(String message) {
+                this.message = message;
+            }
+
+            @Override
+            public void onSuccess(T object) {
+                showSentQueuedSent(message);
+            }
+
+    }
+
+    private class ImageCallback implements Callback<Image> {
+
+        private File file;
+
+        private ImageCallback(File file) {
+            this.file = file;
+        }
+
+        @Override
+        public void onSuccess(Image object) {
+            file.delete();
+            showSentQueuedSent("Image");
         }
 
     }
@@ -331,15 +305,9 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            if (updateCallback != null) {
-                                updateCallback.onFailure();
-                            }
                         }
                     });
         } else {
-            if (updateCallback != null) {
-                updateCallback.onFailure();
-            }
         }
 
         return mLocalDatabase.getQueryMatches(query);
@@ -364,16 +332,13 @@ public class Repository {
                                 @Override
                                 public void onError(Throwable throwable) {
                                     showQueueMessage("Comment vote");
-                                    mLocalDatabase.addNewCommentVoteRequest(vote, commentKey);
-                                    if (callback != null) {
-                                        callback.onFailure();
-                                    }
+                                    mLocalDatabase.addNewCommentVoteRequest(userToken, vote, commentKey);
                                 }
                             }
                     );
         } else {
             showQueueMessage("Comment vote");
-            mLocalDatabase.addNewCommentVoteRequest(vote, commentKey);
+            mLocalDatabase.addNewCommentVoteRequest(userToken, vote, commentKey);
         }
     }
 
@@ -396,30 +361,24 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
-                                    mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
+                                    mLocalDatabase.addNewSendRequest(userToken, entityKey, pitches, attempts,
                                             sendType, climbingStyle, entityName);
                                     showQueueMessage("Send");
-                                    if (callback != null) {
-                                        callback.onFailure();
-                                    }
                                 }
                             }
                     );
         } else {
-            mLocalDatabase.addNewSendRequest(entityKey, pitches, attempts,
+            mLocalDatabase.addNewSendRequest(userToken, entityKey, pitches, attempts,
                     sendType, climbingStyle, entityName);
             showQueueMessage("Send");
-            if (callback != null) {
-                callback.onFailure();
-            }
         }
     }
-
 
 
     public void addImage(final String captionString,
                          final String entityKey, final String entityType, final File imageFile,
                          final String entityName, final Callback<Image> callback) {
+        String userTokenString = mAuthentication.getAuthenticatedUser(mApplicationContext).getToken();
         if (NetworkUtil.isConnected(mApplicationContext)) {
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload",
@@ -427,8 +386,8 @@ public class Repository {
             RequestBody caption = RequestBody.create(MediaType.parse("text/plain"), captionString);
             RequestBody entityTypeRequest = RequestBody.create(MediaType.parse("text/plain"), entityType);
             RequestBody entityKeyRequest = RequestBody.create(MediaType.parse("text/plain"), entityKey);
-            RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"),
-                    mAuthentication.getAuthenticatedUser(mApplicationContext).getToken());
+            RequestBody userToken = RequestBody.create(MediaType.parse("text/plain"), userTokenString
+                    );
             RequestBody entityNameRequest = RequestBody.create(MediaType.parse("text/plain"), entityName);
             mRestApi.postImage(body, userToken, caption, entityKeyRequest, entityTypeRequest, entityNameRequest)
                     .subscribeOn(Schedulers.io())
@@ -449,21 +408,15 @@ public class Repository {
                                 Toast.makeText(mApplicationContext, "Image could no longer be found" +
                                         " to be uploaded", Toast.LENGTH_LONG).show();
                             } else {
-                                mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
+                                mLocalDatabase.addNewImageRequest(userTokenString, captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
                                 showQueueMessage("Image");
-                            }
-                            if (callback != null) {
-                                callback.onFailure();
                             }
                         }
                     });
 
         } else {
             showQueueMessage("Image");
-            mLocalDatabase.addNewImageRequest(captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
-            if (callback != null) {
-                callback.onFailure();
-            }
+            mLocalDatabase.addNewImageRequest(userTokenString, captionString, entityKey, entityType, Uri.fromFile(imageFile).getEncodedPath(), entityName);
         }
     }
 
@@ -485,14 +438,14 @@ public class Repository {
 
                                 @Override
                                 public void onError(Throwable throwable) {
-                                    mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
+                                    mLocalDatabase.addNewCommentReplyRequest(userToken, comment, entityKey, table,
                                             parentId, depth);
                                     showQueueMessage("Comment reply");
                                 }
                             }
                     );
         } else {
-            mLocalDatabase.addNewCommentReplyRequest(comment, entityKey, table,
+            mLocalDatabase.addNewCommentReplyRequest(userToken, comment, entityKey, table,
                     parentId, depth);
             showQueueMessage("Comment reply");
         }
@@ -516,12 +469,12 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            mLocalDatabase.addNewCommentRequest(comment, entityKey, table);
+                            mLocalDatabase.addNewCommentRequest(userToken,comment, entityKey, table);
                             showQueueMessage("Comment");
                         }
                     });
         } else {
-            mLocalDatabase.addNewCommentRequest(comment, entityKey, table);
+            mLocalDatabase.addNewCommentRequest(userToken, comment, entityKey, table);
             showQueueMessage("Comment");
         }
     }
@@ -543,12 +496,12 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            mLocalDatabase.addNewCommentEditRequest(comment, commentKey);
+                            mLocalDatabase.addNewCommentEditRequest(userToken,comment, commentKey);
                             showQueueMessage("Comment edit");
                         }
                     });
         } else {
-            mLocalDatabase.addNewCommentEditRequest(comment, commentKey);
+            mLocalDatabase.addNewCommentEditRequest(userToken, comment, commentKey);
             showQueueMessage("Comment edit");
         }
     }
@@ -570,19 +523,13 @@ public class Repository {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            mLocalDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
+                            mLocalDatabase.addNewRatingRequest(userToken, stars, yds, entityKey, entityName);
                             showQueueMessage("Rating");
-                            if (callback != null) {
-                                callback.onFailure();
-                            }
                         }
                     });
         } else {
-            mLocalDatabase.addNewRatingRequest(stars, yds, entityKey, entityName);
+            mLocalDatabase.addNewRatingRequest(userToken, stars, yds, entityKey, entityName);
             showQueueMessage("Rating");
-            if (callback != null) {
-                callback.onFailure();
-            }
         }
     }
 

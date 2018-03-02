@@ -14,6 +14,12 @@ public class RealmNewCommentEditRequest extends RealmObject implements NewCommen
     private String comment;
     private String commentKey;
 
+    public RealmNewCommentEditRequest(String userToken, String comment, String commentKey) {
+        this.userToken = userToken;
+        this.comment = comment;
+        this.commentKey = commentKey;
+    }
+
     public String getUserToken() {
         return userToken;
     }

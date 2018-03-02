@@ -255,17 +255,7 @@ public class EditImageActivity extends CragChatActivity implements ColorPickerDi
                     entityKey = ((RealmArea) entity).getKey();
                 }
                 repository.addImage(captionString, entityKey, entityType, newFile,
-                        entityName, new Callback<Image>() {
-                            @Override
-                            public void onSuccess(Image object) {
-                                newFile.delete();
-                            }
-
-                            @Override
-                            public void onFailure() {
-
-                            }
-                        });
+                        entityName, i -> newFile.delete());
                 if (entity instanceof RealmRoute) {
                     NavigationUtil.launch(this, ((RealmRoute) entity).getKey());
                 } else {

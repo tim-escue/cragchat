@@ -57,8 +57,6 @@ public interface CragChatDatabase {
 
     List<NewRatingRequest> getNewRatingRequests();
 
-    void update(Object value);
-
     void update(final Send send);
 
     void updateSends(final List<Send> sends);
@@ -85,20 +83,20 @@ public interface CragChatDatabase {
 
     void update(final Route route);
 
-    void addNewCommentRequest(String comment, String entityKey, String table);
+    void addNewCommentRequest(String userToken, String comment, String entityKey, String table);
 
-    void addNewRatingRequest(int stars, int yds, String entityKey, String entityName);
+    void addNewRatingRequest(String userToken,int stars, int yds, String entityKey, String entityName);
 
-    void addNewCommentEditRequest(String comment, String commentKey);
+    void addNewCommentEditRequest(String userToken, String comment, String commentKey);
 
-    void addNewImageRequest(String captionString, String entityKey, String entityType, String fileUri, String entityName);
+    void addNewImageRequest(String userToken, String captionString, String entityKey, String entityType, String fileUri, String entityName);
 
-    void addNewSendRequest(String entityKey, int pitches, int attempts, String sendType,
+    void addNewSendRequest(String userToken, String entityKey, int pitches, int attempts, String sendType,
                            String climbingStyle, String entityName);
 
-    void addNewCommentVoteRequest(String vote, String commentKey);
+    void addNewCommentVoteRequest(String userToken, String vote, String commentKey);
 
-    void addNewCommentReplyRequest(String comment, String entityKey, String table, String parentId,
+    void addNewCommentReplyRequest(String userToken, String comment, String entityKey, String table, String parentId,
                                    int depth);
 
     List getQueryMatches(String query);

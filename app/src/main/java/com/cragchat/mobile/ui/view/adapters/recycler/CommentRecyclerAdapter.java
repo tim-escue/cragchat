@@ -42,17 +42,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
     private Repository mRepository;
     private Authentication mAuthentication;
 
-    private Callback<Comment> callback = new Callback<Comment>() {
-        @Override
-        public void onSuccess(Comment object) {
-            updateSingle(object);
-        }
-
-        @Override
-        public void onFailure() {
-
-        }
-    };
+    private Callback<Comment> callback = this::updateSingle;
 
     public CommentRecyclerAdapter(Context context, List<Comment> comments, String table,
                                   String entityId, Repository repository, Authentication authentication) {
@@ -176,17 +166,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                     mAuthentication.getAuthenticatedUser(context).getToken(),
                     up ? "up" : "down",
                     commentKey,
-                    new Callback<Comment>() {
-                        @Override
-                        public void onSuccess(Comment object) {
-                            updateSingle(object);
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    }
+                    this::updateSingle
             );
             if (lastOpened != null) {
                 lastOpened.expandable.setVisibility(GONE);

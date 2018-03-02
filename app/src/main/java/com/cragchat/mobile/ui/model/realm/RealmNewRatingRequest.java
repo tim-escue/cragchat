@@ -15,6 +15,16 @@ public class RealmNewRatingRequest extends RealmObject implements NewRatingReque
     private String entityName;
     private String entityKey;
 
+    public RealmNewRatingRequest(){}
+
+    public RealmNewRatingRequest(String userToken, int stars, int yds, String entityName, String entityKey) {
+        this.stars = stars;
+        this.yds = yds;
+        this.entityName = entityName;
+        this.userToken = userToken;
+        this.entityKey = entityKey;
+    }
+
     public String getUserToken() {
         return userToken;
     }

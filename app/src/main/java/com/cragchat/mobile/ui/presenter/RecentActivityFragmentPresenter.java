@@ -6,6 +6,7 @@ import com.cragchat.mobile.repository.Repository;
 import com.cragchat.mobile.ui.model.Area;
 import com.cragchat.mobile.ui.model.Datable;
 import com.cragchat.mobile.ui.view.RecentActivityView;
+import com.cragchat.mobile.util.FormatUtil;
 
 import java.util.List;
 
@@ -31,7 +32,12 @@ public class RecentActivityFragmentPresenter {
     }
 
     public void loadRecentActivity() {
-        mRepository.observeRecentActivity(mArea.getKey(), mArea.getSubAreas(), mArea.getRoutes())
+
+        mRepository.observeRecentActivity(mArea.getKey(),
+                    FormatUtil.transform(mArea.getSubAreas(), area -> area.toString()),
+                    FormatUtil.transform(mArea.getRoutes(), route -> route.toString()))
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(recentActivityObserver);
     }
 

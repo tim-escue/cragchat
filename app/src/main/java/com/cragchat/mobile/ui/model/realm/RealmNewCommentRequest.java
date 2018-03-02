@@ -13,6 +13,27 @@ public class RealmNewCommentRequest extends RealmObject implements NewCommentReq
     private String comment;
     private String entityKey;
     private String table;
+    private String userToken;
+
+    public RealmNewCommentRequest() {
+    }
+
+    public RealmNewCommentRequest(String comment, String entityKey, String table, String userToken) {
+
+        this.comment = comment;
+        this.entityKey = entityKey;
+        this.table = table;
+        this.userToken = userToken;
+    }
+
+    public String getUserToken() {
+
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 
     public String getComment() {
         return comment;
