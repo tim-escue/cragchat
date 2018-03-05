@@ -1,20 +1,16 @@
 package com.cragchat.mobile;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 
-import com.cragchat.mobile.authentication.Authentication;
+import com.cragchat.mobile.data.authentication.Authentication;
 import com.cragchat.mobile.di.component.DaggerApplicationComponent;
-import com.cragchat.mobile.receiver.ConnectionReceiver;
-import com.cragchat.mobile.repository.Repository;
+import com.cragchat.mobile.data.remote.ConnectionReceiver;
+import com.cragchat.mobile.data.Repository;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
 import dagger.android.support.DaggerApplication;
 
 /**

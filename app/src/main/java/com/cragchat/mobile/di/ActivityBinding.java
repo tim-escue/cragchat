@@ -1,23 +1,21 @@
 package com.cragchat.mobile.di;
 
-import com.cragchat.mobile.di.module.MainActivityModule;
 import com.cragchat.mobile.di.module.RouteModule;
 import com.cragchat.mobile.di.module.SearchModule;
-import com.cragchat.mobile.ui.contract.SearchContract;
-import com.cragchat.mobile.ui.view.activity.AreaActivity;
+import com.cragchat.mobile.mvp.view.activity.AreaActivity;
 import com.cragchat.mobile.di.module.AreaFragmentsModule;
 import com.cragchat.mobile.di.module.AreaModule;
-import com.cragchat.mobile.ui.view.activity.EditImageActivity;
-import com.cragchat.mobile.ui.view.activity.LoginActivity;
-import com.cragchat.mobile.ui.view.activity.MainActivity;
-import com.cragchat.mobile.ui.view.activity.MapActivity;
-import com.cragchat.mobile.ui.view.activity.ProfileActivity;
-import com.cragchat.mobile.ui.view.activity.RateRouteActivity;
-import com.cragchat.mobile.ui.view.activity.RegisterActivity;
-import com.cragchat.mobile.ui.view.activity.RouteActivity;
-import com.cragchat.mobile.ui.view.activity.SearchActivity;
-import com.cragchat.mobile.ui.view.activity.SubmitSendActivity;
-import com.cragchat.mobile.ui.view.activity.ViewImageActivity;
+import com.cragchat.mobile.mvp.view.activity.EditImageActivity;
+import com.cragchat.mobile.mvp.view.activity.LoginActivity;
+import com.cragchat.mobile.mvp.view.activity.MainActivity;
+import com.cragchat.mobile.mvp.view.activity.MapActivity;
+import com.cragchat.mobile.mvp.view.activity.ProfileActivity;
+import com.cragchat.mobile.mvp.view.activity.RateRouteActivity;
+import com.cragchat.mobile.mvp.view.activity.RegisterActivity;
+import com.cragchat.mobile.mvp.view.activity.RouteActivity;
+import com.cragchat.mobile.mvp.view.activity.SearchActivity;
+import com.cragchat.mobile.mvp.view.activity.SubmitSendActivity;
+import com.cragchat.mobile.mvp.view.activity.ViewImageActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -26,7 +24,7 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class ActivityBinding {
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = MainActivityModule.class)
+    @ContributesAndroidInjector()
     abstract MainActivity mainActivity();
 
     @ActivityScoped

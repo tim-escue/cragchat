@@ -1,5 +1,9 @@
 <resources>
 
+    <style name="BaseThemeCustom" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/black</item>
+    </style>
+
     <style name="TextLabel">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/primary_text</item>
@@ -25,7 +29,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">\\
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>

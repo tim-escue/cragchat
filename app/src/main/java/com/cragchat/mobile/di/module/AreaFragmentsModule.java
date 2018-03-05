@@ -1,14 +1,12 @@
 package com.cragchat.mobile.di.module;
 
-import android.location.Location;
-
 import com.cragchat.mobile.di.FragmentScoped;
-import com.cragchat.mobile.ui.view.fragments.AreaListFragment;
-import com.cragchat.mobile.ui.view.fragments.LocationFragment;
-import com.cragchat.mobile.ui.view.fragments.RecentActivityFragment;
-import com.cragchat.mobile.ui.view.fragments.CommentSectionFragment;
-import com.cragchat.mobile.ui.view.fragments.ImageFragment;
-import com.cragchat.mobile.ui.view.fragments.RouteListFragment;
+import com.cragchat.mobile.mvp.view.fragments.AreaListFragment;
+import com.cragchat.mobile.mvp.view.fragments.LocationFragment;
+import com.cragchat.mobile.mvp.view.fragments.RecentActivityFragment;
+import com.cragchat.mobile.mvp.view.fragments.CommentSectionFragment;
+import com.cragchat.mobile.mvp.view.fragments.ImageFragment;
+import com.cragchat.mobile.mvp.view.fragments.RouteListFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

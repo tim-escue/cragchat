@@ -1,10 +1,10 @@
 package com.cragchat.mobile.util;
 
-import com.cragchat.mobile.ui.model.Datable;
-import com.cragchat.mobile.ui.model.pojo.PojoComment;
-import com.cragchat.mobile.ui.model.pojo.PojoImage;
-import com.cragchat.mobile.ui.model.pojo.PojoRating;
-import com.cragchat.mobile.ui.model.pojo.PojoSend;
+import com.cragchat.mobile.domain.model.Datable;
+import com.cragchat.mobile.data.remote.pojo.PojoComment;
+import com.cragchat.mobile.data.remote.pojo.PojoImage;
+import com.cragchat.mobile.data.remote.pojo.PojoRating;
+import com.cragchat.mobile.data.remote.pojo.PojoSend;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;

@@ -50,7 +50,6 @@ public class FileUtil {
             drawableRequest = requests.load(localImage).diskCacheStrategy(DiskCacheStrategy.NONE);
         } else {
             drawableRequest = requests.load(getRemoteImagePath(imageFilename));
-            //imageCard.setOnClickListener(new ImageRecyclerAdapter.LoadImageListener(this, image.getFilename(), localPath, remotePath, image.getEntityKey(), activity));
         }
         if (progressBar != null) {
             drawableRequest = drawableRequest.listener(new RequestListener<Drawable>() {
@@ -58,9 +57,8 @@ public class FileUtil {
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(imageView.getContext(), "Could not load image", Toast.LENGTH_SHORT).show();
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
+                    e.logRootCauses("GLIDE");
+
                     return false;
                 }
 

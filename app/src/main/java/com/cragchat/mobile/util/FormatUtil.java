@@ -3,8 +3,6 @@ package com.cragchat.mobile.util;
 import android.content.Context;
 
 import com.cragchat.mobile.R;
-import com.cragchat.mobile.ui.model.Area;
-import com.cragchat.mobile.ui.model.Route;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -82,7 +80,7 @@ public class FormatUtil {
         return elapsedSeconds + " seconds ago";
     }
 
-    public static <T, K> List<K> transform(List<T> list, Converter<T, K> converter) {
+    public static <T, K> List<K> transformList(List<T> list, Converter<T, K> converter) {
         List<K> newList = new ArrayList<>();
         for (T t : list) {
             newList.add(converter.convert(t));
