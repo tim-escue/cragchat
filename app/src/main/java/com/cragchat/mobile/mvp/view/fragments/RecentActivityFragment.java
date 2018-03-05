@@ -14,6 +14,8 @@ import com.cragchat.mobile.data.Repository;
 import com.cragchat.mobile.domain.model.Area;
 import com.cragchat.mobile.domain.model.Datable;
 import com.cragchat.mobile.mvp.presenter.RecentActivityFragmentPresenter;
+import com.cragchat.mobile.mvp.view.AppBarCollapseListener;
+import com.cragchat.mobile.mvp.view.CollapsingRecyclerView;
 import com.cragchat.mobile.mvp.view.RecentActivityView;
 import com.cragchat.mobile.mvp.view.adapters.recycler.RecentActivityRecyclerAdapter;
 import com.cragchat.mobile.mvp.view.adapters.recycler.RecyclerUtils;
@@ -34,7 +36,7 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
     @BindView(R.id.empty_text)
     TextView empty;
     @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    CollapsingRecyclerView recyclerView;
 
     RecentActivityFragmentPresenter mPresenter;
 
@@ -57,6 +59,7 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
         ButterKnife.bind(this, view);
         mPresenter = new RecentActivityFragmentPresenter(repository, area);
         adapter = new RecentActivityRecyclerAdapter(getContext(), area.getKey(), repository);
+        recyclerView.setAppBarCollapseListener((AppBarCollapseListener)getActivity());
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
         mPresenter.setView(this);
         mPresenter.loadRecentActivity();

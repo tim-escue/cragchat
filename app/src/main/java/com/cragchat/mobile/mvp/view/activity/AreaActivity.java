@@ -18,6 +18,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.data.Repository;
 import com.cragchat.mobile.mvp.contract.AreaContract;
 import com.cragchat.mobile.domain.model.Area;
+import com.cragchat.mobile.mvp.view.AppBarCollapseListener;
 import com.cragchat.mobile.mvp.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.mvp.view.adapters.pager.TabPagerAdapter;
 import com.cragchat.mobile.mvp.view.fragments.AreaListFragment;
@@ -33,7 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AreaActivity extends SearchableCollapsableActivity implements AreaContract.AreaView, AppBarLayout.OnOffsetChangedListener {
+public class AreaActivity extends SearchableCollapsableActivity implements AreaContract.AreaView, AppBarLayout.OnOffsetChangedListener, AppBarCollapseListener {
 
     @BindView(R.id.header)
     View header;
@@ -75,6 +76,10 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
     @Inject
     Area area;
 
+    private int mAppBarOffset;
+    private boolean mAppBarIdle = false;
+    private int mAppBarMaxOffset;
+
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_displayable_new);
@@ -82,6 +87,7 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
 
         collapsingToolbarLayout.setTitleEnabled(false);
         appBarLayout.addOnOffsetChangedListener(this);
+        appBarLayout.post(() -> mAppBarMaxOffset = -appBarLayout.getTotalScrollRange());
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -199,7 +205,18 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
             float alpha = 1f - percentScrolled;
             header.setAlpha(alpha);
         }
+        mAppBarOffset = offset;
+        mAppBarIdle = (mAppBarOffset >= 0) || (mAppBarOffset <= mAppBarMaxOffset);
     }
 
 
+    @Override
+    public boolean isAppBarIdle() {
+        return mAppBarIdle;
+    }
+
+    @Override
+    public boolean isAppBarExpanded() {
+        return mAppBarOffset == 0;
+    }
 }
