@@ -1,9 +1,9 @@
 package com.cragchat.mobile.di.module;
 
-import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.ui.contract.SearchContract;
-import com.cragchat.mobile.ui.presenter.SearchActivityPresenter;
-import com.cragchat.mobile.ui.view.activity.SearchActivity;
+import com.cragchat.mobile.data.Repository;
+import com.cragchat.mobile.mvp.contract.SearchContract;
+import com.cragchat.mobile.mvp.presenter.SearchActivityPresenter;
+import com.cragchat.mobile.mvp.view.activity.SearchActivity;
 
 import dagger.Module;
 import dagger.Provides;

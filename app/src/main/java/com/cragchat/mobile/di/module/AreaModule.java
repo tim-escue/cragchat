@@ -2,13 +2,13 @@ package com.cragchat.mobile.di.module;
 
 import com.cragchat.mobile.di.ActivityScoped;
 import com.cragchat.mobile.di.InjectionNames;
-import com.cragchat.mobile.repository.Repository;
-import com.cragchat.mobile.repository.local.CragChatDatabase;
-import com.cragchat.mobile.ui.contract.AreaContract;
-import com.cragchat.mobile.ui.presenter.AreaActivityPresenter;
-import com.cragchat.mobile.ui.view.activity.AreaActivity;
-import com.cragchat.mobile.ui.model.Area;
-import com.cragchat.mobile.util.NavigationUtil;
+import com.cragchat.mobile.data.Repository;
+import com.cragchat.mobile.data.local.ClimbrLocalDatabase;
+import com.cragchat.mobile.mvp.contract.AreaContract;
+import com.cragchat.mobile.mvp.presenter.AreaActivityPresenter;
+import com.cragchat.mobile.mvp.view.activity.AreaActivity;
+import com.cragchat.mobile.domain.model.Area;
+import com.cragchat.mobile.util.ViewUtil;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ public class AreaModule {
 
     @ActivityScoped
     @Provides
-    Area provideArea(AreaActivity activity, CragChatDatabase database) {
-        return database.getArea(activity.getIntent().getStringExtra(NavigationUtil.ENTITY_KEY));
+    Area provideArea(AreaActivity activity, ClimbrLocalDatabase database) {
+        return database.getArea(activity.getIntent().getStringExtra(ViewUtil.ENTITY_KEY));
     }
 
     @Provides

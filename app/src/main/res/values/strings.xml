@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Crag Chat</string>
+    <string name="app_name">Climbr</string>
 
     <string name="drawer_open">Drawer open</string>
     <string name="drawer_closed">Drawer closed</string>
 
-    <!-- RealmRouteoute Pager Adapter Titles -->
+    <!-- RealmRoute Pager Adapter Titles -->
     <string name="title_beta">Beta</string>
     <string name="title_ratings">Ratings</string>
     <string name="title_sends">Sends</string>
