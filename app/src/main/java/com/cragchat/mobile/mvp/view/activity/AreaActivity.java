@@ -53,6 +53,10 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
     TabLayout tabLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.subtitle)
+    TextView subtitleView;
 
     @Inject
     AreaListFragment areaListFragment;
@@ -90,6 +94,8 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
         subtitle = getSubtitle(area);
         getSupportActionBar().setTitle(area.getName());
         getSupportActionBar().setSubtitle(subtitle);
+        title.setText(area.getName());
+        subtitleView.setText(subtitle);
 
         commentSectionFragment.setTable(CommentSectionFragment.TABLE_DISCUSSION);
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this, areaListFragment,
