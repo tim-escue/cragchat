@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends SearchableActivity {
 
-    private static final String[] INITIAL_AREAS = new String[]{"74c9deb6ef9b4820a5f039eb16ab1193", "d4f7ae6d1b3040e2b6fd2a608b42ec4d"};
+    private static final String[] INITIAL_AREAS = new String[]{"74c9deb6ef9b4820a5f039eb16ab1193"};//, "870dc2efc04d43c39b74c564c4bca5cf"};
 
     @BindView(R.id.navigation)
     NavigationView navigationView;
@@ -45,7 +45,6 @@ public class MainActivity extends SearchableActivity {
 
         final MainPagerAdapter adapter = new MainPagerAdapter(this);
         pager.setAdapter(adapter);
-        //pager.setPageMargin((int) dpToPixels(20, this));
         ElevationTransformer transformer = new ElevationTransformer(pager, adapter);
         pager.addOnPageChangeListener( transformer);
 

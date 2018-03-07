@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.domain.model.Comment;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import java.util.Calendar;
 import java.util.Date;

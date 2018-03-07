@@ -17,7 +17,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.domain.model.Route;
 import com.cragchat.mobile.data.local.realm.RealmRoute;
 import com.cragchat.mobile.mvp.view.activity.CragChatActivity;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 import com.cragchat.mobile.util.ViewUtil;
 
 import butterknife.BindView;

@@ -14,7 +14,7 @@ import com.cragchat.mobile.data.Repository;
 import com.cragchat.mobile.domain.model.Comment;
 import com.cragchat.mobile.mvp.view.adapters.recycler.viewholder.CommentRecyclerViewHolder;
 import com.cragchat.mobile.mvp.view.fragments.Dialog;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -16,7 +16,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.domain.model.Rating;
 import com.cragchat.mobile.data.local.realm.RealmRating;
 import com.cragchat.mobile.mvp.view.activity.CragChatActivity;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
