@@ -1,10 +1,6 @@
 package com.cragchat.mobile.data
 
-import com.cragchat.mobile.data.authentication.Authentication
-import com.cragchat.mobile.data.local.ClimbrLocalDatabase
-import com.cragchat.mobile.data.remote.ClimbrRemoteDatasource
 import com.cragchat.mobile.domain.model.Area
-import com.cragchat.mobile.data.remote.pojo.PojoArea
 import com.nhaarman.mockito_kotlin.whenever
 
 import org.junit.Before
@@ -35,22 +31,22 @@ class RepositoryTest {
     var mockitoRule = MockitoJUnit.rule()!!
 
     @Mock
-    lateinit var authentication: Authentication
+    lateinit var authentication: com.cragchat.mobile.data.authentication.Authentication
 
     @Mock
-    lateinit var database: ClimbrLocalDatabase
+    lateinit var database: com.cragchat.mobile.data.local.ClimbrLocalDatabase
 
     @Mock
-    lateinit var restApi: ClimbrRemoteDatasource
+    lateinit var restApi: com.cragchat.mobile.data.remote.ClimbrRemoteDatasource
 
     @Mock
-    lateinit var area: PojoArea
+    lateinit var area: com.cragchat.mobile.data.remote.pojo.PojoArea
 
-    lateinit var repository: Repository
+    lateinit var repository: com.cragchat.mobile.data.Repository
 
     @Before
     fun init()  {
-        repository = Repository(RuntimeEnvironment.application, database, restApi, authentication)
+        repository = com.cragchat.mobile.data.Repository(RuntimeEnvironment.application, database, restApi, authentication)
 
         //Prepare restApi
         whenever(restApi.getArea(TEST_KEY, null)).thenReturn(Observable.just(area))

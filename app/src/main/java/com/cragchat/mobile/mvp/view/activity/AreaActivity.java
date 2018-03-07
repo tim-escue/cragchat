@@ -18,7 +18,6 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.data.Repository;
 import com.cragchat.mobile.mvp.contract.AreaContract;
 import com.cragchat.mobile.domain.model.Area;
-import com.cragchat.mobile.mvp.view.AppBarCollapseListener;
 import com.cragchat.mobile.mvp.view.adapters.pager.AreaActivityPagerAdapter;
 import com.cragchat.mobile.mvp.view.adapters.pager.TabPagerAdapter;
 import com.cragchat.mobile.mvp.view.fragments.AreaListFragment;
@@ -34,10 +33,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AreaActivity extends SearchableCollapsableActivity implements AreaContract.AreaView, AppBarLayout.OnOffsetChangedListener, AppBarCollapseListener {
+public class AreaActivity extends SearchableCollapsableActivity implements AreaContract.AreaView, AppBarLayout.OnOffsetChangedListener {
 
-    @BindView(R.id.header)
-    View header;
     @BindView(R.id.viewpager)
     ViewPager pager;
     @BindView(R.id.add_button)
@@ -76,9 +73,8 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
     @Inject
     Area area;
 
-    private int mAppBarOffset;
-    private boolean mAppBarIdle = false;
-    private int mAppBarMaxOffset;
+    private String subtitle;
+    private boolean showTitle;
 
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -87,9 +83,13 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
 
         collapsingToolbarLayout.setTitleEnabled(false);
         appBarLayout.addOnOffsetChangedListener(this);
-        appBarLayout.post(() -> mAppBarMaxOffset = -appBarLayout.getTotalScrollRange());
+
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        subtitle = getSubtitle(area);
+        getSupportActionBar().setTitle(area.getName());
+        getSupportActionBar().setSubtitle(subtitle);
 
         commentSectionFragment.setTable(CommentSectionFragment.TABLE_DISCUSSION);
         AreaActivityPagerAdapter pageAdapter = new AreaActivityPagerAdapter(this, areaListFragment,
@@ -153,9 +153,7 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
         return super.onOptionsItemSelected(item);
     }
 
-    public void present(Area area) {
-        getSupportActionBar().setTitle(area.getName());
-
+    private String getSubtitle(Area area) {
         StringBuilder subTitle = new StringBuilder();
         Area current = repository.getArea(area.getParent());
         int count = 0;
@@ -167,11 +165,10 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
             count++;
             current = repository.getArea(current.getParent());
         }
-        String subTitleString = subTitle.toString();
-        if (!subTitleString.isEmpty()) {
-            getSupportActionBar().setSubtitle(subTitle.toString());
-        }
+        return subTitle.toString();
+    }
 
+    public void present(Area area) {
         images.setText(String.valueOf(area.getImages().size()));
         routes.setText(String.valueOf(area.getRoutes().size()));
         areas.setText(String.valueOf(area.getSubAreas().size()));
@@ -196,7 +193,7 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentScrolled = (float) Math.abs(offset) / (float) maxScroll;
-        if (percentScrolled > .4) {
+        /*if (percentScrolled > .4) {
             header.setVisibility(View.GONE);
         } else {
             if (header.getVisibility() == View.GONE) {
@@ -204,19 +201,14 @@ public class AreaActivity extends SearchableCollapsableActivity implements AreaC
             }
             float alpha = 1f - percentScrolled;
             header.setAlpha(alpha);
+        }*/
+        if (!showTitle && percentScrolled > .6) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            showTitle = true;
+        } else if (showTitle && percentScrolled <= .4) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            showTitle = false;
         }
-        mAppBarOffset = offset;
-        mAppBarIdle = (mAppBarOffset >= 0) || (mAppBarOffset <= mAppBarMaxOffset);
     }
 
-
-    @Override
-    public boolean isAppBarIdle() {
-        return mAppBarIdle;
-    }
-
-    @Override
-    public boolean isAppBarExpanded() {
-        return mAppBarOffset == 0;
-    }
 }

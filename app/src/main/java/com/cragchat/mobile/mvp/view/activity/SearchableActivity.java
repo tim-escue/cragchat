@@ -46,7 +46,7 @@ public abstract class SearchableActivity extends CragChatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.search);
         if (item == null) {
-            getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+            getMenuInflater().inflate(R.menu.menu_search_black_no_action, menu);
             item = menu.findItem(R.id.search);
         }
 

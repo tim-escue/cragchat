@@ -16,11 +16,11 @@
         android:textColor="@color/secondary_text"
         android:visibility="gone" />
 
-    <com.cragchat.mobile.mvp.view.CollapsingRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/four_dp" />
+        android:paddingTop="@dimen/eight_dp" />
 
     <ProgressBar
         android:id="@+id/progressBar1"

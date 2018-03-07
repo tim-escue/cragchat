@@ -24,7 +24,7 @@ import com.cragchat.mobile.mvp.view.fragments.ImageFragment;
 import com.cragchat.mobile.mvp.view.fragments.LocationFragment;
 import com.cragchat.mobile.mvp.view.fragments.RatingFragment;
 import com.cragchat.mobile.mvp.view.fragments.SendsFragment;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 import com.cragchat.mobile.util.ViewUtil;
 
 import javax.inject.Inject;

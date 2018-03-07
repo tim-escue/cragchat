@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.cragchat.mobile.R;
 import com.cragchat.mobile.domain.model.Send;
 import com.cragchat.mobile.data.local.realm.RealmSend;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

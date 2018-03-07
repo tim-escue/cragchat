@@ -4,7 +4,7 @@ import com.cragchat.mobile.data.Repository;
 import com.cragchat.mobile.domain.model.Area;
 import com.cragchat.mobile.domain.model.Datable;
 import com.cragchat.mobile.mvp.view.RecentActivityView;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import java.util.List;
 

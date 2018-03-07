@@ -36,7 +36,7 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
     @BindView(R.id.empty_text)
     TextView empty;
     @BindView(R.id.recycler_view)
-    CollapsingRecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     RecentActivityFragmentPresenter mPresenter;
 
@@ -59,7 +59,6 @@ public class RecentActivityFragment extends DaggerFragment implements RecentActi
         ButterKnife.bind(this, view);
         mPresenter = new RecentActivityFragmentPresenter(repository, area);
         adapter = new RecentActivityRecyclerAdapter(getContext(), area.getKey(), repository);
-        recyclerView.setAppBarCollapseListener((AppBarCollapseListener)getActivity());
         RecyclerUtils.setAdapterAndManager(recyclerView, adapter, LinearLayoutManager.VERTICAL);
         mPresenter.setView(this);
         mPresenter.loadRecentActivity();

@@ -11,7 +11,7 @@ import com.cragchat.mobile.R;
 import com.cragchat.mobile.domain.model.Image;
 import com.cragchat.mobile.mvp.view.adapters.recycler.ImageRecyclerAdapter;
 import com.cragchat.mobile.util.FileUtil;
-import com.cragchat.mobile.util.FormatUtil;
+import com.cragchat.mobile.domain.util.FormatUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
